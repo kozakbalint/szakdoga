@@ -52,7 +52,6 @@ services:
     volumes:
       - web-dist:/usr/share/nginx/html
       - ./infra/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./infra/wait-for-it.sh:/etc/wait-for-it.sh
     depends_on:
       - web
     networks:
