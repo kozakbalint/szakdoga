@@ -1,13 +1,14 @@
-FROM node:22-alpine as build
+FROM node:22-alpine as base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+FROM base AS prod
 
 WORKDIR /app
+COPY package.json pnpm-lock.yaml /app/
+RUN pnpm install --frozen-lockfile
 
-RUN npm install -g pnpm
-
-COPY package.json pnpm-lock.yaml ./
-
-RUN pnpm install
-
-COPY . .
-
+COPY . /app
 RUN pnpm run build
