@@ -40,17 +40,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache-dependency-path: ./web/pnpm-lock.yaml
           cache: "pnpm"
-
-      - name: Set working directory
-        run: cd web
+          working-directory: ./web
 
       - name: Install dependencies
+        working-directory: ./web
         run: pnpm install
 
       - name: Run tests
         if: ${{ !inputs.skipTests }}
+        working-directory: ./web
         run: pnpm test
 
       - name: Build
+        working-directory: ./web
         run: pnpm run build

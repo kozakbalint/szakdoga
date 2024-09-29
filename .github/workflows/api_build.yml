@@ -58,43 +58,51 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go }}
+          working-directory: ./api
           check-latest: true
 
-      - name: Set working directory
-        run: cd api
-
       - name: Go Format
-        run: gofmt -s -w . && git diff --exit-code
+        working-directory: ./api
+        run: gofmt -s -w . && git diff --exit-code .
 
       - name: Go Tidy
-        run: go mod tidy && git diff --exit-code
+        working-directory: ./api
+        run: go mod tidy && git diff --exit-code .
 
       - name: Go Mod
+        working-directory: ./api
         run: go mod download
 
       - name: Go Mod Verify
+        working-directory: ./api
         run: go mod verify
 
       - name: Go Generate
         if: ${{ !inputs.skipGenerate }}
-        run: go generate ./... && git diff --exit-code
+        working-directory: ./api
+        run: go generate ./... && git diff --exit-code .
 
       - name: Go Build
+        working-directory: ./api
         run: go build -o=/dev/null -tags=${{ inputs.buildTags }} ./...
 
       - name: Go Vet
+        working-directory: ./api
         run: go vet ./...
 
       - name: Go Compile Tests
         if: ${{ inputs.skipTests }}
+        working-directory: ./api
         run: go test -exec=/bin/true -tags=${{ inputs.buildTags }} ./...
 
       - name: Go Test
         if: ${{ !inputs.skipTests }}
+        working-directory: ./api
         run: go test -v -shuffle=on -tags=${{ inputs.buildTags }} -race -count=1 -coverprofile=coverage.txt ./...
 
       - name: Go Benchmark
         if: ${{ !inputs.skipTests }}
+        working-directory: ./api
         run: go test -v -shuffle=on -tags=${{ inputs.buildTags }} -run=^$ -bench=. -benchtime=1x ./...
 
       - name: Upload Coverage
@@ -103,5 +111,6 @@ jobs:
         continue-on-error: true
         with:
           token: ${{secrets.CODECOV_TOKEN}}
+          working-directory: ./api
           file: ./coverage.txt
           fail_ci_if_error: false
