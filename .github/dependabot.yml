@@ -6,10 +6,13 @@ updates:
     directory: "/api"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 0
     labels:
       - "gomod"
-      - "dependencies"
+      - "security"
+
   - package-ecosystem: "npm"
+
     commit-message:
       prefix: "chore(deps)"
     directory: "/web"
@@ -17,9 +20,11 @@ updates:
       interval: "weekly"
       day: "sunday"
       time: "09:00"
+    open-pull-requests-limit: 0
     labels:
       - "npm"
-      - "dependencies"
+      - "security"
+
   - package-ecosystem: "docker"
     commit-message:
       prefix: "chore(deps)"
@@ -31,9 +36,11 @@ updates:
       interval: "weekly"
       day: "sunday"
       time: "09:00"
+    open-pull-requests-limit: 0
     labels:
       - "docker"
-      - "dependencies"
+      - "security"
+
   - package-ecosystem: "github-actions"
     commit-message:
       prefix: "ci(github-actions)"
@@ -42,6 +49,7 @@ updates:
       interval: "weekly"
       day: "sunday"
       time: "09:00"
+    open-pull-requests-limit: 0
     labels:
       - "ci"
-      - "dependencies"
+      - "security"
