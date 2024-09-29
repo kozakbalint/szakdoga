@@ -2,7 +2,7 @@ name: api-build
 
 permissions: {}
 
-on: 
+on:
   push:
     branches:
       - main
@@ -10,11 +10,11 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 10 * * 1' # every Monday at 10:00
+    - cron: "0 10 * * 1" # every Monday at 10:00
   workflow_call:
     inputs:
       skipTests:
-        description: 'Skip tests, useful when there is a dedicated CI job for tests'
+        description: "Skip tests, useful when there is a dedicated CI job for tests"
         default: true
         required: false
         type: boolean
@@ -25,12 +25,12 @@ on:
         type: boolean
       buildTags:
         description: 'Build tags to use. Default is "1" which works as no-op'
-        default: '1'
+        default: "1"
         required: false
         type: string
       groupSuffix:
-        description: 'Concurrency group suffix to allow multiple jobs'
-        default: ''
+        description: "Concurrency group suffix to allow multiple jobs"
+        default: ""
         required: false
         type: string
 
@@ -51,6 +51,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Set up Go ${{ matrix.go }}
         uses: actions/setup-go@v4
