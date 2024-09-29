@@ -1,0 +1,47 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    commit-message:
+      prefix: "chore(deps)"
+    directory: "/api"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "gomod"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    commit-message:
+      prefix: "chore(deps)"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "09:00"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "docker"
+    commit-message:
+      prefix: "chore(deps)"
+    directories:
+      - "/api"
+      - "/web"
+      - "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "09:00"
+    labels:
+      - "docker"
+      - "dependencies"
+  - package-ecosystem: "github-actions"
+    commit-message:
+      prefix: "ci(github-actions)"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "09:00"
+    labels:
+      - "ci"
+      - "dependencies"

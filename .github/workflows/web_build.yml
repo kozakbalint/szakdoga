@@ -1,0 +1,58 @@
+name: web-build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 10 * * 1" # every Monday at 10:00
+  workflow_call:
+    inputs:
+      skipTests:
+        description: "Skip tests, useful when there is a dedicated CI job for tests"
+        default: true
+        required: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [21]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache-dependency-path: ./web/pnpm-lock.yaml
+          cache: "pnpm"
+          working-directory: ./web
+
+      - name: Install dependencies
+        working-directory: ./web
+        run: pnpm install
+
+      - name: Run tests
+        if: ${{ !inputs.skipTests }}
+        working-directory: ./web
+        run: pnpm test
+
+      - name: Build
+        working-directory: ./web
+        run: pnpm run build
