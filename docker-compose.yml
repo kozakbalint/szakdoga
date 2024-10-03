@@ -6,6 +6,10 @@ services:
       args:
         - API_PORT=$API_PORT
         - API_ENV=$API_ENV
+        - DB_DSN=$DB_DSN
+        - JWT_SECRET=$JWT_SECRET
+        - DOMAIN=$DOMAIN
+        - CORS_TRUSTED_ORIGINS=$CORS_TRUSTED_ORIGINS
     ports:
       - "$API_PORT:$API_PORT"
     volumes:
