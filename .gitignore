@@ -1,5 +1,9 @@
 # Ignore environment variable files
 .env
+.envrc
+
+# Ignore tmp directory
+tmp/
 
 # Ignore OS generated files
 .DS_Store
