@@ -9,7 +9,7 @@ import (
 func (app *application) routes() http.Handler {
 	router := httprouter.New()
 
-	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.healthcheckHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.requireAuthenticatedUser(app.healthcheckHandler))
 
 	router.HandlerFunc(http.MethodPost, "/v1/users", app.createUserHandler)
 	router.HandlerFunc(http.MethodPost, "/v1/tokens/authentication", app.createAuthenticationTokenHandler)
