@@ -2,11 +2,11 @@ import { configureAuth } from 'react-query-auth';
 import { Navigate, useLocation } from 'react-router-dom';
 import { z } from 'zod';
 
-import { LoginAuthResponse, RegisterAuthResponse, User } from '@/types/api';
+import { LoginAuthResponse, User } from '@/types/api';
 
 import { apiClient } from './api-client';
 
-const getUser = async (): Promise<User | null> => {
+const getUser = async (): Promise<User | void | null> => {
   const jwt = localStorage.getItem('jwt');
   if (!jwt) {
     return null;
