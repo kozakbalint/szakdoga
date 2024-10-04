@@ -58,3 +58,24 @@ func (app *application) createUserHandler(w http.ResponseWriter, r *http.Request
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+func (app *application) getRequestUserHandler(w http.ResponseWriter, r *http.Request) {
+	user := app.contextGetUser(r)
+
+	if user.IsAnonymous() {
+		app.authenticationRequiredResponse(w, r)
+		return
+	}
+
+	userResponse := &data.User{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+	}
+
+	err := app.writeJSON(w, http.StatusOK, envelope{"user": userResponse}, nil)
+	if err != nil {
+		app.logger.Error(err.Error())
+		app.serverErrorResponse(w, r, err)
+	}
+}
