@@ -4,14 +4,19 @@ import (
 	"errors"
 	"net/http"
 	"os"
-	"strconv" // New import
+	"strconv"
 	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/validator"
 
-	"github.com/pascaldekloe/jwt" // New import
+	"github.com/pascaldekloe/jwt"
 )
+
+type loginResponse struct {
+	AuthenticationToken string    `json:"authentication_token"`
+	User                data.User `json:"user"`
+}
 
 func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
@@ -46,6 +51,12 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		return
 	}
 
+	userResponse := data.User{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+	}
+
 	match, err := user.Password.Matches(input.Password)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -57,9 +68,6 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		return
 	}
 
-	// Create a JWT claims struct containing the user ID as the subject, with an issued
-	// time of now and validity window of the next 24 hours. We also set the issuer and
-	// audience to a unique identifier for our application.
 	var claims jwt.Claims
 	claims.Subject = strconv.FormatInt(user.ID, 10)
 	claims.Issued = jwt.NewNumericTime(time.Now())
@@ -68,17 +76,18 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	claims.Issuer = os.Getenv("DOMAIN")
 	claims.Audiences = []string{os.Getenv("DOMAIN")}
 
-	// Sign the JWT claims using the HMAC-SHA256 algorithm and the secret key from the
-	// application config. This returns a []byte slice containing the JWT as a base64-
-	// encoded string.
 	jwtBytes, err := claims.HMACSign(jwt.HS256, []byte(app.config.jwt.secret))
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return
 	}
 
-	// Convert the []byte slice to a string and return it in a JSON response.
-	err = app.writeJSON(w, http.StatusCreated, envelope{"authentication_token": string(jwtBytes)}, nil)
+	response := &loginResponse{
+		AuthenticationToken: string(jwtBytes),
+		User:                userResponse,
+	}
+
+	err = app.writeJSON(w, http.StatusCreated, envelope{"login": response}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

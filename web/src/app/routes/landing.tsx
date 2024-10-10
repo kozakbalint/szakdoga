@@ -2,8 +2,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { Head } from '@/components/seo/head';
 import { Button } from '@/components/ui/button';
+import { useUser } from '@/lib/auth';
 
 export const LandingRoute = () => {
+  const user = useUser();
   const navigate = useNavigate();
 
   return (
@@ -18,7 +20,13 @@ export const LandingRoute = () => {
         </p>
         <Button
           className="mt-8 bg-slate-700 text-white"
-          onClick={() => navigate('/dashboard')}
+          onClick={() => {
+            if (user) {
+              navigate('/app');
+            } else {
+              navigate('/auth/login');
+            }
+          }}
         >
           Get Started
         </Button>

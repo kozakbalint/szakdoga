@@ -1,15 +1,12 @@
 import { env } from '@/config/env';
 
-class APIError extends Error {
+export type APIError = {
+  message: string;
   statusCode: number;
-  response: any;
-
-  constructor(message: string, statusCode: number, response: any) {
-    super(message);
-    this.statusCode = statusCode;
-    this.response = response;
-  }
-}
+  response: {
+    error: string | { email?: string; name?: string; password?: string };
+  };
+};
 
 class APIClient {
   baseURL: string;
@@ -17,14 +14,15 @@ class APIClient {
     this.baseURL = baseURL;
   }
 
-  async request(url: string, options: RequestInit) {
+  async request(url: string, options: RequestInit): Promise<unknown> {
     const response = await fetch(`${this.baseURL}${url}`, options);
     if (!response.ok) {
-      throw new APIError(
-        response.statusText,
-        response.status,
-        await response.json(),
-      );
+      const error: APIError = {
+        message: response.statusText,
+        statusCode: response.status,
+        response: await response.json(),
+      };
+      return Promise.reject(error);
     }
     return response.json();
   }
@@ -38,7 +36,17 @@ class APIClient {
     });
   }
 
-  post(url: string, data: any) {
+  getWithToken(url: string, token: string) {
+    return this.request(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  post(url: string, data: unknown) {
     return this.request(url, {
       method: 'POST',
       headers: {
