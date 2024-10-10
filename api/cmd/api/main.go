@@ -6,6 +6,7 @@ import (
 	"flag"
 	"log/slog"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -43,9 +44,12 @@ type application struct {
 
 func main() {
 	var cfg config
-
-	flag.IntVar(&cfg.port, "port", 4000, "API server port")
-	flag.StringVar(&cfg.env, "env", "development", "Environment (development|production)")
+	port, err := strconv.Atoi(os.Getenv("API_PORT"))
+	if err != nil {
+		port = 4000
+	}
+	flag.IntVar(&cfg.port, "port", port, "API server port")
+	flag.StringVar(&cfg.env, "env", os.Getenv("API_ENV"), "Environment (development|production)")
 	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("DB_DSN"), "PostgreSQL connection string")
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
