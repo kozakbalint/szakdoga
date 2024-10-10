@@ -3,13 +3,21 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-      args:
-        - API_PORT=$API_PORT
-        - API_ENV=$API_ENV
-        - DB_DSN=$DB_DSN
-        - JWT_SECRET=$JWT_SECRET
-        - DOMAIN=$DOMAIN
-        - CORS_TRUSTED_ORIGINS=$CORS_TRUSTED_ORIGINS
+      target: final
+    environment:
+      - API_PORT=$API_PORT
+      - API_ENV=$API_ENV
+      - DB_DSN=$DB_DSN
+      - JWT_SECRET=$JWT_SECRET
+      - DOMAIN=$DOMAIN
+      - CORS_TRUSTED_ORIGINS=$CORS_TRUSTED_ORIGINS
+    command: >
+      /bin/sh -c
+      "/bin/server \
+      --env=$API_ENV \
+      --jwt-secret=$JWT_SECRET \
+      --db-dsn=$DB_DSN \ 
+      --cors-trusted-origins=$CORS_TRUSTED_ORIGINS"
     ports:
       - "$API_PORT:$API_PORT"
     volumes:
@@ -34,18 +42,13 @@ services:
   web:
     build:
       context: ./web
+      target: build
       dockerfile: Dockerfile
-    command: sh -c "pnpm build"
-    # Uncomment the following lines to enable hot-reloading on the web container
-    # develop:
-    #   watch:
-    #     - action: rebuild
-    #       path: ./web
-    #       target: /app
-    #       ignore:
-    #         - node_modules/
+    environment:
+      - VITE_APP_API_URL=$VITE_APP_API_URL
     volumes:
-      - web-dist:/app/dist
+      - web-dist:/usr/src/app/dist
+    command: pnpm run build
     networks:
       - frontend
 
@@ -63,7 +66,7 @@ services:
 
 volumes:
   pgdata: {}
-  web-dist:
+  web-dist: {}
 
 networks:
   backend:
