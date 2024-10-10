@@ -3,7 +3,9 @@ import { env } from '@/config/env';
 export type APIError = {
   message: string;
   statusCode: number;
-  response: unknown;
+  response: {
+    error: string | { email?: string; name?: string; password?: string };
+  };
 };
 
 class APIClient {
@@ -12,14 +14,15 @@ class APIClient {
     this.baseURL = baseURL;
   }
 
-  async request(url: string, options: RequestInit) {
+  async request(url: string, options: RequestInit): Promise<unknown> {
     const response = await fetch(`${this.baseURL}${url}`, options);
     if (!response.ok) {
-      return {
+      const error: APIError = {
         message: response.statusText,
         statusCode: response.status,
         response: await response.json(),
-      } as APIError;
+      };
+      return Promise.reject(error);
     }
     return response.json();
   }

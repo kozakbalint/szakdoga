@@ -11,7 +11,9 @@ const getUser = async (): Promise<User | void | null> => {
   if (!jwt) {
     return null;
   }
-  const response = await apiClient.getWithToken('/users/me', jwt);
+  const response = (await apiClient.getWithToken('/users/me', jwt)) as {
+    user: User;
+  };
 
   return response.user;
 };
@@ -23,31 +25,44 @@ const logout = (): Promise<void> => {
 
 export const loginInputSchema = z.object({
   email: z.string().min(1, 'Required').email('Invalid email'),
-  password: z.string().min(5, 'Required'),
+  password: z.string(),
 });
 
 export type LoginInput = z.infer<typeof loginInputSchema>;
 const loginWithEmailAndPassword = async (
   data: LoginInput,
 ): Promise<LoginAuthResponse> => {
-  const response = await apiClient.post('/tokens/authentication', data);
-  if (response.login.authentication_token !== undefined) {
-    localStorage.setItem('jwt', response.login.authentication_token);
+  try {
+    const response = (await apiClient.post(
+      '/tokens/authentication',
+      data,
+    )) as LoginAuthResponse;
+    if (response.login.authentication_token !== undefined) {
+      localStorage.setItem('jwt', response.login.authentication_token);
+    }
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
   }
-
-  return response;
 };
 
 export const registerInputSchema = z.object({
-  email: z.string().min(1, 'Required'),
-  name: z.string().min(1, 'Required'),
-  password: z.string().min(1, 'Required'),
+  email: z.string().min(1, 'Required').email('Invalid email'),
+  name: z.string().min(3, 'Name must be at least 3 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
 export type RegisterInput = z.infer<typeof registerInputSchema>;
 
-const registerWithEmailAndPassword = (data: RegisterInput) => {
-  apiClient.post('/users', data);
+const registerWithEmailAndPassword = async (
+  data: RegisterInput,
+): Promise<null> => {
+  try {
+    await apiClient.post('/users', data);
+    return null;
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 const authConfig = {
@@ -57,7 +72,7 @@ const authConfig = {
     return response.login.user;
   },
   registerFn: async (data: RegisterInput) => {
-    await registerWithEmailAndPassword(data);
+    return await registerWithEmailAndPassword(data);
   },
   logoutFn: logout,
 };
