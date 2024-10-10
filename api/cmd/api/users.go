@@ -35,7 +35,7 @@ func (app *application) createUserHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	v := validator.New()
-	if data.ValidateEmail(v, user.Email); !v.Valid() {
+	if data.ValidateUser(v, user); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
