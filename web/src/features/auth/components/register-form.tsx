@@ -58,7 +58,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
               shouldUnregister: true,
             }}
           >
-            {({ register, formState }) => (
+            {({ register, formState, setValue }) => (
               <>
                 <div className="grid gap-4">
                   <div className="grid gap-2">
@@ -75,7 +75,10 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                       label="Email Address"
                       error={formState.errors['email']}
                       registration={register('email')}
-                      onChange={() => setRegisterError(undefined)}
+                      onChange={(e) => {
+                        setRegisterError(undefined);
+                        setValue('email', e.target.value);
+                      }}
                     />
                     <Error errorMessage={registerError} />
                   </div>

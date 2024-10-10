@@ -33,7 +33,11 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	v := validator.New()
 
 	data.ValidateEmail(v, input.Email)
-	data.ValidatePasswordPlaintext(v, input.Password)
+
+	if len(input.Password) < 8 {
+		app.invalidCredentialsResponse(w, r)
+		return
+	}
 
 	if !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)

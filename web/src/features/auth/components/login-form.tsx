@@ -1,8 +1,10 @@
+import * as React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Form, Input } from '@/components/ui/form';
 import { useLogin, loginInputSchema } from '@/lib/auth';
+import { APIError } from '@/lib/api-client';
 import {
   Card,
   CardContent,
@@ -10,8 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { APIError } from '@/lib/api-client';
-import React from 'react';
 import { Error } from '@/components/ui/form/error';
 
 type LoginFormProps = {
@@ -23,11 +23,17 @@ export const description = 'Log in to your account';
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const [loginError, setLoginError] = React.useState<string | undefined>();
   const login = useLogin({
-    onSuccess,
+    onSuccess() {
+      onSuccess();
+      setLoginError(undefined);
+    },
     onError(error) {
       const err = error as APIError;
-      const message = err.response?.error as string;
-      setLoginError(message);
+      const message =
+        typeof err.response?.error === 'string'
+          ? err.response.error
+          : undefined;
+      setLoginError(message ?? 'Failed to log in');
     },
   });
   const [searchParams] = useSearchParams();
@@ -46,8 +52,11 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               login.mutate(values);
             }}
             schema={loginInputSchema}
+            options={{
+              shouldUnregister: true,
+            }}
           >
-            {({ register, formState }) => (
+            {({ register, formState, setValue }) => (
               <>
                 <div className="grid gap-4">
                   <div className="grid gap-2">
@@ -56,7 +65,10 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                       label="Email"
                       error={formState.errors['email']}
                       registration={register('email')}
-                      onChange={() => setLoginError(undefined)}
+                      onChange={(e) => {
+                        setLoginError(undefined);
+                        setValue('email', e.target.value);
+                      }}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -65,7 +77,10 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                       label="Password"
                       error={formState.errors['password']}
                       registration={register('password')}
-                      onChange={() => setLoginError(undefined)}
+                      onChange={(e) => {
+                        setLoginError(undefined);
+                        setValue('password', e.target.value);
+                      }}
                     />
                     <Error errorMessage={loginError} />
                   </div>
