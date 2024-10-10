@@ -10,6 +10,7 @@ import { ProtectedRoute } from '@/lib/auth';
 
 import { AppRoot } from './routes/app/root';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
