@@ -17,6 +17,8 @@ const buttonVariants = cva(
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline:
           'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
+        outlineShortCut:
+          'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground justify-center lg:justify-between',
         secondary:
           'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
@@ -41,6 +43,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
     asChild?: boolean;
     isLoading?: boolean;
     icon?: React.ReactNode;
+    shortCut?: string;
   };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -53,6 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       isLoading,
       icon,
+      shortCut,
       ...props
     },
     ref,
@@ -67,6 +71,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {isLoading && <Spinner size="sm" className="text-current" />}
         {!isLoading && icon && <span className="mr-2">{icon}</span>}
         <span className="mx-2">{children}</span>
+        {shortCut && (
+          <kbd className="bg-muted rounded mx-2 px-2 hidden lg:inline">
+            {shortCut}
+          </kbd>
+        )}
       </Comp>
     );
   },
