@@ -16,10 +16,10 @@ import { Button } from '../button';
 
 export type SearchInputProps = {
   className?: string;
-  groups: SearchInputGroup[];
+  groups: SearchInputGroups[];
 };
 
-export type SearchInputGroup = {
+export type SearchInputGroups = {
   title: string;
   items: SearchInputItem[];
 };
@@ -27,11 +27,16 @@ export type SearchInputGroup = {
 export type SearchInputItem = {
   title: string;
   shortcut?: string;
+  page?: string;
   onSelect: () => void;
 };
 
 export const SearchInput = ({ className, groups }: SearchInputProps) => {
   const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState('');
+  const [searchPlaceholder, setSearchPlaceholder] = React.useState('Search...');
+  const [pages, setPages] = React.useState<string[]>([]);
+  const page = pages[pages.length - 1];
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -60,31 +65,77 @@ export const SearchInput = ({ className, groups }: SearchInputProps) => {
           </Button>
         </Command>
       </div>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput autoFocus />
-        <CommandList>
-          {groups.map((group) => (
-            <CommandGroup key={group.title} heading={group.title}>
-              {group.items.map((item) => (
-                <CommandItem
-                  key={item.title}
-                  onSelect={() => {
-                    item.onSelect();
-                    setOpen(false);
-                  }}
-                >
-                  {item.title}
-                  {item.shortcut && (
-                    <CommandShortcut>{item.shortcut}</CommandShortcut>
-                  )}
-                </CommandItem>
+      <div
+        onKeyDown={(e) => {
+          if (e.key === 'Escape' || (e.key === 'Backspace' && !search)) {
+            e.preventDefault();
+            setPages((pages) => pages.slice(0, -1));
+            setSearchPlaceholder('Search...');
+          }
+        }}
+      >
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <CommandInput
+            value={search}
+            onValueChange={setSearch}
+            autoFocus
+            placeholder={searchPlaceholder}
+          />
+
+          {!page && (
+            <CommandList>
+              {groups.map((group) => (
+                <CommandGroup key={group.title} heading={group.title}>
+                  {group.items.map((item) => (
+                    <CommandItem
+                      key={item.title}
+                      onSelect={() => {
+                        item.onSelect();
+                        if (item.page) {
+                          setPages([...pages, item.page]);
+                          setSearchPlaceholder(
+                            group.title + ' ' + item.title + '...',
+                          );
+                        } else {
+                          setOpen(false);
+                        }
+                      }}
+                    >
+                      <div className="flex gap-2 items-start align-middle">
+                        <p>{item.title}</p>
+                        {item.shortcut && (
+                          <CommandShortcut>{item.shortcut}</CommandShortcut>
+                        )}
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
               ))}
-            </CommandGroup>
-          ))}
-          <CommandSeparator />
-          <CommandEmpty>No results found</CommandEmpty>
-        </CommandList>
-      </CommandDialog>
+              <CommandSeparator />
+              <CommandEmpty>No results found.</CommandEmpty>
+            </CommandList>
+          )}
+
+          {page === 'movies' && (
+            <CommandList>
+              <CommandSeparator />
+              <CommandEmpty>No results found.</CommandEmpty>
+            </CommandList>
+          )}
+          {page === 'tv-shows' && (
+            <CommandList>
+              <CommandSeparator />
+              <CommandEmpty>No results found.</CommandEmpty>
+            </CommandList>
+          )}
+          {page === 'people' && (
+            <CommandList>
+              <CommandSeparator />
+              <CommandEmpty>No results found.</CommandEmpty>
+            </CommandList>
+          )}
+        </CommandDialog>
+      </div>
     </>
   );
 };

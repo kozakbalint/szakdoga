@@ -22,7 +22,7 @@ import {
 } from '../ui/dropdown';
 import { Link } from '../ui/link';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { SearchInput, SearchInputGroup } from '../ui/cmdk';
+import { SearchInput, SearchInputGroups } from '../ui/cmdk';
 
 type SideNavigationItem = {
   name: string;
@@ -86,9 +86,29 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     { name: 'Lists', to: './lists', icon: List },
   ].filter(Boolean) as SideNavigationItem[];
 
-  const commandGroups: SearchInputGroup[] = [
+  const commandGroups: SearchInputGroups[] = [
     {
-      title: 'Navigation',
+      title: 'Search',
+      items: [
+        {
+          title: 'Movies',
+          page: 'movies',
+          onSelect: () => {},
+        },
+        {
+          title: 'TV Shows',
+          page: 'tv-shows',
+          onSelect: () => {},
+        },
+        {
+          title: 'People',
+          page: 'people',
+          onSelect: () => {},
+        },
+      ],
+    },
+    {
+      title: 'Naviagtion',
       items: [
         {
           title: 'Dashboard',
