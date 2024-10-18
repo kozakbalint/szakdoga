@@ -17,7 +17,7 @@ services:
       --env=$API_ENV \
       --jwt-secret=$JWT_SECRET \
       --db-dsn=$DB_DSN \ 
-      --cors-trusted-origins=$CORS_TRUSTED_ORIGINS"
+      --cors-trusted-origins='$CORS_TRUSTED_ORIGINS'"
     ports:
       - "$API_PORT:$API_PORT"
     volumes:
