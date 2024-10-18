@@ -118,18 +118,21 @@ export const SearchInput = ({ className, groups }: SearchInputProps) => {
 
           {page === 'movies' && (
             <CommandList>
+              //TODO: Fetch data from API
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
           )}
           {page === 'tv-shows' && (
             <CommandList>
+              //TODO: Fetch data from API
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
           )}
           {page === 'people' && (
             <CommandList>
+              //TODO: Fetch data from API
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
