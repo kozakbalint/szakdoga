@@ -26,7 +26,7 @@ export function NavMain({
       <SidebarGroup>
         <SidebarGroupLabel>Navigation</SidebarGroupLabel>
         {items.map((item) => (
-          <SidebarMenuItem>
+          <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
               onClick={() => navigate(item.url)}
               tooltip={item.title}
