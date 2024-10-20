@@ -59,7 +59,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
           path: 'settings',
           lazy: async () => {
-            const { SettingsRoute } = await import('./routes/app/settings.tsx');
+            const { SettingsRoute } = await import('./routes/app/settings');
             return { Component: SettingsRoute };
           },
         },
