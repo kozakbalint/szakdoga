@@ -1,17 +1,6 @@
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from 'lucide-react';
+import { BadgeCheck, ChevronsUpDown, LogOut, Settings } from 'lucide-react';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,17 +16,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useLogout } from '@/lib/auth';
+import { User } from '@/types/api';
+import { useNavigate } from 'react-router-dom';
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
+  const logout = useLogout();
+  const navigate = useNavigate();
 
   return (
     <SidebarMenu>
@@ -49,8 +35,9 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {user.name[0].toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
@@ -68,8 +55,9 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {user.name[0].toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
@@ -77,32 +65,28 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate('./profile');
+                }}
+              >
                 <BadgeCheck />
-                Account
+                <p className="px-2">Account</p>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate('./settings');
+                }}
+              >
+                <Settings />
+                <p className="px-2">Settings</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
+            <DropdownMenuItem onClick={() => logout.mutate({})}>
+              <LogOut className="fill-secondary" />
+              <p className="px-2">Log out</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -55,16 +55,14 @@ export const SearchInput = ({ className, groups }: SearchInputProps) => {
   };
   return (
     <>
-      <div
-        className={cn('flex flex-grow justify-center', className)}
-        onClick={handleInputClick}
-      >
+      <div className={cn('flex flex-grow justify-center', className)}>
         <Command className="sm:max-w-sm md:max-w-md lg:max-w-lg ">
           <Button
             variant={'outlineShortCut'}
             shortCut={'⌘K'}
             icon={<Search />}
             size={'sm'}
+            onClick={handleInputClick}
           >
             Search...
           </Button>

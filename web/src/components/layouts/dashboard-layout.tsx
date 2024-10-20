@@ -3,7 +3,7 @@ import { useLogout } from '@/lib/auth';
 
 import { SearchInput, SearchInputGroups } from '../ui/cmdk';
 import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
-import { AppSidebar } from '../app-sidebar';
+import { AppSidebar } from '../ui/nav/app-sidebar';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const logout = useLogout();
