@@ -56,11 +56,16 @@ export const SearchInput = ({ className, groups }: SearchInputProps) => {
   return (
     <>
       <div
-        className={cn('justify-center', className)}
+        className={cn('flex flex-grow justify-center', className)}
         onClick={handleInputClick}
       >
-        <Command className="lg:max-w-lg">
-          <Button variant={'outlineShortCut'} shortCut={'⌘K'} icon={<Search />}>
+        <Command className="sm:max-w-sm md:max-w-md lg:max-w-lg ">
+          <Button
+            variant={'outlineShortCut'}
+            shortCut={'⌘K'}
+            icon={<Search />}
+            size={'sm'}
+          >
             Search...
           </Button>
         </Command>
@@ -118,21 +123,21 @@ export const SearchInput = ({ className, groups }: SearchInputProps) => {
 
           {page === 'movies' && (
             <CommandList>
-              //TODO: Fetch data from API
+              {/* //TODO: Fetch data from API */}
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
           )}
           {page === 'tv-shows' && (
             <CommandList>
-              //TODO: Fetch data from API
+              {/* //TODO: Fetch data from API */}
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
           )}
           {page === 'people' && (
             <CommandList>
-              //TODO: Fetch data from API
+              {/* //TODO: Fetch data from API */}
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
