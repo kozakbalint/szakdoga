@@ -12,7 +12,7 @@ import {
 } from './command';
 import { Search } from 'lucide-react';
 import React from 'react';
-import { Button } from '../button';
+import { Button } from '@/components/ui/button';
 
 export type SearchInputProps = {
   className?: string;
@@ -55,12 +55,15 @@ export const SearchInput = ({ className, groups }: SearchInputProps) => {
   };
   return (
     <>
-      <div
-        className={cn('justify-center', className)}
-        onClick={handleInputClick}
-      >
-        <Command className="lg:max-w-lg">
-          <Button variant={'outlineShortCut'} shortCut={'⌘K'} icon={<Search />}>
+      <div className={cn('flex flex-grow justify-center', className)}>
+        <Command className="sm:max-w-sm md:max-w-md lg:max-w-lg ">
+          <Button
+            variant={'outlineShortCut'}
+            shortCut={'⌘K'}
+            icon={<Search />}
+            size={'sm'}
+            onClick={handleInputClick}
+          >
             Search...
           </Button>
         </Command>
@@ -118,21 +121,21 @@ export const SearchInput = ({ className, groups }: SearchInputProps) => {
 
           {page === 'movies' && (
             <CommandList>
-              //TODO: Fetch data from API
+              {/* //TODO: Fetch data from API */}
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
           )}
           {page === 'tv-shows' && (
             <CommandList>
-              //TODO: Fetch data from API
+              {/* //TODO: Fetch data from API */}
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
           )}
           {page === 'people' && (
             <CommandList>
-              //TODO: Fetch data from API
+              {/* //TODO: Fetch data from API */}
               <CommandSeparator />
               <CommandEmpty>No results found.</CommandEmpty>
             </CommandList>
