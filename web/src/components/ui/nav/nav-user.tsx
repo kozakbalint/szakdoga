@@ -19,16 +19,28 @@ import {
 import { useLogout } from '@/lib/auth';
 import { User } from '@/types/api';
 import { useNavigate } from 'react-router-dom';
+import { ThemeModeToggle } from '../theme';
+import { useCallback, useEffect, useState } from 'react';
 
 export function NavUser({ user }: { user: User }) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isMobile } = useSidebar();
   const logout = useLogout();
   const navigate = useNavigate();
+  const handleDropdownClose = useCallback(() => {
+    if (!isDropdownOpen) {
+      document.body.removeAttribute('style'); // Removes pointer-events: none
+    }
+  }, [isDropdownOpen]);
+
+  useEffect(() => {
+    handleDropdownClose();
+  }, [isDropdownOpen, handleDropdownClose]);
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
@@ -63,6 +75,7 @@ export function NavUser({ user }: { user: User }) {
                   <span className="truncate font-semibold">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
+                <ThemeModeToggle />
               </div>
             </DropdownMenuLabel>
             <DropdownMenuGroup>
@@ -85,7 +98,7 @@ export function NavUser({ user }: { user: User }) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => logout.mutate({})}>
-              <LogOut className="fill-secondary" />
+              <LogOut />
               <p className="px-2">Log out</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
