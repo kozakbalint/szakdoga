@@ -1,6 +1,6 @@
 import { BadgeCheck, ChevronsUpDown, LogOut, Settings } from 'lucide-react';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,

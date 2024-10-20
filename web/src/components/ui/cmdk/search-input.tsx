@@ -12,7 +12,7 @@ import {
 } from './command';
 import { Search } from 'lucide-react';
 import React from 'react';
-import { Button } from '../button';
+import { Button } from '@/components/ui/button';
 
 export type SearchInputProps = {
   className?: string;

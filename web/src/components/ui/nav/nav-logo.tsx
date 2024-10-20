@@ -3,7 +3,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { Link } from '../link';
+import { Link } from '@/components/ui/link';
 
 export function NavLogo() {
   const { open } = useSidebar();

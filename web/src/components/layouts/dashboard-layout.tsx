@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLogout } from '@/lib/auth';
 
 import { SearchInput, SearchInputGroups } from '../ui/cmdk';
-import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
-import { AppSidebar } from '../ui/nav/app-sidebar';
+import { SidebarProvider, SidebarTrigger, AppSidebar } from '../ui/sidebar';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const logout = useLogout();

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { SquareMenu, List } from 'lucide-react';
 
-import { NavMain } from '@/components/ui/nav/nav-main';
-import { NavUser } from '@/components/ui/nav/nav-user';
-import { NavLogo } from '@/components/ui/nav/nav-logo';
+import { NavMain, NavUser, NavLogo } from '@/components/ui/nav';
 import {
   Sidebar,
   SidebarContent,
