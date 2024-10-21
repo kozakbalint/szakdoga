@@ -12,11 +12,11 @@ export const LandingRoute = () => {
   return (
     <>
       <Head title="Welcome to ScreenLog" />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-        <h1 className="text-3xl font-bold text-gray-900">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background px-4">
+        <h1 className="text-3xl font-bold text-primary">
           Welcome to ScreenLog
         </h1>
-        <p className="mt-4 text-lg sm:text-sm text-center text-gray-600">
+        <p className="mt-4 text-lg sm:text-sm text-center text-primary">
           A simple way to log your watched movies and TV shows.
         </p>
         <div className="flex mt-8 space-x-4">
@@ -30,7 +30,7 @@ export const LandingRoute = () => {
             Go to Dashboard
           </Button>
           <Button
-            variant={'outline'}
+            variant={'secondary'}
             onClick={() =>
               user ? navigate('./app') : navigate('./auth/register')
             }
