@@ -27,12 +27,9 @@ export const AuthLayout = ({ children, title }: LayoutProps) => {
   return (
     <>
       <Head title={title} />
-      <div className="flex min-h-screen flex-col justify-center bg-gray-50 sm:px-6 lg:px-8">
+      <div className="flex min-h-screen flex-col justify-center bg-background sm:px-6 lg:px-8">
         <div className="pt-6">
-          <Link
-            to="/"
-            className="text-primary hover:text-slate-700 text-3xl p-6"
-          >
+          <Link to="/" className="text-primary text-3xl p-6">
             Screenlog
           </Link>
         </div>
