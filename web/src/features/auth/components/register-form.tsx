@@ -43,7 +43,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
 
   return (
     <div>
-      <Card className="mx-auto max-w-sm">
+      <Card className="mx-auto max-w-sm bg-primary-foreground">
         <CardHeader>
           <CardTitle>Register</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -95,6 +95,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                       isLoading={registering.isPending}
                       type="submit"
                       className="w-full"
+                      variant={'default'}
                     >
                       Register
                     </Button>

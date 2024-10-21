@@ -1,10 +1,13 @@
+import { ThemeProvider } from '@/components/ui/theme';
 import { AppProvider } from './provider';
 import { AppRouter } from './router';
 
 export const App = () => {
   return (
     <AppProvider>
-      <AppRouter />
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <AppRouter />
+      </ThemeProvider>
     </AppProvider>
   );
 };

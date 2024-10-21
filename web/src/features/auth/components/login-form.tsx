@@ -41,7 +41,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
   return (
     <div>
-      <Card className="mx-auto max-w-sm">
+      <Card className="mx-auto max-w-sm bg-primary-foreground">
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -89,6 +89,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                       isLoading={login.isPending}
                       type="submit"
                       className="w-full"
+                      variant={'default'}
                     >
                       Log in
                     </Button>

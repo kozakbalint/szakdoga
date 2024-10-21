@@ -3,6 +3,7 @@ import { useLogout } from '@/lib/auth';
 
 import { SearchInput, SearchInputGroups } from '../ui/cmdk';
 import { SidebarProvider, SidebarTrigger, AppSidebar } from '../ui/sidebar';
+import { ThemeModeToggle } from '../ui/theme';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const logout = useLogout();
@@ -71,6 +72,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="w-max flex-grow flex justify-center h-max">
             <SearchInput groups={commandGroups} />
+          </div>
+          <div>
+            <ThemeModeToggle />
           </div>
         </header>
         <main className="grid flex-grow flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">

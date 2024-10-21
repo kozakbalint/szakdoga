@@ -12,8 +12,8 @@ export function NavLogo() {
     <SidebarMenu>
       <SidebarMenuItem>
         <Link
-          className="text-2xl text-center transition-[width] ease-linear duration-500 font-semibold"
-          to="./dashboard"
+          className="text-2xl text-center transition-[width] ease-linear duration-500 font-semibold text-primary"
+          to="."
         >
           {open ? 'ScreenLog' : 'SL'}
         </Link>
