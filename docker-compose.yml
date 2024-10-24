@@ -9,6 +9,7 @@ services:
       - API_ENV=$API_ENV
       - DB_DSN=$DB_DSN
       - JWT_SECRET=$JWT_SECRET
+      - TMDB_API_KEY=$TMDB_API_KEY
       - DOMAIN=$DOMAIN
       - CORS_TRUSTED_ORIGINS=$CORS_TRUSTED_ORIGINS
     command: >
@@ -16,7 +17,8 @@ services:
       "/bin/server \
       --env=$API_ENV \
       --jwt-secret=$JWT_SECRET \
-      --db-dsn=$DB_DSN \ 
+      --tmdb-api-key=$TMDB_API_KEY \
+      --db-dsn=$DB_DSN \
       --cors-trusted-origins='$CORS_TRUSTED_ORIGINS'"
     ports:
       - "$API_PORT:$API_PORT"
