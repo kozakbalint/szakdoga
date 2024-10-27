@@ -6,7 +6,7 @@ import { SearchTvsResponse } from '@/types/api';
 
 export const searchTV = (q: string): Promise<SearchTvsResponse> => {
   if (!q) {
-    return Promise.reject();
+    return Promise.resolve({ tv: [] });
   }
   q = q.trim();
   const url = apiClient.appendQueryParams('/search/tv', { q });

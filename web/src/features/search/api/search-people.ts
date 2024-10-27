@@ -6,7 +6,7 @@ import { SearchPeopleResponse } from '@/types/api';
 
 export const searchPeople = (q: string): Promise<SearchPeopleResponse> => {
   if (!q) {
-    return Promise.reject();
+    return Promise.resolve({ people: [] });
   }
   q = q.trim();
   const url = apiClient.appendQueryParams('/search/people', { q });
