@@ -12,6 +12,19 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+func (app *application) readQueryParams(r *http.Request) (map[string]string, error) {
+	queryParams := make(map[string]string)
+
+	query := r.URL.Query()
+	for key, value := range query {
+		if len(value) > 0 {
+			queryParams[key] = value[0]
+		}
+	}
+
+	return queryParams, nil
+}
+
 func (app *application) readIDParam(r *http.Request) (int64, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
