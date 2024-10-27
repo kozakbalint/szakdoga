@@ -11,7 +11,7 @@ const getUser = async (): Promise<User | void | null> => {
   if (!jwt) {
     return null;
   }
-  const response = (await apiClient.getWithToken('/users/me', jwt)) as {
+  const response = (await apiClient.getWithToken('/users/me')) as {
     user: User;
   };
 

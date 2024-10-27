@@ -36,7 +36,8 @@ class APIClient {
     });
   }
 
-  getWithToken(url: string, token: string) {
+  getWithToken(url: string) {
+    const token = localStorage.getItem('jwt');
     return this.request(url, {
       method: 'GET',
       headers: {
@@ -54,6 +55,11 @@ class APIClient {
       },
       body: JSON.stringify(data),
     });
+  }
+
+  appendQueryParams(url: string, params: Record<string, string>) {
+    const searchParams = new URLSearchParams(params).toString();
+    return `${url}?${searchParams}`;
   }
 }
 
