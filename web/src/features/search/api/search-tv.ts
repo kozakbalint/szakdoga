@@ -8,6 +8,7 @@ export const searchTV = (q: string): Promise<SearchTvsResponse> => {
   if (!q) {
     return Promise.reject();
   }
+  q = q.trim();
   const url = apiClient.appendQueryParams('/search/tv', { q });
   return apiClient.get(url) as Promise<SearchTvsResponse>;
 };

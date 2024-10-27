@@ -8,6 +8,7 @@ export const searchPeople = (q: string): Promise<SearchPeopleResponse> => {
   if (!q) {
     return Promise.reject();
   }
+  q = q.trim();
   const url = apiClient.appendQueryParams('/search/people', { q });
   return apiClient.get(url) as Promise<SearchPeopleResponse>;
 };

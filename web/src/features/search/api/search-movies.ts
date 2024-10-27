@@ -8,6 +8,7 @@ export const searchMovies = (q: string): Promise<SearchMoviesResponse> => {
   if (!q) {
     return Promise.reject();
   }
+  q = q.trim();
   const url = apiClient.appendQueryParams('/search/movies', { q });
   return apiClient.get(url) as Promise<SearchMoviesResponse>;
 };
