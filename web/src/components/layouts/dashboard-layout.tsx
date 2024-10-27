@@ -1,67 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import { useLogout } from '@/lib/auth';
-
-import { SearchInput, SearchInputGroups } from '../ui/cmdk';
+import { SearchInput } from '@/features/search/components/search-input';
 import { SidebarProvider, SidebarTrigger, AppSidebar } from '../ui/sidebar';
 import { ThemeModeToggle } from '../ui/theme';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const logout = useLogout();
-  const navigate = useNavigate();
-
-  const commandGroups: SearchInputGroups[] = [
-    {
-      title: 'Search',
-      items: [
-        {
-          title: 'Movies',
-          page: 'movies',
-          onSelect: () => {},
-        },
-        {
-          title: 'TV Shows',
-          page: 'tv-shows',
-          onSelect: () => {},
-        },
-        {
-          title: 'People',
-          page: 'people',
-          onSelect: () => {},
-        },
-      ],
-    },
-    {
-      title: 'Naviagtion',
-      items: [
-        {
-          title: 'Dashboard',
-          onSelect: () => navigate('.'),
-        },
-        {
-          title: 'Lists',
-          onSelect: () => navigate('./lists'),
-        },
-      ],
-    },
-    {
-      title: 'User',
-      items: [
-        {
-          title: 'Profile',
-          onSelect: () => navigate('./profile'),
-        },
-        {
-          title: 'Settings',
-          onSelect: () => {},
-        },
-        {
-          title: 'Sign Out',
-          onSelect: () => logout.mutate({}),
-        },
-      ],
-    },
-  ];
-
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -71,7 +12,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <SidebarTrigger />
           </div>
           <div className="w-max flex-grow flex justify-center h-max">
-            <SearchInput groups={commandGroups} />
+            <SearchInput />
           </div>
           <div>
             <ThemeModeToggle />
