@@ -26,7 +26,10 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-type CommandDialogProps = DialogProps;
+type CommandDialogProps = DialogProps & {
+  shouldFilter?: boolean;
+  filter?: (value: string, search: string, keywords?: string[]) => number;
+};
 
 const CommandDialog = ({
   children,
