@@ -1,4 +1,5 @@
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
+import { AspectRatio } from '@/components/ui/aspectratio';
 import { CommandLoading } from 'cmdk';
 import { SearchPersonResponse } from '@/types/api';
 import { useSearchPeople } from '../api/search-people';
@@ -36,9 +37,29 @@ export const SearchPagePeople = ({
               onSelect(person);
             }}
           >
-            <div className="flex gap-2 items-start align-middle">
-              <p>{person.name}</p>
-              <p className="text-muted text-sm">{person.popularity}</p>
+            <div className="flex flex-grow justify-between">
+              <div className="flex gap-4 items-start align-middle">
+                <div className="w-12">
+                  {person.profile_url == '' ? (
+                    <div className="w-full h-full bg-gray-300 rounded-md"></div>
+                  ) : (
+                    <AspectRatio ratio={2 / 3}>
+                      <img
+                        src={person.profile_url}
+                        alt={person.name}
+                        className="w-full h-full object-cover rounded-md"
+                      />
+                    </AspectRatio>
+                  )}
+                </div>
+                <div className="flex flex-col align-middle">
+                  <p className="font-medium">{person.name}</p>
+                </div>
+              </div>
+              <div className="flex flex-col align-middle">
+                <p className="text-sm font-thin">Popularity:</p>
+                <p className="text-sm font-medium">{person.popularity}</p>
+              </div>
             </div>
           </CommandItem>
         ))}
