@@ -52,11 +52,15 @@ func (app *application) searchMoviesHandler(w http.ResponseWriter, r *http.Reque
 
 	var response []movieSearchResponse
 	for _, movie := range movies.Results {
+		poster_url := ""
+		if movie.PosterPath != "" {
+			poster_url = tmdb.GetImageURL(movie.PosterPath, "w92")
+		}
 		response = append(response, movieSearchResponse{
 			ID:          movie.ID,
 			Title:       movie.Title,
 			Overview:    movie.Overview,
-			PosterUrl:   tmdb.GetImageURL(movie.PosterPath, "w92"),
+			PosterUrl:   poster_url,
 			ReleaseDate: movie.ReleaseDate,
 			Popularity:  movie.Popularity,
 		})
@@ -88,10 +92,14 @@ func (app *application) searchPeopleHandler(w http.ResponseWriter, r *http.Reque
 
 	var response []personSearchResponse
 	for _, person := range people.Results {
+		profile_url := ""
+		if person.ProfilePath != "" {
+			profile_url = tmdb.GetImageURL(person.ProfilePath, "w185")
+		}
 		response = append(response, personSearchResponse{
 			ID:         person.ID,
 			Name:       person.Name,
-			ProfileUrl: tmdb.GetImageURL(person.ProfilePath, "w185"),
+			ProfileUrl: profile_url,
 			Popularity: person.Popularity,
 		})
 	}
@@ -122,11 +130,16 @@ func (app *application) searchTvHandler(w http.ResponseWriter, r *http.Request) 
 
 	var response []tvSearchResponse
 	for _, show := range tv.Results {
+		posterUrl := ""
+		if show.PosterPath != "" {
+			posterUrl = tmdb.GetImageURL(show.PosterPath, "w92")
+		}
+
 		response = append(response, tvSearchResponse{
 			ID:           show.ID,
 			Name:         show.Name,
 			Overview:     show.Overview,
-			PosterUrl:    tmdb.GetImageURL(show.PosterPath, "w92"),
+			PosterUrl:    posterUrl,
 			FirstAirDate: show.FirstAirDate,
 			Popularity:   show.Popularity,
 		})
