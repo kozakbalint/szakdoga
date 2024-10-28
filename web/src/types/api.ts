@@ -20,6 +20,7 @@ export type SearchMovieResponse = {
   id: number;
   title: string;
   overview: string;
+  poster_url: string;
   release_date: string;
   popularity: number;
 };
@@ -32,6 +33,7 @@ export type SearchTvResponse = {
   id: number;
   name: string;
   overview: string;
+  poster_url: string;
   first_air_date: string;
   popularity: number;
 };
@@ -43,6 +45,7 @@ export type SearchTvsResponse = {
 export type SearchPersonResponse = {
   id: number;
   name: string;
+  profile_url: string;
   popularity: number;
 };
 
