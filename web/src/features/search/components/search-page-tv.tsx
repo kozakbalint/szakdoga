@@ -1,8 +1,11 @@
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
 import { AspectRatio } from '@/components/ui/aspectratio';
-import { CommandLoading } from 'cmdk';
+import { CommandLoading, useCommandState } from 'cmdk';
 import { SearchTvResponse } from '@/types/api';
 import { useSearchTV } from '../api/search-tv';
+import { getTvByIdQueryOptions } from '@/features/tv/api/get-tv-by-id';
+import { useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 
 export interface SearchPageTVProps {
   searchTerm: string;
@@ -10,6 +13,19 @@ export interface SearchPageTVProps {
 }
 
 export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
+  const queryClient = useQueryClient();
+
+  const currentItem = useCommandState((state) => state.value);
+  React.useEffect(() => {
+    const prefetchTv = (id: string) => {
+      queryClient.prefetchQuery(getTvByIdQueryOptions({ id }));
+    };
+    if (currentItem) {
+      const id = currentItem.split('-')[1];
+      prefetchTv(id);
+    }
+  }, [currentItem, queryClient]);
+
   const searchTVQuery = useSearchTV({ q: searchTerm });
   const tv = searchTVQuery.data?.tv;
 
@@ -29,7 +45,7 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
         {tv.map((tv) => (
           <CommandItem
             key={tv.id + tv.name}
-            value={tv.name + tv.id}
+            value={tv.name + '-' + tv.id}
             onSelect={() => {
               onSelect(tv);
             }}
