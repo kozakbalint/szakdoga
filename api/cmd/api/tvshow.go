@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/http"
+
+	tmdb "github.com/cyruzin/golang-tmdb"
 )
 
 type tvResponse struct {
@@ -9,6 +11,7 @@ type tvResponse struct {
 	Name         string  `json:"name"`
 	Overview     string  `json:"overview"`
 	FirstAirDate string  `json:"first_air_date"`
+	PosterPath   string  `json:"poster_path"`
 	Popularity   float32 `json:"popularity"`
 }
 
@@ -30,6 +33,7 @@ func (app *application) getTvByIdHandler(w http.ResponseWriter, r *http.Request)
 		Name:         tv.Name,
 		Overview:     tv.Overview,
 		FirstAirDate: tv.FirstAirDate,
+		PosterPath:   tmdb.GetImageURL(tv.PosterPath, "w185"),
 		Popularity:   tv.Popularity,
 	}
 

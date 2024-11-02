@@ -9,6 +9,8 @@ import (
 type personResponse struct {
 	ID         int64   `json:"id"`
 	Name       string  `json:"name"`
+	Biography  string  `json:"biography"`
+	Birthday   string  `json:"birthday"`
 	ProfileUrl string  `json:"profile_url"`
 	Popularity float32 `json:"popularity"`
 }
@@ -29,6 +31,8 @@ func (app *application) getPersonByIdHandler(w http.ResponseWriter, r *http.Requ
 	response := personResponse{
 		ID:         person.ID,
 		Name:       person.Name,
+		Biography:  person.Biography,
+		Birthday:   person.Birthday,
 		ProfileUrl: tmdb.GetImageURL(person.ProfilePath, "w185"),
 		Popularity: person.Popularity,
 	}
