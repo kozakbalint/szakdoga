@@ -1,8 +1,11 @@
-import { CommandItem, CommandList } from '@/components/ui/cmdk';
 import { AspectRatio } from '@/components/ui/aspectratio';
-import { CommandLoading } from 'cmdk';
+import { CommandItem, CommandList } from '@/components/ui/cmdk';
+import { getMovieByIdQueryOptions } from '@/features/movies/api/get-movie-by-id';
 import { SearchMovieResponse } from '@/types/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { CommandLoading, useCommandState } from 'cmdk';
 import { useSearchMovies } from '../api/search-movies';
+import React from 'react';
 
 export interface SearchPageMoviesProps {
   searchTerm: string;
@@ -13,6 +16,19 @@ export const SearchPageMovies = ({
   searchTerm,
   onSelect,
 }: SearchPageMoviesProps) => {
+  const queryClient = useQueryClient();
+
+  const currentItem = useCommandState((state) => state.value);
+  React.useEffect(() => {
+    const prefetchMovie = (id: string) => {
+      queryClient.prefetchQuery(getMovieByIdQueryOptions({ id }));
+    };
+    if (currentItem) {
+      const id = currentItem.split('-')[1];
+      prefetchMovie(id);
+    }
+  }, [currentItem, queryClient]);
+
   const searchMoviesQuery = useSearchMovies({ q: searchTerm });
   const movies = searchMoviesQuery.data?.movies;
 
@@ -32,7 +48,7 @@ export const SearchPageMovies = ({
         {movies.map((movie) => (
           <CommandItem
             key={movie.id + movie.title}
-            value={movie.title + movie.id}
+            value={movie.title + '-' + movie.id}
             onSelect={() => {
               onSelect(movie);
             }}

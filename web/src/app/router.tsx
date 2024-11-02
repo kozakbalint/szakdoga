@@ -9,33 +9,34 @@ import {
 import { ProtectedRoute } from '@/lib/auth';
 
 import { AppRoot } from './routes/app/root';
+import { paths } from '@/config/paths';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
-      path: '/',
+      path: paths.home.path,
       lazy: async () => {
         const { LandingRoute } = await import('./routes/landing');
         return { Component: LandingRoute };
       },
     },
     {
-      path: '/auth/register',
+      path: paths.auth.register.path,
       lazy: async () => {
         const { RegisterRoute } = await import('./routes/auth/register');
         return { Component: RegisterRoute };
       },
     },
     {
-      path: '/auth/login',
+      path: paths.auth.login.path,
       lazy: async () => {
         const { LoginRoute } = await import('./routes/auth/login');
         return { Component: LoginRoute };
       },
     },
     {
-      path: '/app',
+      path: paths.app.root.path,
       element: (
         <ProtectedRoute>
           <AppRoot />
@@ -43,28 +44,53 @@ export const createAppRouter = (queryClient: QueryClient) =>
       ),
       children: [
         {
-          path: '',
+          path: paths.app.dashboard.path,
           lazy: async () => {
             const { DashboardRoute } = await import('./routes/app/dashboard');
             return { Component: DashboardRoute };
           },
         },
         {
-          path: 'profile',
+          path: paths.app.movie.path,
+          lazy: async () => {
+            const { MovieRoute, movieLoader } = await import(
+              './routes/app/movies/movie'
+            );
+            return { Component: MovieRoute, loader: movieLoader };
+          },
+        },
+        {
+          path: paths.app.tv.path,
+          lazy: async () => {
+            const { TvRoute, tvLoader } = await import('./routes/app/tv/tv');
+            return { Component: TvRoute, loader: tvLoader };
+          },
+        },
+        {
+          path: paths.app.person.path,
+          lazy: async () => {
+            const { PersonRoute, personLoader } = await import(
+              './routes/app/people/person'
+            );
+            return { Component: PersonRoute, loader: personLoader };
+          },
+        },
+        {
+          path: paths.app.profile.path,
           lazy: async () => {
             const { ProfileRoute } = await import('./routes/app/profile');
             return { Component: ProfileRoute };
           },
         },
         {
-          path: 'settings',
+          path: paths.app.settings.path,
           lazy: async () => {
             const { SettingsRoute } = await import('./routes/app/settings');
             return { Component: SettingsRoute };
           },
         },
         {
-          path: 'lists',
+          path: paths.app.lists.path,
           lazy: async () => {
             const { ListsRoute } = await import('./routes/app/lists');
             return { Component: ListsRoute };

@@ -1,8 +1,11 @@
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
 import { AspectRatio } from '@/components/ui/aspectratio';
-import { CommandLoading } from 'cmdk';
+import { CommandLoading, useCommandState } from 'cmdk';
 import { SearchPersonResponse } from '@/types/api';
 import { useSearchPeople } from '../api/search-people';
+import { getPersonByIdQueryOptions } from '@/features/people/api/get-person-by-id';
+import { useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 
 export interface SearchPagePeopleProps {
   searchTerm: string;
@@ -13,6 +16,19 @@ export const SearchPagePeople = ({
   searchTerm,
   onSelect,
 }: SearchPagePeopleProps) => {
+  const queryClient = useQueryClient();
+
+  const currentItem = useCommandState((state) => state.value);
+  React.useEffect(() => {
+    const prefetchPerson = (id: string) => {
+      queryClient.prefetchQuery(getPersonByIdQueryOptions({ id }));
+    };
+    if (currentItem) {
+      const id = currentItem.split('-')[1];
+      prefetchPerson(id);
+    }
+  }, [currentItem, queryClient]);
+
   const searchPeopleQuery = useSearchPeople({ q: searchTerm });
   const people = searchPeopleQuery.data?.people;
 
@@ -32,7 +48,7 @@ export const SearchPagePeople = ({
         {people.map((person) => (
           <CommandItem
             key={person.id + person.name}
-            value={person.name + person.id}
+            value={person.name + '-' + person.id}
             onSelect={() => {
               onSelect(person);
             }}

@@ -202,7 +202,7 @@ export const SearchInput = () => {
           <SearchPageMovies
             searchTerm={debouncedSearch}
             onSelect={(movie) => {
-              console.log(movie);
+              navigate(`./movies/${movie.id}`);
               setOpen(false);
             }}
           />
@@ -211,7 +211,7 @@ export const SearchInput = () => {
           <SearchPageTV
             searchTerm={debouncedSearch}
             onSelect={(tv) => {
-              console.log(tv);
+              navigate(`./tv/${tv.id}`);
               setOpen(false);
             }}
           />
@@ -220,7 +220,7 @@ export const SearchInput = () => {
           <SearchPagePeople
             searchTerm={debouncedSearch}
             onSelect={(person) => {
-              console.log(person);
+              navigate(`./people/${person.id}`);
               setOpen(false);
             }}
           />

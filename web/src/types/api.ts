@@ -52,3 +52,36 @@ export type SearchPersonResponse = {
 export type SearchPeopleResponse = {
   people: SearchPersonResponse[] | null;
 };
+
+export type GetMovieResponse = {
+  movie: {
+    id: number;
+    title: string;
+    overview: string;
+    release_date: string;
+    poster_url: string;
+    popularity: number;
+  } | null;
+};
+
+export type GetTvResponse = {
+  tv: {
+    id: number;
+    name: string;
+    overview: string;
+    first_air_date: string;
+    poster_url: string;
+    popularity: number;
+  } | null;
+};
+
+export type GetPersonResponse = {
+  person: {
+    id: number;
+    name: string;
+    biography: string;
+    birthday: string;
+    profile_url: string;
+    popularity: number;
+  } | null;
+};
