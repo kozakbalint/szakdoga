@@ -11,7 +11,7 @@ type movieResponse struct {
 	Title       string  `json:"title"`
 	Overview    string  `json:"overview"`
 	ReleaseDate string  `json:"release_date"`
-	PosterPath  string  `json:"poster_path"`
+	PosterUrl   string  `json:"poster_url"`
 	Popularity  float32 `json:"popularity"`
 }
 
@@ -28,12 +28,17 @@ func (app *application) getMovieByIdHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	poster_url := ""
+	if movie.PosterPath != "" {
+		poster_url = tmdb.GetImageURL(movie.PosterPath, "w185")
+	}
+
 	response := movieResponse{
 		ID:          movie.ID,
 		Title:       movie.Title,
 		Overview:    movie.Overview,
 		ReleaseDate: movie.ReleaseDate,
-		PosterPath:  tmdb.GetImageURL(movie.PosterPath, "w185"),
+		PosterUrl:   poster_url,
 		Popularity:  movie.Popularity,
 	}
 

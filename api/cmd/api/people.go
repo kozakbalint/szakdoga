@@ -28,12 +28,17 @@ func (app *application) getPersonByIdHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+	profile_url := ""
+	if person.ProfilePath != "" {
+		profile_url = tmdb.GetImageURL(person.ProfilePath, "w185")
+	}
+
 	response := personResponse{
 		ID:         person.ID,
 		Name:       person.Name,
 		Biography:  person.Biography,
 		Birthday:   person.Birthday,
-		ProfileUrl: tmdb.GetImageURL(person.ProfilePath, "w185"),
+		ProfileUrl: profile_url,
 		Popularity: person.Popularity,
 	}
 

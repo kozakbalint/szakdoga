@@ -11,7 +11,7 @@ type tvResponse struct {
 	Name         string  `json:"name"`
 	Overview     string  `json:"overview"`
 	FirstAirDate string  `json:"first_air_date"`
-	PosterPath   string  `json:"poster_path"`
+	PosterUrl    string  `json:"poster_url"`
 	Popularity   float32 `json:"popularity"`
 }
 
@@ -28,12 +28,17 @@ func (app *application) getTvByIdHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	poster_url := ""
+	if tv.PosterPath != "" {
+		poster_url = tmdb.GetImageURL(tv.PosterPath, "w185")
+	}
+
 	response := tvResponse{
 		ID:           tv.ID,
 		Name:         tv.Name,
 		Overview:     tv.Overview,
 		FirstAirDate: tv.FirstAirDate,
-		PosterPath:   tmdb.GetImageURL(tv.PosterPath, "w185"),
+		PosterUrl:    poster_url,
 		Popularity:   tv.Popularity,
 	}
 
