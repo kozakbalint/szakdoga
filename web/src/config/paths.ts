@@ -38,6 +38,14 @@ export const paths = {
       path: '/app/people/:personId',
       getHref: (id: string) => `/app/people/${id}`,
     },
+    categoris: {
+      path: '/app/categories/:categoryId',
+      getHref: (id: string) => `/app/categories/${id}`,
+    },
+    cast: {
+      path: '/app/cast/:movieId',
+      getHref: (id: string) => `/app/cast/${id}`,
+    },
     profile: {
       path: '/app/profile',
       getHref: () => '/app/profile',
