@@ -95,6 +95,24 @@ export type GetTvResponse = {
   } | null;
 };
 
+export type GetTvCastResponse = {
+  cast:
+    | {
+        id: number;
+        name: string;
+        roles: Role[];
+        profile_url: string;
+        total_episode_count: number;
+        popularity: number;
+      }[]
+    | null;
+};
+
+export type Role = {
+  character: string;
+  episode_count: number;
+};
+
 export type GetPersonResponse = {
   person: {
     id: number;
