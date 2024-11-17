@@ -37,7 +37,7 @@ export const TvRoute = () => {
 
   return (
     <>
-      <ContentLayout title={tv.name}>
+      <ContentLayout head={tv.name}>
         <div className="flex gap-4">
           <div className="w-1/3">
             <AspectRatio ratio={2 / 3}>

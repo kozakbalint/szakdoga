@@ -1,5 +1,9 @@
 import { ContentLayout } from '@/components/layouts';
 
 export const SettingsRoute = () => {
-  return <ContentLayout title="Settings">Settings</ContentLayout>;
+  return (
+    <ContentLayout title="Settings" head="Settings">
+      Settings
+    </ContentLayout>
+  );
 };

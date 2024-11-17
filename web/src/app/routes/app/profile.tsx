@@ -9,7 +9,7 @@ export const ProfileRoute = () => {
     : 'N/A';
   return (
     <div>
-      <ContentLayout title="Profile">
+      <ContentLayout title="Profile" head="Profile">
         <h2 className="text-xl font-medium">Email</h2>
         <p className="font-mono">{user.data?.email}</p>
         <h2 className="text-xl font-medium">Name</h2>
