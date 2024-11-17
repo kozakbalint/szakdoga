@@ -85,9 +85,16 @@ export const createAppRouter = (queryClient: QueryClient) =>
           },
         },
         {
-          path: paths.app.cast.path,
+          path: paths.app.cast.movie.path,
           lazy: async () => {
-            const { CastRoute } = await import('./routes/app/cast/cast');
+            const { CastRoute } = await import('./routes/app/cast/movie/cast');
+            return { Component: CastRoute };
+          },
+        },
+        {
+          path: paths.app.cast.tv.path,
+          lazy: async () => {
+            const { CastRoute } = await import('./routes/app/cast/tv/cast');
             return { Component: CastRoute };
           },
         },

@@ -22,6 +22,7 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v1/movies/:id", app.getMovieByIdHandler)
 
 	router.HandlerFunc(http.MethodGet, "/v1/tv/:id", app.getTvByIdHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/tv/:id/seasons", app.getTvSeasonsHandler)
 
 	router.HandlerFunc(http.MethodGet, "/v1/people/:id", app.getPersonByIdHandler)
 

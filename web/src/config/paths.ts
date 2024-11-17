@@ -43,8 +43,14 @@ export const paths = {
       getHref: (id: string) => `/app/categories/${id}`,
     },
     cast: {
-      path: '/app/cast/:movieId',
-      getHref: (id: string) => `/app/cast/${id}`,
+      movie: {
+        path: '/app/cast/movies/:movieId',
+        getHref: (id: string) => `/app/cast/movies/${id}`,
+      },
+      tv: {
+        path: '/app/cast/tv/:tvId',
+        getHref: (id: string) => `/app/cast/tv/${id}`,
+      },
     },
     profile: {
       path: '/app/profile',

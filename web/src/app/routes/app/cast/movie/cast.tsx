@@ -36,7 +36,7 @@ export const CastRoute = () => {
                 />
                 <div className="flex flex-col gap-2">
                   <h2 className="text-xl font-bold">{actor.name}</h2>
-                  <p className="text-base">{actor.character}</p>
+                  <p className="text-base">Role: {actor.character}</p>
                 </div>
               </div>
             </Link>

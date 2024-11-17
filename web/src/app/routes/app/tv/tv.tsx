@@ -3,8 +3,9 @@ import {
   getTvByIdQueryOptions,
   useGetTvById,
 } from '@/features/tv/api/get-tv-by-id';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { TvView } from '@/features/tv/components/tv-view';
 import { QueryClient } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 import { LoaderFunctionArgs, useParams } from 'react-router-dom';
 
 export const tvLoader =
@@ -32,31 +33,19 @@ export const TvRoute = () => {
 
   const tv = tvQuery.data?.tv;
   if (!tv) {
-    return <div>Movie not found</div>;
+    return <div>Tv Show not found</div>;
   }
 
   return (
     <>
       <ContentLayout head={tv.name}>
-        <div className="flex gap-4">
-          <div className="w-1/3">
-            <AspectRatio ratio={2 / 3}>
-              <img
-                src={tv.poster_url}
-                alt={tv.name}
-                className="w-full h-full object-cover rounded-md"
-              />
-            </AspectRatio>
-          </div>
-          <div className="flex flex-col gap-2 w-2/3">
-            <h1 className="text-2xl font-bold">
-              {tv.name}{' '}
-              <span className="text-xl font-normal">
-                ({tv.first_air_date.slice(0, 4)})
-              </span>
-            </h1>
-            <p>{tv.overview}</p>
-          </div>
+        <TvView tvId={tvId} />
+        <div className="mt-8">
+          <ErrorBoundary
+            fallback={
+              <div>Failed to load the movie. Try to refresh the page.</div>
+            }
+          ></ErrorBoundary>
         </div>
       </ContentLayout>
     </>

@@ -91,7 +91,9 @@ export type GetTvResponse = {
     overview: string;
     first_air_date: string;
     poster_url: string;
+    genres: Genre[];
     popularity: number;
+    vote_average: number;
   } | null;
 };
 
@@ -135,4 +137,32 @@ export type WatchProvider = {
   id: number;
   name: string;
   logo_url: string;
+};
+
+export type GetTvSeasonsResponse = {
+  seasons: {
+    tv_id: number;
+    number_of_seasons: number;
+    seasons: Season[];
+  } | null;
+};
+
+export type Season = {
+  season_number: number;
+  episode_count: number;
+  name: string;
+  overview: string;
+  poster_url: string;
+  vote_average: number;
+  episodes: Episode[];
+};
+
+export type Episode = {
+  air_date: string;
+  episode_number: number;
+  name: string;
+  overview: string;
+  runtime: number;
+  still_url: string;
+  vote_average: number;
 };
