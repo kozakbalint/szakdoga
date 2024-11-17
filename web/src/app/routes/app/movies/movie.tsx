@@ -3,8 +3,9 @@ import {
   getMovieByIdQueryOptions,
   useGetMovieById,
 } from '@/features/movies/api/get-movie-by-id';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { MovieView } from '@/features/movies/components/movie-view';
 import { QueryClient } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 import { LoaderFunctionArgs, useParams } from 'react-router-dom';
 
 export const movieLoader =
@@ -37,26 +38,14 @@ export const MovieRoute = () => {
 
   return (
     <>
-      <ContentLayout title={movie.title}>
-        <div className="flex gap-4">
-          <div className="w-1/3">
-            <AspectRatio ratio={2 / 3}>
-              <img
-                src={movie.poster_url}
-                alt={movie.title}
-                className="w-full h-full object-cover rounded-md"
-              />
-            </AspectRatio>
-          </div>
-          <div className="flex flex-col gap-2 w-2/3">
-            <h1 className="text-2xl font-bold">
-              {movie.title}{' '}
-              <span className="text-xl font-normal">
-                ({movie.release_date.slice(0, 4)})
-              </span>
-            </h1>
-            <p>{movie.overview}</p>
-          </div>
+      <ContentLayout head={movie.title}>
+        <MovieView movieId={movieId} />
+        <div className="mt-8">
+          <ErrorBoundary
+            fallback={
+              <div>Failed to load the movie. Try to refresh the page.</div>
+            }
+          ></ErrorBoundary>
         </div>
       </ContentLayout>
     </>
