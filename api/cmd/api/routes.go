@@ -25,5 +25,11 @@ func (app *application) routes() http.Handler {
 
 	router.HandlerFunc(http.MethodGet, "/v1/people/:id", app.getPersonByIdHandler)
 
+	router.HandlerFunc(http.MethodGet, "/v1/cast/movies/:id", app.getMovieCastHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/cast/tv/:id", app.getTvCastHandler)
+
+	router.HandlerFunc(http.MethodGet, "/v1/watch/movies/:id", app.watchMovieHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/watch/tv/:id", app.watchTvHandler)
+
 	return app.recoverPanic(app.enableCORS(app.authenticate(router)))
 }

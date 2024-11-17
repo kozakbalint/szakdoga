@@ -4,20 +4,23 @@ import { Head } from '../seo';
 
 type ContentLayoutProps = {
   children: React.ReactNode;
-  title: string;
+  title?: string;
+  head?: string;
 };
 
-export const ContentLayout = ({ children, title }: ContentLayoutProps) => {
+export const ContentLayout = ({
+  children,
+  title,
+  head,
+}: ContentLayoutProps) => {
   return (
     <>
-      <Head title={title} />
-      <div className="py-6">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+      <Head title={head} />
+      <div className="py-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-2 md:px-4">
           <h1 className="text-2xl font-semibold text-primary">{title}</h1>
         </div>
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-8">
-          {children}
-        </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-2 md:px-4">{children}</div>
       </div>
     </>
   );

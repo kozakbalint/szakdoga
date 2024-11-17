@@ -53,15 +53,35 @@ export type SearchPeopleResponse = {
   people: SearchPersonResponse[] | null;
 };
 
+export type Genre = {
+  id: number;
+  name: string;
+};
+
 export type GetMovieResponse = {
   movie: {
     id: number;
     title: string;
     overview: string;
     release_date: string;
+    genres: Genre[];
+    runtime: number;
     poster_url: string;
     popularity: number;
+    vote_average: number;
   } | null;
+};
+
+export type GetMovieCastResponse = {
+  cast:
+    | {
+        id: number;
+        name: string;
+        character: string;
+        profile_url: string;
+        popularity: number;
+      }[]
+    | null;
 };
 
 export type GetTvResponse = {
@@ -84,4 +104,17 @@ export type GetPersonResponse = {
     profile_url: string;
     popularity: number;
   } | null;
+};
+
+export type GetWatchProvidersResponse = {
+  providers: {
+    streaming: WatchProvider[];
+    buy: WatchProvider[];
+  } | null;
+};
+
+export type WatchProvider = {
+  id: number;
+  name: string;
+  logo_url: string;
 };

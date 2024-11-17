@@ -6,6 +6,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { CommandLoading, useCommandState } from 'cmdk';
 import { useSearchMovies } from '../api/search-movies';
 import React from 'react';
+import { getMovieCastByIdQueryOptions } from '@/features/movies/api/get-movie-cast-by-id';
+import { getMovieWatchProvidersByIdQueryOptions } from '@/features/movies/api/get-movie-watch-providers-by-id';
 
 export interface SearchPageMoviesProps {
   searchTerm: string;
@@ -22,6 +24,8 @@ export const SearchPageMovies = ({
   React.useEffect(() => {
     const prefetchMovie = (id: string) => {
       queryClient.prefetchQuery(getMovieByIdQueryOptions({ id }));
+      queryClient.prefetchQuery(getMovieCastByIdQueryOptions({ id }));
+      queryClient.prefetchQuery(getMovieWatchProvidersByIdQueryOptions({ id }));
     };
     if (currentItem) {
       const id = currentItem.split('-')[1];

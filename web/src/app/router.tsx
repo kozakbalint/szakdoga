@@ -76,6 +76,22 @@ export const createAppRouter = (queryClient: QueryClient) =>
           },
         },
         {
+          path: paths.app.categoris.path,
+          lazy: async () => {
+            const { CategoriesRoute } = await import(
+              './routes/app/categories/categories'
+            );
+            return { Component: CategoriesRoute };
+          },
+        },
+        {
+          path: paths.app.cast.path,
+          lazy: async () => {
+            const { CastRoute } = await import('./routes/app/cast/cast');
+            return { Component: CastRoute };
+          },
+        },
+        {
           path: paths.app.profile.path,
           lazy: async () => {
             const { ProfileRoute } = await import('./routes/app/profile');

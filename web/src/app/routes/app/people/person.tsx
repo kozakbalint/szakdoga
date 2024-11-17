@@ -37,7 +37,7 @@ export const PersonRoute = () => {
 
   return (
     <>
-      <ContentLayout title={person.name}>
+      <ContentLayout head={person.name}>
         <div className="flex gap-4">
           <div className="w-1/3">
             <AspectRatio ratio={2 / 3}>

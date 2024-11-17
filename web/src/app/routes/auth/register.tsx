@@ -7,7 +7,7 @@ export const RegisterRoute = () => {
   const navigate = useNavigate();
 
   return (
-    <AuthLayout title="Register your account">
+    <AuthLayout title="Register">
       <RegisterForm
         onSuccess={() =>
           navigate('/auth/login', {
