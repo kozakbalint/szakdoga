@@ -91,8 +91,30 @@ export type GetTvResponse = {
     overview: string;
     first_air_date: string;
     poster_url: string;
+    genres: Genre[];
+    number_of_seasons: number;
+    number_of_episodes: number;
     popularity: number;
+    vote_average: number;
   } | null;
+};
+
+export type GetTvCastResponse = {
+  cast:
+    | {
+        id: number;
+        name: string;
+        roles: Role[];
+        profile_url: string;
+        total_episode_count: number;
+        popularity: number;
+      }[]
+    | null;
+};
+
+export type Role = {
+  character: string;
+  episode_count: number;
 };
 
 export type GetPersonResponse = {
@@ -117,4 +139,56 @@ export type WatchProvider = {
   id: number;
   name: string;
   logo_url: string;
+};
+
+export type GetTvSeasonsResponse = {
+  seasons: {
+    tv_id: number;
+    seasons_count: number;
+    seasons_without_episodes: SeasonsWithoutEpisodes[];
+  } | null;
+};
+
+export type SeasonsWithoutEpisodes = {
+  season_number: number;
+  episode_count: number;
+  name: string;
+  overview: string;
+  poster_url: string;
+  vote_average: number;
+};
+
+export type GetTvSeasonResponse = {
+  season: {
+    tv_id: number;
+    season: Season;
+  } | null;
+};
+
+export type Season = {
+  season_number: number;
+  episode_count: number;
+  name: string;
+  overview: string;
+  poster_url: string;
+  vote_average: number;
+  episodes: Episode[];
+};
+
+export type GetTvEpisodeResponse = {
+  episode: {
+    tv_id: number;
+    season_number: number;
+    episode: Episode;
+  } | null;
+};
+
+export type Episode = {
+  air_date: string;
+  episode_number: number;
+  name: string;
+  overview: string;
+  runtime: number;
+  still_url: string;
+  vote_average: number;
 };

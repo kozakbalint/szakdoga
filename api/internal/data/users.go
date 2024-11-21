@@ -87,9 +87,9 @@ type UserModel struct {
 	DB *sql.DB
 }
 
-func (m UserModel) Insert(user *User) error {
+func (m UserModel) Insert(user *User) (*User, error) {
 	query := `
-        INSERT INTO users (name, email, password_hash) 
+        INSERT INTO users (name, email, password_hash)
         VALUES ($1, $2, $3)
         RETURNING id, created_at, version`
 
@@ -102,13 +102,13 @@ func (m UserModel) Insert(user *User) error {
 	if err != nil {
 		switch {
 		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
-			return ErrDuplicateEmail
+			return nil, ErrDuplicateEmail
 		default:
-			return err
+			return nil, err
 		}
 	}
 
-	return nil
+	return user, nil
 }
 
 func (m UserModel) Get(id int64) (*User, error) {
@@ -177,7 +177,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 
 func (m UserModel) Update(user *User) error {
 	query := `
-        UPDATE users 
+        UPDATE users
         SET name = $1, email = $2, password_hash = $3, version = version + 1
         WHERE id = $4 AND version = $5
         RETURNING version`

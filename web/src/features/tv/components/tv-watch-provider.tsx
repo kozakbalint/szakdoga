@@ -1,22 +1,20 @@
 import { Card } from '@/components/ui/card';
-import { useGetMovieWatchProvidersById } from '../api/get-movie-watch-providers-by-id';
+import { useGetTvWatchProvidersById } from '../api/get-tv-watch-providers-by-id';
 
-export const MovieWatchProvider = ({
-  movieId,
+export const TvWatchProvider = ({
+  tvId,
   type,
 }: {
-  movieId: string;
+  tvId: string;
   type: 'streming' | 'buy';
 }) => {
-  const movieWatchProviderQuery = useGetMovieWatchProvidersById({
-    id: movieId,
-  });
+  const tvWatchProviderQuery = useGetTvWatchProvidersById({ id: tvId });
 
-  if (movieWatchProviderQuery.isLoading) {
+  if (tvWatchProviderQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
-  const providers = movieWatchProviderQuery.data?.providers;
+  const providers = tvWatchProviderQuery.data?.providers;
 
   if (!providers) {
     return <div>Providers not found</div>;

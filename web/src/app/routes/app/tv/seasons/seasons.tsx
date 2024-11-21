@@ -3,43 +3,54 @@ import {
   getTvByIdQueryOptions,
   useGetTvById,
 } from '@/features/tv/api/get-tv-by-id';
-import { TvView } from '@/features/tv/components/tv-view';
+import {
+  getTvSeasonsByIdQueryOptions,
+  useGetTvSeasonsById,
+} from '@/features/tv/api/get-tv-seasons-by-id';
+import { SeasonsView } from '@/features/tv/components/seasons-view';
 import { QueryClient } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { LoaderFunctionArgs, useParams } from 'react-router-dom';
 
-export const tvLoader =
+export const seasonsLoader =
   (queryClient: QueryClient) =>
   async ({ params }: LoaderFunctionArgs) => {
     const id = params.tvId as string;
 
     const tvQuery = getTvByIdQueryOptions({ id });
+    const seasonsQuery = getTvSeasonsByIdQueryOptions({ id });
 
     const tv =
       queryClient.getQueryData(tvQuery.queryKey) ??
       (await queryClient.fetchQuery(tvQuery));
 
-    return { tv };
+    const seasons =
+      queryClient.getQueryData(seasonsQuery.queryKey) ??
+      (await queryClient.fetchQuery(seasonsQuery));
+
+    return { seasons, tv };
   };
 
-export const TvRoute = () => {
+export const SeasonsRoute = () => {
   const params = useParams();
   const tvId = params.tvId as string;
   const tvQuery = useGetTvById({ id: tvId });
+  const seasonsQuery = useGetTvSeasonsById({ id: tvId });
 
-  if (tvQuery.isLoading) {
+  if (tvQuery.isLoading || seasonsQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
   const tv = tvQuery.data?.tv;
-  if (!tv) {
-    return <div>Tv Show not found</div>;
+  const seasons = seasonsQuery.data?.seasons;
+  if (!tv || !seasons) {
+    return <div>Seasons not found</div>;
   }
 
   return (
     <>
-      <ContentLayout head={tv.name}>
-        <TvView tvId={tvId} />
+      <ContentLayout head={tv.name + 'Seasons'}>
+        <SeasonsView id={tvId} />
         <div className="mt-8">
           <ErrorBoundary
             fallback={

@@ -13,11 +13,6 @@ import (
 	"github.com/pascaldekloe/jwt"
 )
 
-type loginResponse struct {
-	AuthenticationToken string    `json:"authentication_token"`
-	User                data.User `json:"user"`
-}
-
 func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Email    string `json:"email"`
@@ -86,7 +81,7 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		return
 	}
 
-	response := &loginResponse{
+	response := &LoginResponse{
 		AuthenticationToken: string(jwtBytes),
 		User:                userResponse,
 	}
