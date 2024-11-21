@@ -60,6 +60,10 @@ func (app *application) getTvSeasonsHandler(w http.ResponseWriter, r *http.Reque
 		SeasonCount: tvDetails.NumberOfSeasons,
 	}
 	for _, season := range tvDetails.Seasons {
+		if season.SeasonNumber == 0 {
+			continue
+		}
+
 		var posterUrl = ""
 		posterUrl = tmdb.GetImageURL(season.PosterPath, "w500")
 

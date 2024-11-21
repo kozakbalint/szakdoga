@@ -51,7 +51,11 @@ export const EpisodeRoute = () => {
   return (
     <>
       <ContentLayout head={episode.episode.name}>
-        <EpisodeView />
+        <EpisodeView
+          id={tvId}
+          seasonId={seasonNumber}
+          episodeId={episodeNumber}
+        />
         <div className="mt-8">
           <ErrorBoundary
             fallback={
