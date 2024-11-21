@@ -7,8 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 export function NavMain({
   items,
@@ -28,7 +27,7 @@ export function NavMain({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
-              onClick={() => navigate(item.url)}
+              onClick={() => navigate({ to: item.url })}
               tooltip={item.title}
             >
               {item.icon && <item.icon />}

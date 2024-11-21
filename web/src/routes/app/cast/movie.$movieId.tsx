@@ -1,12 +1,45 @@
 import { ContentLayout } from '@/components/layouts';
-import { useGetMovieById } from '@/features/movies/api/get-movie-by-id';
-import { useGetMovieCastById } from '@/features/movies/api/get-movie-cast-by-id';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import {
+  getMovieByIdQueryOptions,
+  useGetMovieById,
+} from '@/features/movies/api/get-movie-by-id';
+import {
+  getMovieCastByIdQueryOptions,
+  useGetMovieCastById,
+} from '@/features/movies/api/get-movie-cast-by-id';
+import { QueryClient } from '@tanstack/react-query';
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useParams,
+} from '@tanstack/react-router';
 
-export const CastRoute = () => {
-  const params = useParams();
-  const movieId = params.movieId?.toString() ?? '';
+const queryClient = new QueryClient();
+
+export const Route = createFileRoute('/app/cast/movie/$movieId')({
+  beforeLoad: async ({ context, location }) => {
+    if (context.auth.data === null) {
+      throw redirect({
+        to: '/auth/login',
+        search: { redirect: location.pathname },
+      });
+    }
+  },
+  component: MovieCastRoute,
+  loader: async ({ params }) => {
+    queryClient.ensureQueryData(
+      getMovieByIdQueryOptions({ id: params.movieId }),
+    );
+    queryClient.ensureQueryData(
+      getMovieCastByIdQueryOptions({ id: params.movieId }),
+    );
+  },
+});
+
+function MovieCastRoute() {
+  const params = useParams({ strict: false });
+  const movieId = params.movieId as string;
 
   const movieQuery = useGetMovieById({ id: movieId });
   const movieCastQuery = useGetMovieCastById({ id: movieId });
@@ -45,4 +78,4 @@ export const CastRoute = () => {
       </ContentLayout>
     </>
   );
-};
+}

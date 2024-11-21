@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Form, Input } from '@/components/ui/form';
@@ -13,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Error } from '@/components/ui/form/error';
+import { getRouteApi, Link } from '@tanstack/react-router';
 
 type RegisterFormProps = {
   onSuccess: () => void;
@@ -38,8 +38,9 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       setRegisterError(message ?? 'Failed to register');
     },
   });
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo');
+
+  const routeApi = getRouteApi('/auth/register');
+  const search = routeApi.useSearch();
 
   return (
     <div>
@@ -107,7 +108,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           <div className="mt-4 flex justify-between items-center">
             <div className="text-sm">Already have an account? </div>
             <Link
-              to={`/auth/login${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`}
+              to="/auth/login"
+              search={(prev) => ({ ...prev, redirect: search.redirect })}
             >
               <Button variant="link">Login</Button>
             </Link>

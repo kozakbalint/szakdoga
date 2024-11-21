@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useGetTvById } from '../api/get-tv-by-id';
 import { useGetTvSeasonsById } from '../api/get-tv-seasons-by-id';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Link } from '@tanstack/react-router';
 
 export const SeasonsView = ({ id }: { id: string }) => {
   const tvQuery = useGetTvById({ id });
@@ -25,7 +25,7 @@ export const SeasonsView = ({ id }: { id: string }) => {
       <div className="flex flex-row sm:flex-col gap-2 flex-wrap justify-center sm:justify-start">
         {seasons.seasons_without_episodes.map((season) => (
           <Link
-            to={`/app/tv/${tv.id}/seasons/${season.season_number}`}
+            to={`/app/season/${tv.id}/${season.season_number}`}
             className="hover:underline w-3/4 sm:w-full"
             key={season.season_number}
           >

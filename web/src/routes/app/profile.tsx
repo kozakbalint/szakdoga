@@ -1,8 +1,21 @@
 import { ContentLayout } from '@/components/layouts';
 import { useUser } from '@/lib/auth';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { format } from 'date-fns';
 
-export const ProfileRoute = () => {
+export const Route = createFileRoute('/app/profile')({
+  beforeLoad: async ({ context, location }) => {
+    if (context.auth.data === null) {
+      throw redirect({
+        to: '/auth/login',
+        search: { redirect: location.pathname },
+      });
+    }
+  },
+  component: ProfileRoute,
+});
+
+function ProfileRoute() {
   const user = useUser();
   const formattedDate = user.data?.createdAt
     ? format(new Date(user.data.createdAt), 'yyyy-MM-dd HH:mm:ss')
@@ -21,4 +34,4 @@ export const ProfileRoute = () => {
       </ContentLayout>
     </div>
   );
-};
+}

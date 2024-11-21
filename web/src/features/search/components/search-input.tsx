@@ -2,7 +2,6 @@ import { Search } from 'lucide-react';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useLogout } from '@/lib/auth';
-import { useNavigate } from 'react-router-dom';
 import {
   CommandDialog,
   CommandEmpty,
@@ -17,6 +16,7 @@ import { useDebounce } from '@uidotdev/usehooks';
 import { SearchPageMovies } from './search-page-movies';
 import { SearchPageTV } from './search-page-tv';
 import { SearchPagePeople } from './search-page-people';
+import { useNavigate } from '@tanstack/react-router';
 
 export type SearchInputProps = {
   className?: string;
@@ -64,11 +64,11 @@ export const SearchInput = () => {
       items: [
         {
           title: 'Dashboard',
-          onSelect: () => navigate('.'),
+          onSelect: () => navigate({ to: '/app/dashboard' }),
         },
         {
           title: 'Lists',
-          onSelect: () => navigate('./lists'),
+          onSelect: () => navigate({ to: '/app/lists' }),
         },
       ],
     },
@@ -77,15 +77,18 @@ export const SearchInput = () => {
       items: [
         {
           title: 'Profile',
-          onSelect: () => navigate('./profile'),
+          onSelect: () => navigate({ to: '/app/profile' }),
         },
         {
           title: 'Settings',
-          onSelect: () => {},
+          onSelect: () => navigate({ to: '/app/settings' }),
         },
         {
-          title: 'Sign Out',
-          onSelect: () => logout.mutate({}),
+          title: 'Log Out',
+          onSelect: () => {
+            navigate({ to: '/auth/login' });
+            logout.mutate({});
+          },
         },
       ],
     },
@@ -202,7 +205,7 @@ export const SearchInput = () => {
           <SearchPageMovies
             searchTerm={debouncedSearch}
             onSelect={(movie) => {
-              navigate(`./movies/${movie.id}`);
+              navigate({ to: `/app/movies/${movie.id}` });
               setOpen(false);
             }}
           />
@@ -211,7 +214,7 @@ export const SearchInput = () => {
           <SearchPageTV
             searchTerm={debouncedSearch}
             onSelect={(tv) => {
-              navigate(`./tv/${tv.id}`);
+              navigate({ to: `/app/tv/${tv.id}` });
               setOpen(false);
             }}
           />
@@ -220,7 +223,7 @@ export const SearchInput = () => {
           <SearchPagePeople
             searchTerm={debouncedSearch}
             onSelect={(person) => {
-              navigate(`./people/${person.id}`);
+              navigate({ to: `/app/people/${person.id}` });
               setOpen(false);
             }}
           />

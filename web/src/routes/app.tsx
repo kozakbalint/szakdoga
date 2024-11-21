@@ -1,11 +1,28 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Outlet, useLocation } from 'react-router-dom';
 
 import { DashboardLayout } from '@/components/layouts';
 import { Spinner } from '@/components/ui/spinner';
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useLocation,
+} from '@tanstack/react-router';
 
-export const AppRoot = () => {
+export const Route = createFileRoute('/app')({
+  beforeLoad: async ({ context, location }) => {
+    if (context.auth.data === null) {
+      throw redirect({
+        to: '/auth/login',
+        search: { redirect: location.pathname },
+      });
+    }
+  },
+  component: AppRoot,
+});
+
+function AppRoot() {
   const location = useLocation();
   return (
     <DashboardLayout>
@@ -25,4 +42,4 @@ export const AppRoot = () => {
       </Suspense>
     </DashboardLayout>
   );
-};
+}

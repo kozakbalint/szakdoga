@@ -1,12 +1,41 @@
 import { ContentLayout } from '@/components/layouts';
-import { useGetTvById } from '@/features/tv/api/get-tv-by-id';
-import { useGetTvCastById } from '@/features/tv/api/get-tv-cast-by-id';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import {
+  getTvByIdQueryOptions,
+  useGetTvById,
+} from '@/features/tv/api/get-tv-by-id';
+import {
+  getTvCastByIdQueryOptions,
+  useGetTvCastById,
+} from '@/features/tv/api/get-tv-cast-by-id';
+import { QueryClient } from '@tanstack/react-query';
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useParams,
+} from '@tanstack/react-router';
 
-export const CastRoute = () => {
-  const params = useParams();
-  const tvId = params.tvId?.toString() ?? '';
+const queryClient = new QueryClient();
+
+export const Route = createFileRoute('/app/cast/tv/$tvId')({
+  beforeLoad: async ({ context, location }) => {
+    if (context.auth.data === null) {
+      throw redirect({
+        to: '/auth/login',
+        search: { redirect: location.pathname },
+      });
+    }
+  },
+  component: TvCastRoute,
+  loader: async ({ params }) => {
+    queryClient.ensureQueryData(getTvByIdQueryOptions({ id: params.tvId }));
+    queryClient.ensureQueryData(getTvCastByIdQueryOptions({ id: params.tvId }));
+  },
+});
+
+function TvCastRoute() {
+  const params = useParams({ strict: false });
+  const tvId = params.tvId as string;
 
   const tvQuery = useGetTvById({ id: tvId });
   const tvCastQuery = useGetTvCastById({ id: tvId });
@@ -53,4 +82,4 @@ export const CastRoute = () => {
       </ContentLayout>
     </>
   );
-};
+}

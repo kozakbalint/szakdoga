@@ -1,10 +1,10 @@
 import { configureAuth } from 'react-query-auth';
-import { Navigate, useLocation } from 'react-router-dom';
 import { z } from 'zod';
 
 import { LoginAuthResponse, User } from '@/types/api';
 
 import { apiClient } from './api-client';
+import { Navigate, useLocation } from '@tanstack/react-router';
 
 const getUser = async (): Promise<User | void | null> => {
   const jwt = localStorage.getItem('jwt');
@@ -85,12 +85,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   if (!user.data) {
-    return (
-      <Navigate
-        to={`/auth/login?redirectTo=${encodeURIComponent(location.pathname)}`}
-        replace
-      />
-    );
+    return <Navigate to="/auth/login" search={location.search} replace />;
   }
 
   return children;
