@@ -7,31 +7,6 @@ import (
 	tmdb "github.com/cyruzin/golang-tmdb"
 )
 
-type movieSearchResponse struct {
-	ID          int64   `json:"id"`
-	Title       string  `json:"title"`
-	Overview    string  `json:"overview"`
-	PosterUrl   string  `json:"poster_url"`
-	ReleaseDate string  `json:"release_date"`
-	Popularity  float32 `json:"popularity"`
-}
-
-type tvSearchResponse struct {
-	ID           int64   `json:"id"`
-	Name         string  `json:"name"`
-	Overview     string  `json:"overview"`
-	PosterUrl    string  `json:"poster_url"`
-	FirstAirDate string  `json:"first_air_date"`
-	Popularity   float32 `json:"popularity"`
-}
-
-type personSearchResponse struct {
-	ID         int64   `json:"id"`
-	Name       string  `json:"name"`
-	ProfileUrl string  `json:"profile_url"`
-	Popularity float32 `json:"popularity"`
-}
-
 func (app *application) searchMoviesHandler(w http.ResponseWriter, r *http.Request) {
 	queryParams, err := app.readQueryParams(r)
 	if err != nil {
@@ -50,13 +25,13 @@ func (app *application) searchMoviesHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	var response []movieSearchResponse
+	var response []MovieSearchResponse
 	for _, movie := range movies.Results {
 		poster_url := ""
 		if movie.PosterPath != "" {
 			poster_url = tmdb.GetImageURL(movie.PosterPath, "w92")
 		}
-		response = append(response, movieSearchResponse{
+		response = append(response, MovieSearchResponse{
 			ID:          movie.ID,
 			Title:       movie.Title,
 			Overview:    movie.Overview,
@@ -90,13 +65,13 @@ func (app *application) searchPeopleHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	var response []personSearchResponse
+	var response []PersonSearchResponse
 	for _, person := range people.Results {
 		profile_url := ""
 		if person.ProfilePath != "" {
 			profile_url = tmdb.GetImageURL(person.ProfilePath, "w185")
 		}
-		response = append(response, personSearchResponse{
+		response = append(response, PersonSearchResponse{
 			ID:         person.ID,
 			Name:       person.Name,
 			ProfileUrl: profile_url,
@@ -128,14 +103,14 @@ func (app *application) searchTvHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var response []tvSearchResponse
+	var response []TvSearchResponse
 	for _, show := range tv.Results {
 		posterUrl := ""
 		if show.PosterPath != "" {
 			posterUrl = tmdb.GetImageURL(show.PosterPath, "w92")
 		}
 
-		response = append(response, tvSearchResponse{
+		response = append(response, TvSearchResponse{
 			ID:           show.ID,
 			Name:         show.Name,
 			Overview:     show.Overview,

@@ -6,21 +6,6 @@ import (
 	tmdb "github.com/cyruzin/golang-tmdb"
 )
 
-type movieResponse struct {
-	ID          int64  `json:"id"`
-	Title       string `json:"title"`
-	Overview    string `json:"overview"`
-	ReleaseDate string `json:"release_date"`
-	Genres      []struct {
-		ID   int64  `json:"id"`
-		Name string `json:"name"`
-	} `json:"genres"`
-	Runtime     int     `json:"runtime"`
-	PosterUrl   string  `json:"poster_url"`
-	Popularity  float32 `json:"popularity"`
-	VoteAverage float32 `json:"vote_average"`
-}
-
 func (app *application) getMovieByIdHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
@@ -39,7 +24,7 @@ func (app *application) getMovieByIdHandler(w http.ResponseWriter, r *http.Reque
 		poster_url = tmdb.GetImageURL(movie.PosterPath, "w500")
 	}
 
-	response := movieResponse{
+	response := MovieResponse{
 		ID:          movie.ID,
 		Title:       movie.Title,
 		Overview:    movie.Overview,

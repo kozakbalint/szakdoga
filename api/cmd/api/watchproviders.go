@@ -6,17 +6,6 @@ import (
 	tmdb "github.com/cyruzin/golang-tmdb"
 )
 
-type providerResponse struct {
-	Streaming []watchprovider `json:"streaming"`
-	Buy       []watchprovider `json:"buy"`
-}
-
-type watchprovider struct {
-	ID      int64  `json:"id"`
-	LogoURL string `json:"logo_url"`
-	Name    string `json:"name"`
-}
-
 func (app *application) watchMovieHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
@@ -30,16 +19,16 @@ func (app *application) watchMovieHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 	huProviders := providers.Results["HU"]
-	var response providerResponse
+	var response WatchProviderResponse
 	for _, provider := range huProviders.Flatrate {
-		response.Streaming = append(response.Streaming, watchprovider{
+		response.Streaming = append(response.Streaming, Watchprovider{
 			ID:      provider.ProviderID,
 			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
 			Name:    provider.ProviderName,
 		})
 	}
 	for _, provider := range huProviders.Buy {
-		response.Buy = append(response.Buy, watchprovider{
+		response.Buy = append(response.Buy, Watchprovider{
 			ID:      provider.ProviderID,
 			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
 			Name:    provider.ProviderName,
@@ -65,16 +54,16 @@ func (app *application) watchTvHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	huProviders := providers.Results["HU"]
-	var response providerResponse
+	var response WatchProviderResponse
 	for _, provider := range huProviders.Flatrate {
-		response.Streaming = append(response.Streaming, watchprovider{
+		response.Streaming = append(response.Streaming, Watchprovider{
 			ID:      provider.ProviderID,
 			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
 			Name:    provider.ProviderName,
 		})
 	}
 	for _, provider := range huProviders.Buy {
-		response.Buy = append(response.Buy, watchprovider{
+		response.Buy = append(response.Buy, Watchprovider{
 			ID:      provider.ProviderID,
 			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
 			Name:    provider.ProviderName,

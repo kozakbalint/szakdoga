@@ -6,15 +6,6 @@ import (
 	tmdb "github.com/cyruzin/golang-tmdb"
 )
 
-type personResponse struct {
-	ID         int64   `json:"id"`
-	Name       string  `json:"name"`
-	Biography  string  `json:"biography"`
-	Birthday   string  `json:"birthday"`
-	ProfileUrl string  `json:"profile_url"`
-	Popularity float32 `json:"popularity"`
-}
-
 func (app *application) getPersonByIdHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
@@ -33,7 +24,7 @@ func (app *application) getPersonByIdHandler(w http.ResponseWriter, r *http.Requ
 		profile_url = tmdb.GetImageURL(person.ProfilePath, "w185")
 	}
 
-	response := personResponse{
+	response := PersonResponse{
 		ID:         person.ID,
 		Name:       person.Name,
 		Biography:  person.Biography,

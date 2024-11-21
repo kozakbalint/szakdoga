@@ -6,14 +6,6 @@ import (
 	tmdb "github.com/cyruzin/golang-tmdb"
 )
 
-type castResponse struct {
-	ID         int64   `json:"id"`
-	Name       string  `json:"name"`
-	Character  string  `json:"character"`
-	ProfileUrl string  `json:"profile_url"`
-	Popularity float32 `json:"popularity"`
-}
-
 func (app *application) getMovieCastHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
@@ -27,14 +19,14 @@ func (app *application) getMovieCastHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	var response []castResponse
+	var response []MovieCastResponse
 	for _, cast := range movie.Cast {
 		profile_url := ""
 		if cast.ProfilePath != "" {
 			profile_url = tmdb.GetImageURL(cast.ProfilePath, "w185")
 		}
 
-		response = append(response, castResponse{
+		response = append(response, MovieCastResponse{
 			ID:         cast.ID,
 			Name:       cast.Name,
 			Character:  cast.Character,
@@ -47,20 +39,6 @@ func (app *application) getMovieCastHandler(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
-}
-
-type tvCastResponse struct {
-	ID                int64   `json:"id"`
-	Name              string  `json:"name"`
-	Roles             []Role  `json:"roles"`
-	ProfileUrl        string  `json:"profile_url"`
-	TotalEpisodeCount int     `json:"total_episode_count"`
-	Popularity        float64 `json:"popularity"`
-}
-
-type Role struct {
-	Character    string `json:"character"`
-	EpisodeCount int    `json:"episode_count"`
 }
 
 func (app *application) getTvCastHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +54,7 @@ func (app *application) getTvCastHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	var response []tvCastResponse
+	var response []TvCastResponse
 	for _, cast := range tv.Cast {
 		profile_url := ""
 		if cast.ProfilePath != "" {
@@ -91,7 +69,7 @@ func (app *application) getTvCastHandler(w http.ResponseWriter, r *http.Request)
 			})
 		}
 
-		response = append(response, tvCastResponse{
+		response = append(response, TvCastResponse{
 			ID:                cast.ID,
 			Name:              cast.Name,
 			Roles:             roles,

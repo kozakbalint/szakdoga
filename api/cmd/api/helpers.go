@@ -36,6 +36,28 @@ func (app *application) readIDParam(r *http.Request) (int64, error) {
 	return id, nil
 }
 
+func (app *application) readSeasonParam(r *http.Request) (int, error) {
+	params := httprouter.ParamsFromContext(r.Context())
+
+	season, err := strconv.Atoi(params.ByName("season"))
+	if err != nil {
+		return 0, errors.New("invalid season parameter")
+	}
+
+	return season, nil
+}
+
+func (app *application) readEpisodeParam(r *http.Request) (int, error) {
+	params := httprouter.ParamsFromContext(r.Context())
+
+	episode, err := strconv.Atoi(params.ByName("episode"))
+	if err != nil {
+		return 0, errors.New("invalid episode parameter")
+	}
+
+	return episode, nil
+}
+
 type envelope map[string]any
 
 func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
