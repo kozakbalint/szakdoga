@@ -99,6 +99,33 @@ export const createAppRouter = (queryClient: QueryClient) =>
           },
         },
         {
+          path: paths.app.tv.seasons.path,
+          lazy: async () => {
+            const { SeasonsRoute, seasonsLoader } = await import(
+              './routes/app/tv/seasons/seasons'
+            );
+            return { Component: SeasonsRoute, loader: seasonsLoader };
+          },
+        },
+        {
+          path: paths.app.tv.season.path,
+          lazy: async () => {
+            const { SeasonRoute, seasonLoader } = await import(
+              './routes/app/tv/seasons/season'
+            );
+            return { Component: SeasonRoute, loader: seasonLoader };
+          },
+        },
+        {
+          path: paths.app.tv.episode.path,
+          lazy: async () => {
+            const { EpisodeRoute, episodeLoader } = await import(
+              './routes/app/tv/episode/episode'
+            );
+            return { Component: EpisodeRoute, loader: episodeLoader };
+          },
+        },
+        {
           path: paths.app.profile.path,
           lazy: async () => {
             const { ProfileRoute } = await import('./routes/app/profile');

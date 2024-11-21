@@ -27,12 +27,12 @@ export const TvCast = ({ tvId }: { tvId: string }) => {
           <ChevronRight size={32} className="align-baseline" />
         </div>
       </Link>
-      <div className="flex flex-row flex-wrap max-w-full gap-4 justify-center sm:justify-start overflow-scroll">
+      <div className="flex flex-row flex-wrap max-w-full gap-4 justify-center lg:justify-start overflow-scroll">
         {topCast.map((actor) => (
           <Link key={actor.id} to={`/app/people/${actor.id}`}>
             <Card
               key={actor.id}
-              className="w-40 hover:underline h-full max-h-80"
+              className="w-36 hover:underline h-full max-h-80"
             >
               <img
                 src={actor.profile_url}

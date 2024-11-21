@@ -6,6 +6,7 @@ import { useSearchTV } from '../api/search-tv';
 import { getTvByIdQueryOptions } from '@/features/tv/api/get-tv-by-id';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
+import { getTvSeasonByIdQueryOptions } from '@/features/tv/api/get-tv-season-by-id';
 
 export interface SearchPageTVProps {
   searchTerm: string;
@@ -19,6 +20,9 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
   React.useEffect(() => {
     const prefetchTv = (id: string) => {
       queryClient.prefetchQuery(getTvByIdQueryOptions({ id }));
+      queryClient.prefetchQuery(
+        getTvSeasonByIdQueryOptions({ id, seasonId: '1' }),
+      );
     };
     if (currentItem) {
       const id = currentItem.split('-')[1];
