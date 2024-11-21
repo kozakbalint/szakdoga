@@ -18,9 +18,9 @@ import {
 } from '@/components/ui/sidebar';
 import { useLogout } from '@/lib/auth';
 import { User } from '@/types/api';
-import { useNavigate } from 'react-router-dom';
 import { ThemeModeToggle } from '../theme';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 
 export function NavUser({ user }: { user: User }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -81,7 +81,7 @@ export function NavUser({ user }: { user: User }) {
             <DropdownMenuGroup>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate('./profile');
+                  navigate({ to: '/app/profile' });
                 }}
               >
                 <BadgeCheck />
@@ -89,7 +89,7 @@ export function NavUser({ user }: { user: User }) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate('./settings');
+                  navigate({ to: '/app/settings' });
                 }}
               >
                 <Settings />

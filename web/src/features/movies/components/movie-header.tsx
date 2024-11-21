@@ -3,7 +3,7 @@ import { Heart, List, Star } from 'lucide-react';
 import { useGetMovieById } from '../api/get-movie-by-id';
 import { Badge } from '@/components/ui/badge';
 import { MovieWatchProvider } from './movie-watch-provider';
-import { Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-router';
 
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movieQuery = useGetMovieById({ id: movieId });

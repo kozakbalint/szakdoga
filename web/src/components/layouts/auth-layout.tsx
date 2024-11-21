@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { Head } from '@/components/seo';
-import { Link } from '@/components/ui/link';
 import { useUser } from '@/lib/auth';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -18,9 +17,7 @@ export const AuthLayout = ({ children, title }: LayoutProps) => {
 
   useEffect(() => {
     if (user.data) {
-      navigate('/app', {
-        replace: true,
-      });
+      navigate({ to: '/app/dashboard', replace: true });
     }
   }, [user.data, navigate]);
 

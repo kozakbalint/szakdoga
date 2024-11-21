@@ -1,14 +1,15 @@
-import { useNavigate } from 'react-router-dom';
-
 import { Head } from '@/components/seo/head';
 import { Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/lib/auth';
+import { createLazyFileRoute, Link } from '@tanstack/react-router';
 
-export const LandingRoute = () => {
+export const Route = createLazyFileRoute('/')({
+  component: LandingRoute,
+});
+
+function LandingRoute() {
   const user = useUser();
-  const navigate = useNavigate();
-
   return (
     <>
       <Head title="Welcome to ScreenLog" />
@@ -20,25 +21,18 @@ export const LandingRoute = () => {
           A simple way to log your watched movies and TV shows.
         </p>
         <div className="flex mt-8 space-x-4">
-          <Button
-            variant={'default'}
-            onClick={() =>
-              user ? navigate('./app') : navigate('./auth/login')
-            }
-            icon={<Home />}
-          >
-            Go to Dashboard
-          </Button>
-          <Button
-            variant={'secondary'}
-            onClick={() =>
-              user ? navigate('./app') : navigate('./auth/register')
-            }
-          >
-            Register
-          </Button>
+          <Link to={user.data ? '/app/dashboard' : '/auth/login'}>
+            <Button variant={'default'} icon={<Home />}>
+              Go to Dashboard
+            </Button>
+          </Link>
+          <Link to={user.data ? '/app/dashboard' : '/auth/register'}>
+            <Button variant={'secondary'} icon={<Home />}>
+              Register
+            </Button>
+          </Link>
         </div>
       </div>
     </>
   );
-};
+}

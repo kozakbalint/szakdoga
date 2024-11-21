@@ -3,7 +3,7 @@ import { Heart, List, Star } from 'lucide-react';
 import { useGetTvById } from '../api/get-tv-by-id';
 import { Badge } from '@/components/ui/badge';
 import { TvWatchProvider } from './tv-watch-provider';
-import { Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-router';
 
 export const TvHeader = ({ tvId }: { tvId: string }) => {
   const tvQuery = useGetTvById({ id: tvId });

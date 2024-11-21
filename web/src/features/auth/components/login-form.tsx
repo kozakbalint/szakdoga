@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Form, Input } from '@/components/ui/form';
@@ -13,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Error } from '@/components/ui/form/error';
+import { getRouteApi, Link } from '@tanstack/react-router';
 
 type LoginFormProps = {
   onSuccess: () => void;
@@ -36,8 +36,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
       setLoginError(message ?? 'Failed to log in');
     },
   });
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo');
+  const routeApi = getRouteApi('/auth/login');
+  const search = routeApi.useSearch();
 
   return (
     <div>
@@ -101,7 +101,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           <div className="mt-4 flex justify-between items-center">
             <div className="text-sm">Don&apos;t have an account? </div>
             <Link
-              to={`/auth/register${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`}
+              to="/auth/register"
+              search={(prev) => ({ ...prev, redirect: search.redirect })}
             >
               <Button variant="link">Register</Button>
             </Link>

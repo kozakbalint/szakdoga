@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useGetTvById } from '../api/get-tv-by-id';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-router';
 
 export const TvSeasons = ({ tvId }: { tvId: string }) => {
   const [selectedSeason, setSelectedSeason] = useState<number>(1);
@@ -47,7 +47,7 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link to={`/app/tv/${tvId}/seasons`} className="hover:underline">
+      <Link to={`/app/seasons/${tvId}`} className="hover:underline">
         <div className="flex flex-row place-items-center gap-2">
           <div className="text-2xl font-bold">Seasons</div>
           <div className="text-xl font-thin">({tv.number_of_seasons})</div>
@@ -82,7 +82,7 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
       <div className="flex flex-col items-center gap-2 h-96 overflow-scroll">
         {season.season.episodes.map((episode) => (
           <Link
-            to={`/app/tv/${tvId}/seasons/${selectedSeason}/episodes/${episode.episode_number}`}
+            to={`/app/episode/${tvId}/${season.season.season_number}/${episode.episode_number}`}
             className="hover:underline w-full"
             key={episode.episode_number}
           >

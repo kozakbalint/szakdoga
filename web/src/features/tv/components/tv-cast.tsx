@@ -1,7 +1,7 @@
 import { useGetTvCastById } from '../api/get-tv-cast-by-id';
 import { ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Link } from '@/components/ui/link';
+import { Link } from '@tanstack/react-router';
 
 export const TvCast = ({ tvId }: { tvId: string }) => {
   const tvCastQuery = useGetTvCastById({ id: tvId });

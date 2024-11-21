@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useGetTvById } from '../api/get-tv-by-id';
 import { useGetTvSeasonById } from '../api/get-tv-season-by-id';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Link } from '@tanstack/react-router';
 
 export const SeasonView = ({
   id,
@@ -45,7 +45,7 @@ export const SeasonView = ({
       <div className="flex flex-row sm:flex-col gap-2 flex-wrap justify-center sm:justify-start">
         {season.season.episodes.map((episode) => (
           <Link
-            to={`/app/tv/${tv.id}/seasons/${season.season.season_number}/episodes/${episode.episode_number}`}
+            to={`/app/episode/${tv.id}/${seasonId}/${episode.episode_number}`}
             className="hover:underline w-3/4 sm:w-full"
             key={episode.episode_number}
           >

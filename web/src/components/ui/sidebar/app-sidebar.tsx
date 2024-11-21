@@ -14,18 +14,19 @@ import { useUser } from '@/lib/auth';
 const navItems = [
   {
     title: 'Dashboard',
-    url: './',
+    url: '/app/dashboard',
     icon: SquareMenu,
   },
   {
     title: 'Lists',
-    url: './lists',
+    url: '/app/lists',
     icon: List,
   },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useUser();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

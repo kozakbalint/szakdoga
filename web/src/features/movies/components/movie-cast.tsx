@@ -1,7 +1,7 @@
 import { useGetMovieCastById } from '../api/get-movie-cast-by-id';
 import { ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Link } from '@/components/ui/link';
+import { Link } from '@tanstack/react-router';
 
 export const MovieCast = ({ movieId }: { movieId: string }) => {
   const movieCastQuery = useGetMovieCastById({ id: movieId });
