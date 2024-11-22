@@ -64,3 +64,18 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+func (app *application) invalidateAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
+	user := app.contextGetUser(r)
+
+	err := app.models.Tokens.DeleteAllForUser(user.ID)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "authentication token(s) successfully deleted"}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}

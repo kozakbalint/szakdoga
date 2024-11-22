@@ -4,13 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/data"
-	"github.com/pascaldekloe/jwt"
+	"github.com/kozakbalint/szakdoga/api/internal/validator"
 )
 
 func (app *application) recoverPanic(next http.Handler) http.Handler {
@@ -75,34 +72,14 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 
 		token := headerParts[1]
 
-		claims, err := jwt.HMACCheck([]byte(token), []byte(app.config.jwt.secret))
-		if err != nil {
+		v := validator.New()
+
+		if data.ValidateTokenPlaintext(v, token); !v.Valid() {
 			app.invalidAuthenticationTokenResponse(w, r)
 			return
 		}
 
-		if !claims.Valid(time.Now()) {
-			app.invalidAuthenticationTokenResponse(w, r)
-			return
-		}
-
-		if claims.Issuer != os.Getenv("DOMAIN") {
-			app.invalidAuthenticationTokenResponse(w, r)
-			return
-		}
-
-		if !claims.AcceptAudience(os.Getenv("DOMAIN")) {
-			app.invalidAuthenticationTokenResponse(w, r)
-			return
-		}
-
-		userID, err := strconv.ParseInt(claims.Subject, 10, 64)
-		if err != nil {
-			app.serverErrorResponse(w, r, err)
-			return
-		}
-
-		user, err := app.models.Users.Get(userID)
+		user, err := app.models.Users.GetForToken(token)
 		if err != nil {
 			switch {
 			case errors.Is(err, data.ErrRecordNotFound):
