@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Error } from '@/components/ui/form/error';
-import { getRouteApi, Link } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 
 type RegisterFormProps = {
   onSuccess: () => void;
@@ -38,9 +38,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       setRegisterError(message ?? 'Failed to register');
     },
   });
-
-  const routeApi = getRouteApi('/auth/register');
-  const search = routeApi.useSearch();
 
   return (
     <div>
@@ -107,10 +104,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           </Form>
           <div className="mt-4 flex justify-between items-center">
             <div className="text-sm">Already have an account? </div>
-            <Link
-              to="/auth/login"
-              search={(prev) => ({ ...prev, redirect: search.redirect })}
-            >
+            <Link to="/auth/login">
               <Button variant="link">Login</Button>
             </Link>
           </div>

@@ -22,6 +22,12 @@ class APIClient {
         statusCode: response.status,
         response: await response.json(),
       };
+
+      if (error.statusCode === 401) {
+        localStorage.removeItem('auth');
+        window.location.href = `/auth/login`;
+      }
+
       return Promise.reject(error);
     }
     return response.json();
@@ -38,12 +44,6 @@ class APIClient {
 
   getWithToken(url: string) {
     const authObject = JSON.parse(localStorage.getItem('auth') ?? '');
-    if (!authObject.token || !authObject.expiry) {
-      return Promise.reject('No token found');
-    }
-    if (new Date(authObject.expiry) < new Date()) {
-      return Promise.reject('Token expired');
-    }
     return this.request(url, {
       method: 'GET',
       headers: {

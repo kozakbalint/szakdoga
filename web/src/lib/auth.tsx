@@ -78,7 +78,7 @@ const logout = async (): Promise<void> => {
     return Promise.resolve();
   }
 
-  return Promise.reject('');
+  return Promise.reject('Failed to logout');
 };
 
 const authConfig = {

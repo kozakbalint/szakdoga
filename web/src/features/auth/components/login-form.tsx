@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Error } from '@/components/ui/form/error';
-import { getRouteApi, Link } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 
 type LoginFormProps = {
   onSuccess: () => void;
@@ -36,8 +36,6 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
       setLoginError(message ?? 'Failed to log in');
     },
   });
-  const routeApi = getRouteApi('/auth/login');
-  const search = routeApi.useSearch();
 
   return (
     <div>
@@ -100,10 +98,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           </Form>
           <div className="mt-4 flex justify-between items-center">
             <div className="text-sm">Don&apos;t have an account? </div>
-            <Link
-              to="/auth/register"
-              search={(prev) => ({ ...prev, redirect: search.redirect })}
-            >
+            <Link to="/auth/register">
               <Button variant="link">Register</Button>
             </Link>
           </div>
