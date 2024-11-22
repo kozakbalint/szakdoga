@@ -9,7 +9,7 @@ export const getMovieCastById = (id: string): Promise<GetMovieCastResponse> => {
     return Promise.resolve({ cast: null });
   }
   const url = `/cast/movies/${id}`;
-  return apiClient.get(url) as Promise<GetMovieCastResponse>;
+  return apiClient.getWithToken(url) as Promise<GetMovieCastResponse>;
 };
 
 export const getMovieCastByIdQueryOptions = ({ id }: { id: string }) => {
