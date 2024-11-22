@@ -37,12 +37,18 @@ class APIClient {
   }
 
   getWithToken(url: string) {
-    const token = localStorage.getItem('jwt');
+    const authObject = JSON.parse(localStorage.getItem('auth') ?? '');
+    if (!authObject.token || !authObject.expiry) {
+      return Promise.reject('No token found');
+    }
+    if (new Date(authObject.expiry) < new Date()) {
+      return Promise.reject('Token expired');
+    }
     return this.request(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authObject.token}`,
       },
     });
   }

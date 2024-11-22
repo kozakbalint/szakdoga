@@ -6,14 +6,22 @@ export type User = {
 };
 
 export type LoginAuthResponse = {
-  login: {
-    authentication_token: string;
-    user: User;
+  authentication_token: {
+    token: string;
+    expiry: string;
   };
 };
 
 export type RegisterAuthResponse = {
   user: User;
+};
+
+export type GetProfileResponse = {
+  user: User;
+};
+
+export type LogoutResponse = {
+  message: string;
 };
 
 export type SearchMovieResponse = {

@@ -68,9 +68,10 @@ func (app *application) getRequestUserHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	userResponse := &data.User{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
+		ID:        user.ID,
+		CreatedAt: user.CreatedAt,
+		Name:      user.Name,
+		Email:     user.Email,
 	}
 
 	err := app.writeJSON(w, http.StatusOK, envelope{"user": userResponse}, nil)
