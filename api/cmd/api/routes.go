@@ -35,5 +35,9 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v1/watch/movies/:id", app.requireAuthenticatedUser(app.watchMovieHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/watch/tv/:id", app.requireAuthenticatedUser(app.watchTvHandler))
 
+	router.HandlerFunc(http.MethodGet, "/v1/watchlist/movies", app.requireAuthenticatedUser(app.getMoviesWatchlistHandler))
+	router.HandlerFunc(http.MethodPost, "/v1/watchlist/movies", app.requireAuthenticatedUser(app.addMovieToWatchlistHandler))
+	router.HandlerFunc(http.MethodDelete, "/v1/watchlist/movies/:id", app.requireAuthenticatedUser(app.removeMovieFromWatchlistHandler))
+
 	return app.recoverPanic(app.enableCORS(app.authenticate(router)))
 }
