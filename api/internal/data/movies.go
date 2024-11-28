@@ -25,16 +25,13 @@ type MovieModel struct {
 	DB *sql.DB
 }
 
-func (m MovieModel) Insert(movie *Movie) error {
+func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
 	stmt := `INSERT INTO movies
-	(tmdb_id, created_at, last_fetched_at,
-	title, release_date, poster_url,
-	overview, genres, vote_average, runtime, version)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 1)`
+	(tmdb_id, title, release_date, poster_url, overview, genres, vote_average, runtime)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+	RETURNING id, created_at, last_fetched_at, version`
 	args := []interface{}{
 		movie.TmdbID,
-		movie.CreatedAt,
-		movie.LastFetched,
 		movie.Title,
 		movie.ReleaseDate,
 		movie.PosterURL,
@@ -47,11 +44,11 @@ func (m MovieModel) Insert(movie *Movie) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := m.DB.ExecContext(ctx, stmt, args...)
+	err := m.DB.QueryRowContext(ctx, stmt, args...).Scan(&movie.ID, &movie.CreatedAt, &movie.LastFetched, &movie.Version)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return movie, nil
 }
 
 func (m MovieModel) Get(id int64) (*Movie, error) {

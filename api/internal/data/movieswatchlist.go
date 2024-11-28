@@ -23,31 +23,30 @@ type MoviesWatchlistModel struct {
 	DB *sql.DB
 }
 
-func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) error {
+func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlistEntry, error) {
 	stmt := `INSERT INTO movies_watchlist
-	(user_id, movie_id, added_at, updated_at, watched)
-	VALUES($1, $2, $3, $4, $5)`
+	(user_id, movie_id, watched)
+	VALUES($1, $2, $3)
+	RETURNING id, added_at, updated_at`
 	args := []interface{}{
 		mwe.UserID,
 		mwe.MovieID,
-		mwe.AddedAt,
-		mwe.UpdateAt,
 		mwe.Watched,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := m.DB.ExecContext(ctx, stmt, args...)
+	err := m.DB.QueryRowContext(ctx, stmt, args...).Scan(&mwe.ID, &mwe.AddedAt, &mwe.UpdateAt)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return mwe, nil
 }
 
-func (m MoviesWatchlistModel) GetWatchlistEntry(id int64) (*MoviesWatchlistEntry, error) {
-	stmt := `SELECT * FROM movies_watchlist WHERE id = $1`
+func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchlistEntry, error) {
+	stmt := `SELECT * FROM movies_watchlist WHERE user_id = $1 AND id = $2`
 
 	var mwe MoviesWatchlistEntry
 
