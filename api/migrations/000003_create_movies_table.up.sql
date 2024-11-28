@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS movies (
     id bigserial PRIMARY KEY,
-    tmdb_id integer NOT NULL,
+    tmdb_id integer NOT NULL UNIQUE,
     created_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
     last_fetched_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
     title text NOT NULL,
