@@ -10,7 +10,7 @@ export const searchMovies = (q: string): Promise<SearchMoviesResponse> => {
   }
   q = q.trim();
   const url = apiClient.appendQueryParams('/search/movies', { q });
-  return apiClient.get(url) as Promise<SearchMoviesResponse>;
+  return apiClient.getWithToken(url) as Promise<SearchMoviesResponse>;
 };
 
 export const searchMoviesQueryOptions = ({ q }: { q: string }) => {

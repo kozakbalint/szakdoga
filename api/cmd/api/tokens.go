@@ -3,14 +3,10 @@ package main
 import (
 	"errors"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/validator"
-
-	"github.com/pascaldekloe/jwt"
 )
 
 func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
@@ -28,11 +24,7 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	v := validator.New()
 
 	data.ValidateEmail(v, input.Email)
-
-	if len(input.Password) < 8 {
-		app.invalidCredentialsResponse(w, r)
-		return
-	}
+	data.ValidatePasswordPlaintext(v, input.Password)
 
 	if !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
@@ -50,12 +42,6 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		return
 	}
 
-	userResponse := data.User{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
-	}
-
 	match, err := user.Password.Matches(input.Password)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -67,26 +53,28 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		return
 	}
 
-	var claims jwt.Claims
-	claims.Subject = strconv.FormatInt(user.ID, 10)
-	claims.Issued = jwt.NewNumericTime(time.Now())
-	claims.NotBefore = jwt.NewNumericTime(time.Now())
-	claims.Expires = jwt.NewNumericTime(time.Now().Add(24 * time.Hour))
-	claims.Issuer = os.Getenv("DOMAIN")
-	claims.Audiences = []string{os.Getenv("DOMAIN")}
-
-	jwtBytes, err := claims.HMACSign(jwt.HS256, []byte(app.config.jwt.secret))
+	token, err := app.models.Tokens.New(user.ID, 4*7*24*time.Hour)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return
 	}
 
-	response := &LoginResponse{
-		AuthenticationToken: string(jwtBytes),
-		User:                userResponse,
+	err = app.writeJSON(w, http.StatusCreated, envelope{"authentication_token": token}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}
+
+func (app *application) invalidateAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
+	user := app.contextGetUser(r)
+
+	err := app.models.Tokens.DeleteAllForUser(user.ID)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
 	}
 
-	err = app.writeJSON(w, http.StatusCreated, envelope{"login": response}, nil)
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "authentication token(s) successfully deleted"}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

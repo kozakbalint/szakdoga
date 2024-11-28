@@ -8,10 +8,7 @@ require (
 	golang.org/x/crypto v0.27.0
 )
 
-require (
-	github.com/cyruzin/golang-tmdb v1.6.7
-	github.com/pascaldekloe/jwt v1.12.0
-)
+require github.com/cyruzin/golang-tmdb v1.6.7
 
 require (
 	github.com/json-iterator/go v1.1.12 // indirect

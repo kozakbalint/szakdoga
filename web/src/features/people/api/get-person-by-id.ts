@@ -9,7 +9,7 @@ export const getPersonById = (id: string): Promise<GetPersonResponse> => {
     return Promise.resolve({ person: null });
   }
   const url = `/people/${id}`;
-  return apiClient.get(url) as Promise<GetPersonResponse>;
+  return apiClient.getWithToken(url) as Promise<GetPersonResponse>;
 };
 
 export const getPersonByIdQueryOptions = ({ id }: { id: string }) => {

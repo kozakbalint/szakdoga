@@ -22,6 +22,12 @@ class APIClient {
         statusCode: response.status,
         response: await response.json(),
       };
+
+      if (error.statusCode === 401) {
+        localStorage.removeItem('auth');
+        window.location.href = `/auth/login`;
+      }
+
       return Promise.reject(error);
     }
     return response.json();
@@ -37,12 +43,12 @@ class APIClient {
   }
 
   getWithToken(url: string) {
-    const token = localStorage.getItem('jwt');
+    const authObject = JSON.parse(localStorage.getItem('auth') ?? '');
     return this.request(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authObject.token}`,
       },
     });
   }
