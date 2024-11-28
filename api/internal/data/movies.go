@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 type Movie struct {
@@ -36,7 +38,7 @@ func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
 		movie.ReleaseDate,
 		movie.PosterURL,
 		movie.Overview,
-		movie.Genres,
+		pq.Array(movie.Genres),
 		movie.VoteAverage,
 		movie.Runtime,
 	}
