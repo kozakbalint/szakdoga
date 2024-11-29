@@ -67,37 +67,45 @@ func (app *application) addMovieToWatchlistHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	tmdb_movie, err := app.tmdb.GetMovieDetails(int(input.TmdbID), nil)
-	if err != nil || tmdb_movie == nil {
-		app.serverErrorResponse(w, r, err)
-		return
-	}
-
-	genres := []string{}
-	for _, genre := range tmdb_movie.Genres {
-		genres = append(genres, genre.Name)
-	}
-
-	movie := &data.Movie{
-		TmdbID:      int(input.TmdbID),
-		Title:       tmdb_movie.Title,
-		ReleaseDate: tmdb_movie.ReleaseDate,
-		PosterURL:   tmdb.GetImageURL(tmdb_movie.PosterPath, "w500"),
-		Overview:    tmdb_movie.Overview,
-		Genres:      genres,
-		VoteAverage: tmdb_movie.VoteAverage,
-		Runtime:     tmdb_movie.Runtime,
-	}
-
-	movie, err = app.models.Movies.Insert(movie)
+	movie, err := app.models.Movies.GetByTmdbID(int(input.TmdbID))
 	if err != nil {
 		switch err {
-			case data.ErrDuplicateRecord:
-			app.conflictResponse(w, r, "Already on the watchlist")
+		case data.ErrRecordNotFound:
+			break
 		default:
 			app.serverErrorResponse(w, r, err)
+			return
 		}
-		return
+	}
+
+	if movie == nil {
+		tmdb_movie, err := app.tmdb.GetMovieDetails(int(input.TmdbID), nil)
+		if err != nil || tmdb_movie == nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+
+		genres := []string{}
+		for _, genre := range tmdb_movie.Genres {
+			genres = append(genres, genre.Name)
+		}
+
+		movie = &data.Movie{
+			TmdbID:      int(input.TmdbID),
+			Title:       tmdb_movie.Title,
+			ReleaseDate: tmdb_movie.ReleaseDate,
+			PosterURL:   tmdb.GetImageURL(tmdb_movie.PosterPath, "w500"),
+			Overview:    tmdb_movie.Overview,
+			Genres:      genres,
+			VoteAverage: tmdb_movie.VoteAverage,
+			Runtime:     tmdb_movie.Runtime,
+		}
+
+		movie, err = app.models.Movies.Insert(movie)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	moviesWatchlistEntry := &data.MoviesWatchlistEntry{
@@ -131,7 +139,7 @@ func (app *application) removeMovieFromWatchlistHandler(w http.ResponseWriter, r
 		return
 	}
 
-	_, err = app.models.MoviesWatchlist.GetWatchlistEntry(id, user.ID)
+	_, err = app.models.MoviesWatchlist.GetWatchlistEntry(user.ID, id)
 	if err != nil {
 		switch err {
 		case data.ErrRecordNotFound:

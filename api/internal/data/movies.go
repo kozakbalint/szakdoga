@@ -48,6 +48,9 @@ func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
 
 	err := m.DB.QueryRowContext(ctx, stmt, args...).Scan(&movie.ID, &movie.CreatedAt, &movie.LastFetched, &movie.Version)
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
+			return nil, ErrDuplicateRecord
+		}
 		return nil, err
 	}
 	return movie, nil
@@ -100,14 +103,19 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 		&movie.ReleaseDate,
 		&movie.PosterURL,
 		&movie.Overview,
-		&movie.Genres,
+		pq.Array(&movie.Genres),
 		&movie.VoteAverage,
 		&movie.Runtime,
 		&movie.Version,
 	)
 
 	if err != nil {
-		return nil, err
+		switch err {
+		case sql.ErrNoRows:
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
 	}
 
 	return &movie, nil

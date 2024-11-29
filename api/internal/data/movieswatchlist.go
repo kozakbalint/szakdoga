@@ -61,7 +61,7 @@ func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchl
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := m.DB.QueryRowContext(ctx, stmt, id).Scan(
+	err := m.DB.QueryRowContext(ctx, stmt, userID, id).Scan(
 		&mwe.ID,
 		&mwe.UserID,
 		&mwe.MovieID,
