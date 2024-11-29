@@ -9,7 +9,7 @@ export const getTvById = (id: string): Promise<GetTvResponse> => {
     return Promise.resolve({ tv: null });
   }
   const url = `/tv/${id}`;
-  return apiClient.getWithToken(url) as Promise<GetTvResponse>;
+  return apiClient.get(url, true) as Promise<GetTvResponse>;
 };
 
 export const getTvByIdQueryOptions = ({ id }: { id: string }) => {

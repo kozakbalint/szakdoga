@@ -18,8 +18,8 @@ const navItems = [
     icon: SquareMenu,
   },
   {
-    title: 'Lists',
-    url: '/app/lists',
+    title: 'Watchlist',
+    url: '/app/watchlist',
     icon: List,
   },
 ];

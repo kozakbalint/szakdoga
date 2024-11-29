@@ -11,7 +11,7 @@ export const getTvWatchProvidersById = (
     return Promise.resolve({ providers: null });
   }
   const url = `/watch/tv/${id}`;
-  return apiClient.getWithToken(url) as Promise<GetWatchProvidersResponse>;
+  return apiClient.get(url, true) as Promise<GetWatchProvidersResponse>;
 };
 
 export const getTvWatchProvidersByIdQueryOptions = ({ id }: { id: string }) => {

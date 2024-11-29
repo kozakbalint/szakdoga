@@ -13,7 +13,7 @@ export const getTvEpisodeById = (
     return Promise.resolve({ episode: null });
   }
   const url = `/tv/${id}/seasons/${seasonId}/episodes/${episodeId}`;
-  return apiClient.getWithToken(url) as Promise<GetTvEpisodeResponse>;
+  return apiClient.get(url, true) as Promise<GetTvEpisodeResponse>;
 };
 
 export const getTvEpisodeByIdQueryOptions = ({

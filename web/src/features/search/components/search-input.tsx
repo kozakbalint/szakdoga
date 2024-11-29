@@ -68,7 +68,7 @@ export const SearchInput = () => {
         },
         {
           title: 'Lists',
-          onSelect: () => navigate({ to: '/app/lists' }),
+          onSelect: () => navigate({ to: '/app/watchlist' }),
         },
       ],
     },

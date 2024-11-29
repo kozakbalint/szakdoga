@@ -61,16 +61,18 @@ const getUser = async (): Promise<User | null> => {
   if (!authObj || !authObj.token || !authObj.expiry) {
     return null;
   }
-  const response = (await apiClient.getWithToken(
+  const response = (await apiClient.get(
     '/users/me',
+    true,
   )) as GetProfileResponse;
 
   return response.user;
 };
 
 const logout = async (): Promise<void> => {
-  const response = (await apiClient.getWithToken(
+  const response = (await apiClient.get(
     '/users/logout',
+    true,
   )) as LogoutResponse;
   localStorage.removeItem('auth');
 

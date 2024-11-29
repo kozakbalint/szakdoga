@@ -16,9 +16,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AppImport } from './routes/app'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthLoginImport } from './routes/auth/login'
+import { Route as AppWatchlistImport } from './routes/app/watchlist'
 import { Route as AppSettingsImport } from './routes/app/settings'
 import { Route as AppProfileImport } from './routes/app/profile'
-import { Route as AppListsImport } from './routes/app/lists'
 import { Route as AppDashboardImport } from './routes/app/dashboard'
 import { Route as AppTvTvIdImport } from './routes/app/tv/$tvId'
 import { Route as AppSeasonsTvIdImport } from './routes/app/seasons/$tvId'
@@ -60,6 +60,12 @@ const AuthLoginRoute = AuthLoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AppWatchlistRoute = AppWatchlistImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => AppRoute,
+} as any)
+
 const AppSettingsRoute = AppSettingsImport.update({
   id: '/settings',
   path: '/settings',
@@ -69,12 +75,6 @@ const AppSettingsRoute = AppSettingsImport.update({
 const AppProfileRoute = AppProfileImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => AppRoute,
-} as any)
-
-const AppListsRoute = AppListsImport.update({
-  id: '/lists',
-  path: '/lists',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -164,13 +164,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardImport
       parentRoute: typeof AppImport
     }
-    '/app/lists': {
-      id: '/app/lists'
-      path: '/lists'
-      fullPath: '/app/lists'
-      preLoaderRoute: typeof AppListsImport
-      parentRoute: typeof AppImport
-    }
     '/app/profile': {
       id: '/app/profile'
       path: '/profile'
@@ -183,6 +176,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/app/settings'
       preLoaderRoute: typeof AppSettingsImport
+      parentRoute: typeof AppImport
+    }
+    '/app/watchlist': {
+      id: '/app/watchlist'
+      path: '/watchlist'
+      fullPath: '/app/watchlist'
+      preLoaderRoute: typeof AppWatchlistImport
       parentRoute: typeof AppImport
     }
     '/auth/login': {
@@ -269,9 +269,9 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
-  AppListsRoute: typeof AppListsRoute
   AppProfileRoute: typeof AppProfileRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppWatchlistRoute: typeof AppWatchlistRoute
   AppCategoriesCategoryIdRoute: typeof AppCategoriesCategoryIdRoute
   AppMoviesMovieIdRoute: typeof AppMoviesMovieIdRoute
   AppPeoplePersonIdRoute: typeof AppPeoplePersonIdRoute
@@ -285,9 +285,9 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
-  AppListsRoute: AppListsRoute,
   AppProfileRoute: AppProfileRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppWatchlistRoute: AppWatchlistRoute,
   AppCategoriesCategoryIdRoute: AppCategoriesCategoryIdRoute,
   AppMoviesMovieIdRoute: AppMoviesMovieIdRoute,
   AppPeoplePersonIdRoute: AppPeoplePersonIdRoute,
@@ -305,9 +305,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
-  '/app/lists': typeof AppListsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/app/categories/$categoryId': typeof AppCategoriesCategoryIdRoute
@@ -325,9 +325,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
-  '/app/lists': typeof AppListsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/app/categories/$categoryId': typeof AppCategoriesCategoryIdRoute
@@ -346,9 +346,9 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
-  '/app/lists': typeof AppListsRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/app/categories/$categoryId': typeof AppCategoriesCategoryIdRoute
@@ -368,9 +368,9 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/dashboard'
-    | '/app/lists'
     | '/app/profile'
     | '/app/settings'
+    | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
     | '/app/categories/$categoryId'
@@ -387,9 +387,9 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/dashboard'
-    | '/app/lists'
     | '/app/profile'
     | '/app/settings'
+    | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
     | '/app/categories/$categoryId'
@@ -406,9 +406,9 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/dashboard'
-    | '/app/lists'
     | '/app/profile'
     | '/app/settings'
+    | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
     | '/app/categories/$categoryId'
@@ -460,9 +460,9 @@ export const routeTree = rootRoute
       "filePath": "app.tsx",
       "children": [
         "/app/dashboard",
-        "/app/lists",
         "/app/profile",
         "/app/settings",
+        "/app/watchlist",
         "/app/categories/$categoryId",
         "/app/movies/$movieId",
         "/app/people/$personId",
@@ -478,16 +478,16 @@ export const routeTree = rootRoute
       "filePath": "app/dashboard.tsx",
       "parent": "/app"
     },
-    "/app/lists": {
-      "filePath": "app/lists.tsx",
-      "parent": "/app"
-    },
     "/app/profile": {
       "filePath": "app/profile.tsx",
       "parent": "/app"
     },
     "/app/settings": {
       "filePath": "app/settings.tsx",
+      "parent": "/app"
+    },
+    "/app/watchlist": {
+      "filePath": "app/watchlist.tsx",
       "parent": "/app"
     },
     "/auth/login": {
