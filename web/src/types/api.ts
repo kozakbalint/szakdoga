@@ -5,6 +5,21 @@ export type User = {
   email: string;
 };
 
+export type Movie = {
+  id: number;
+  tmdb_id: number;
+  created_at: string;
+  last_fetched_at: string;
+  title: string;
+  release_date: string;
+  poster_url: string;
+  overview: string;
+  genres: string[];
+  vote_average: number;
+  runtime: number;
+  version: number;
+};
+
 export type LoginAuthResponse = {
   authentication_token: {
     token: string;
@@ -199,4 +214,20 @@ export type Episode = {
   runtime: number;
   still_url: string;
   vote_average: number;
+};
+
+export type GetMovieWatchlistResponse = {
+  watchlist: MovieWatchlistResponse[] | null;
+};
+
+export type MovieWatchlistResponse = {
+  id: number;
+  movie: Movie;
+  added_at: string;
+  updated_at: string;
+  watched: boolean;
+};
+
+export type MessageResponse = {
+  message: string;
 };

@@ -1,18 +1,31 @@
 import { Button } from '@/components/ui/button';
-import { Heart, List, Star } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { useGetMovieById } from '../api/get-movie-by-id';
 import { Badge } from '@/components/ui/badge';
 import { MovieWatchProvider } from './movie-watch-provider';
 import { Link } from '@tanstack/react-router';
+import { useAddMovieToWatchlist } from '@/features/watchlist/movies/api/add-movie-to-watchlist';
+import { useGetMoviesWatchlist } from '@/features/watchlist/movies/api/get-movies-watchlist';
+import { useRemoveMovieFromWatchlist } from '@/features/watchlist/movies/api/remove-movie-from-watchlist';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movieQuery = useGetMovieById({ id: movieId });
+  const watchlistQuery = useGetMoviesWatchlist({});
+  const addMovieToWatchlistMutation = useAddMovieToWatchlist();
+  const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist();
 
-  if (movieQuery.isLoading) {
+  if (movieQuery.isLoading || watchlistQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
   const movie = movieQuery.data?.movie;
+  const watchlist = watchlistQuery.data?.watchlist;
+  const onWatchlist = watchlist?.find((m) => m.movie.tmdb_id === movie?.id);
 
   if (!movie) {
     return '';
@@ -41,7 +54,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {movie.genres.map((genre) => (
               <Link key={genre.id} to={`/app/categories/${genre.id}`}>
                 <Badge key={genre.id} className="cursor-pointer">
@@ -57,15 +70,45 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
       </div>
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
         <div>
-          <Button size={'icon'} variant={'outline'}>
-            <Heart />
-          </Button>
-          <Button size={'icon'} variant={'outline'}>
-            <List />
-          </Button>
-          <Button size={'icon'} variant={'outline'}>
-            <Star />
-          </Button>
+          {onWatchlist ? (
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  onClick={() => {
+                    removeMovieFromWatchlistMutation.mutate({
+                      id: onWatchlist?.id,
+                    });
+                  }}
+                  disabled={addMovieToWatchlistMutation.isPending}
+                  className="flex items-center"
+                  size={'icon'}
+                  variant={'outline'}
+                >
+                  <Heart fill="red" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                Remove from watchlist
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  onClick={() => {
+                    addMovieToWatchlistMutation.mutate({ tmdb_id: movie.id });
+                  }}
+                  disabled={addMovieToWatchlistMutation.isPending}
+                  className="flex items-center"
+                  size={'icon'}
+                  variant={'outline'}
+                >
+                  <Heart fill="none" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Add to watchlist</TooltipContent>
+            </Tooltip>
+          )}
         </div>
         <div>
           <MovieWatchProvider movieId={movieId} type="streming" />
