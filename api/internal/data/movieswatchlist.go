@@ -3,8 +3,13 @@ package data
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
+
+	"github.com/lib/pq"
 )
+
+var ErrDuplicateRecord = errors.New("duplicate record")
 
 type MoviesWatchlist struct {
 	Entries []*MoviesWatchlistEntry `json:"entries"`
@@ -39,6 +44,9 @@ func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlis
 
 	err := m.DB.QueryRowContext(ctx, stmt, args...).Scan(&mwe.ID, &mwe.AddedAt, &mwe.UpdateAt)
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
+			return nil, ErrDuplicateRecord
+		}
 		return nil, err
 	}
 

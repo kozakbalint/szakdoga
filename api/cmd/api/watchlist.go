@@ -91,7 +91,12 @@ func (app *application) addMovieToWatchlistHandler(w http.ResponseWriter, r *htt
 
 	movie, err = app.models.Movies.Insert(movie)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		switch err {
+			case data.ErrDuplicateRecord:
+			app.conflictResponse(w, r, "Already on the watchlist")
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
 		return
 	}
 
