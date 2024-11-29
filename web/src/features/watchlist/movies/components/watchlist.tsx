@@ -14,7 +14,7 @@ export const Watchlist = () => {
     return 'No movies in watchlist';
   }
   return (
-    <div className="flex flex-row flex-wrap gap-2 justify-center lg:justify-start">
+    <div className="flex flex-row flex-wrap gap-2 justify-center lg:justify-start w-full">
       {watchlist.map((movie) => (
         <Link
           to={`/app/movies/${movie.movie.tmdb_id}`}
