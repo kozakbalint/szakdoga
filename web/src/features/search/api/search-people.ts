@@ -10,7 +10,7 @@ export const searchPeople = (q: string): Promise<SearchPeopleResponse> => {
   }
   q = q.trim();
   const url = apiClient.appendQueryParams('/search/people', { q });
-  return apiClient.getWithToken(url) as Promise<SearchPeopleResponse>;
+  return apiClient.get(url, true) as Promise<SearchPeopleResponse>;
 };
 
 export const searchPeopleQueryOptions = ({ q }: { q: string }) => {

@@ -1,5 +1,10 @@
 import { env } from '@/config/env';
 
+type Headers = {
+  'Content-Type': string;
+  Authorization?: string;
+};
+
 export type APIError = {
   message: string;
   statusCode: number;
@@ -33,33 +38,55 @@ class APIClient {
     return response.json();
   }
 
-  get(url: string) {
-    return this.request(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }
-
-  getWithToken(url: string) {
-    const authObject = JSON.parse(localStorage.getItem('auth') ?? '');
-    return this.request(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+  get(url: string, auth?: boolean) {
+    let headers: Headers = {
+      'Content-Type': 'application/json',
+    };
+    if (auth) {
+      const authObject = JSON.parse(localStorage.getItem('auth') ?? '');
+      headers = {
+        ...headers,
         Authorization: `Bearer ${authObject.token}`,
-      },
+      };
+    }
+    return this.request(url, {
+      method: 'GET',
+      headers: headers,
     });
   }
 
-  post(url: string, data: unknown) {
+  post(url: string, data: unknown, auth?: boolean) {
+    let headers: Headers = {
+      'Content-Type': 'application/json',
+    };
+    if (auth) {
+      const authObject = JSON.parse(localStorage.getItem('auth') ?? '');
+      headers = {
+        ...headers,
+        Authorization: `Bearer ${authObject.token}`,
+      };
+    }
     return this.request(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
       body: JSON.stringify(data),
+    });
+  }
+
+  delete(url: string, auth?: boolean) {
+    let headers: Headers = {
+      'Content-Type': 'application/json',
+    };
+    if (auth) {
+      const authObject = JSON.parse(localStorage.getItem('auth') ?? '');
+      headers = {
+        ...headers,
+        Authorization: `Bearer ${authObject.token}`,
+      };
+    }
+    return this.request(url, {
+      method: 'DELETE',
+      headers: headers,
     });
   }
 

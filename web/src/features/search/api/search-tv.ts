@@ -10,7 +10,7 @@ export const searchTV = (q: string): Promise<SearchTvsResponse> => {
   }
   q = q.trim();
   const url = apiClient.appendQueryParams('/search/tv', { q });
-  return apiClient.getWithToken(url) as Promise<SearchTvsResponse>;
+  return apiClient.get(url, true) as Promise<SearchTvsResponse>;
 };
 
 export const searchTVQueryOptions = ({ q }: { q: string }) => {
