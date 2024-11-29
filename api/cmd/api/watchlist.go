@@ -7,6 +7,14 @@ import (
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 )
 
+type MovieWatchlistResponse struct {
+	ID       int64      `json:"id"`
+	Movie    data.Movie `json:"movie"`
+	AddedAt  string     `json:"added_at"`
+	UpdateAt string     `json:"updated_at"`
+	Watched  bool       `json:"watched"`
+}
+
 func (app *application) getMoviesWatchlistHandler(w http.ResponseWriter, r *http.Request) {
 	user := app.contextGetUser(r)
 	if user == nil {
@@ -20,7 +28,23 @@ func (app *application) getMoviesWatchlistHandler(w http.ResponseWriter, r *http
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"watchlist": moviesWatchlist}, nil)
+	var watchlistResponse []MovieWatchlistResponse
+	for _, entry := range moviesWatchlist.Entries {
+		movie, err := app.models.Movies.Get(entry.MovieID)
+		if err != nil || movie == nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+		watchlistResponse = append(watchlistResponse, MovieWatchlistResponse{
+			ID:       entry.ID,
+			Movie:    *movie,
+			AddedAt:  entry.AddedAt,
+			UpdateAt: entry.UpdateAt,
+			Watched:  entry.Watched,
+		})
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"watchlist": watchlistResponse}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

@@ -70,7 +70,7 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 		&movie.ReleaseDate,
 		&movie.PosterURL,
 		&movie.Overview,
-		&movie.Genres,
+		pq.Array(&movie.Genres),
 		&movie.VoteAverage,
 		&movie.Runtime,
 		&movie.Version,
