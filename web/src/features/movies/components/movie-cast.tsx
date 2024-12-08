@@ -20,7 +20,7 @@ export const MovieCast = ({ movieId }: { movieId: string }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link to={'/app/cast/movies/' + movieId}>
+      <Link to={`/app/cast/movie/${movieId}`}>
         <div className="flex flex-row gap-2 place-items-center text-2xl font-semibold">
           <p>Top Cast</p>
           <p className="text-xl font-thin">({cast.length})</p>
