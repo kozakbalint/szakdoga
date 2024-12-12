@@ -5,10 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math"
+	"math/big"
 	"net/http"
 	"strconv"
 	"strings"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -130,4 +133,31 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 	}
 
 	return nil
+}
+
+func ConvertNumericToFloat32(n pgtype.Numeric) (float32, error) {
+	if !n.Valid {
+		return 0, fmt.Errorf("numeric value is not valid")
+	}
+
+	if n.NaN {
+		return 0, fmt.Errorf("numeric value is NaN")
+	}
+
+	if n.InfinityModifier != 0 {
+		return 0, fmt.Errorf("numeric value represents infinity")
+	}
+
+	// Convert Int to a big.Float
+	intPart := new(big.Float).SetInt(n.Int)
+
+	// Compute 10^Exp as a big.Float
+	scaleFactor := new(big.Float).SetFloat64(math.Pow(10, float64(n.Exp)))
+
+	// Multiply the integer part by the scaling factor
+	result := new(big.Float).Mul(intPart, scaleFactor)
+
+	// Convert the big.Float to float64, then cast to float32
+	floatVal, _ := result.Float64()
+	return float32(floatVal), nil
 }
