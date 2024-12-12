@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS movies (
     created_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
     last_fetched_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
     title text NOT NULL,
-    release_date date NOT NULL,
+    release_date text NOT NULL,
     poster_url text NOT NULL,
     overview text NOT NULL,
     genres text[] NOT NULL,

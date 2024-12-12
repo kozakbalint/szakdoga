@@ -1,18 +1,21 @@
-package main
+package utils
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"math"
+	"math/big"
 	"net/http"
 	"strconv"
 	"strings"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/julienschmidt/httprouter"
 )
 
-func (app *application) readQueryParams(r *http.Request) (map[string]string, error) {
+func ReadQueryParams(r *http.Request) (map[string]string, error) {
 	queryParams := make(map[string]string)
 
 	query := r.URL.Query()
@@ -25,7 +28,7 @@ func (app *application) readQueryParams(r *http.Request) (map[string]string, err
 	return queryParams, nil
 }
 
-func (app *application) readIDParam(r *http.Request) (int64, error) {
+func ReadIDParam(r *http.Request) (int64, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
 	id, err := strconv.ParseInt(params.ByName("id"), 10, 64)
@@ -36,7 +39,7 @@ func (app *application) readIDParam(r *http.Request) (int64, error) {
 	return id, nil
 }
 
-func (app *application) readSeasonParam(r *http.Request) (int, error) {
+func ReadSeasonParam(r *http.Request) (int, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
 	season, err := strconv.Atoi(params.ByName("season"))
@@ -47,7 +50,7 @@ func (app *application) readSeasonParam(r *http.Request) (int, error) {
 	return season, nil
 }
 
-func (app *application) readEpisodeParam(r *http.Request) (int, error) {
+func ReadEpisodeParam(r *http.Request) (int, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
 	episode, err := strconv.Atoi(params.ByName("episode"))
@@ -58,9 +61,9 @@ func (app *application) readEpisodeParam(r *http.Request) (int, error) {
 	return episode, nil
 }
 
-type envelope map[string]any
+type Envelope map[string]any
 
-func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
+func WriteJSON(w http.ResponseWriter, status int, data Envelope, headers http.Header) error {
 	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
@@ -74,12 +77,15 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Write(js)
+	_, err = w.Write(js)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst any) error {
+func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 	maxBytes := 1_048_576
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
 
@@ -132,19 +138,29 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst any
 	return nil
 }
 
-func (app *application) background(fn func()) {
-	app.wg.Add(1)
+func ConvertNumericToFloat32(n pgtype.Numeric) (float32, error) {
+	if !n.Valid {
+		return 0, fmt.Errorf("numeric value is not valid")
+	}
 
-	go func() {
+	if n.NaN {
+		return 0, fmt.Errorf("numeric value is NaN")
+	}
 
-		defer app.wg.Done()
+	if n.InfinityModifier != 0 {
+		return 0, fmt.Errorf("numeric value represents infinity")
+	}
 
-		defer func() {
-			if err := recover(); err != nil {
-				app.logger.Error(fmt.Sprintf("%v", err))
-			}
-		}()
+	// Convert Int to a big.Float
+	intPart := new(big.Float).SetInt(n.Int)
 
-		fn()
-	}()
+	// Compute 10^Exp as a big.Float
+	scaleFactor := new(big.Float).SetFloat64(math.Pow(10, float64(n.Exp)))
+
+	// Multiply the integer part by the scaling factor
+	result := new(big.Float).Mul(intPart, scaleFactor)
+
+	// Convert the big.Float to float64, then cast to float32
+	floatVal, _ := result.Float64()
+	return float32(floatVal), nil
 }

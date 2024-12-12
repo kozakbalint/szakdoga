@@ -2,10 +2,10 @@ package data
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"time"
 
+	"github.com/kozakbalint/szakdoga/api/internal/repository"
 	"github.com/lib/pq"
 )
 
@@ -16,33 +16,29 @@ type MoviesWatchlist struct {
 }
 
 type MoviesWatchlistEntry struct {
-	ID       int64  `json:"id"`
-	UserID   int64  `json:"user_id"`
-	MovieID  int64  `json:"movie_id"`
-	AddedAt  string `json:"added_at"`
-	UpdateAt string `json:"updated_at"`
-	Watched  bool   `json:"watched"`
+	ID       int64     `json:"id"`
+	UserID   int64     `json:"user_id"`
+	MovieID  int64     `json:"movie_id"`
+	AddedAt  time.Time `json:"added_at"`
+	UpdateAt time.Time `json:"updated_at"`
+	Watched  bool      `json:"watched"`
 }
 
 type MoviesWatchlistModel struct {
-	DB *sql.DB
+	Repository *repository.Queries
 }
 
 func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlistEntry, error) {
-	stmt := `INSERT INTO movies_watchlist
-	(user_id, movie_id, watched)
-	VALUES($1, $2, $3)
-	RETURNING id, added_at, updated_at`
-	args := []interface{}{
-		mwe.UserID,
-		mwe.MovieID,
-		mwe.Watched,
+	args := repository.InsertWatchlistMovieParams{
+		UserID:  int32(mwe.UserID),
+		MovieID: int32(mwe.MovieID),
+		Watched: mwe.Watched,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := m.DB.QueryRowContext(ctx, stmt, args...).Scan(&mwe.ID, &mwe.AddedAt, &mwe.UpdateAt)
+	mweRes, err := m.Repository.InsertWatchlistMovie(ctx, args)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
 			return nil, ErrDuplicateRecord
@@ -50,50 +46,57 @@ func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlis
 		return nil, err
 	}
 
+	mwe = &MoviesWatchlistEntry{
+		ID:       mweRes.ID,
+		UserID:   int64(mweRes.UserID),
+		MovieID:  int64(mweRes.MovieID),
+		AddedAt:  mweRes.AddedAt,
+		UpdateAt: mweRes.UpdatedAt,
+		Watched:  mweRes.Watched,
+	}
+
 	return mwe, nil
 }
 
 func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchlistEntry, error) {
-	stmt := `SELECT * FROM movies_watchlist WHERE user_id = $1 AND id = $2`
-
+	args := repository.GetWatchlistMovieParams{
+		UserID: int32(userID),
+		ID:     id,
+	}
 	var mwe MoviesWatchlistEntry
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := m.DB.QueryRowContext(ctx, stmt, userID, id).Scan(
-		&mwe.ID,
-		&mwe.UserID,
-		&mwe.MovieID,
-		&mwe.AddedAt,
-		&mwe.UpdateAt,
-		&mwe.Watched,
-	)
-
+	mweRes, err := m.Repository.GetWatchlistMovie(ctx, args)
 	if err != nil {
 		return nil, err
+	}
+
+	mwe = MoviesWatchlistEntry{
+		ID:       mweRes.ID,
+		UserID:   int64(mweRes.UserID),
+		MovieID:  int64(mweRes.MovieID),
+		AddedAt:  mweRes.AddedAt,
+		UpdateAt: mweRes.UpdatedAt,
+		Watched:  mweRes.Watched,
 	}
 
 	return &mwe, nil
 }
 
 func (m MoviesWatchlistModel) UpdateWatchlistEntry(mwe *MoviesWatchlistEntry) error {
-	stmt := `UPDATE movies_watchlist
-	SET user_id = $1, movie_id = $2, added_at = $3, updated_at = $4, watched = $5
-	WHERE id = $6`
-	args := []interface{}{
-		mwe.UserID,
-		mwe.MovieID,
-		mwe.AddedAt,
-		mwe.UpdateAt,
-		mwe.Watched,
-		mwe.ID,
+	args := repository.UpdateWatchlistMovieParams{
+		ID:      mwe.ID,
+		UserID:  int32(mwe.UserID),
+		MovieID: int32(mwe.MovieID),
+		Watched: mwe.Watched,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := m.DB.ExecContext(ctx, stmt, args...)
+	_, err := m.Repository.UpdateWatchlistMovie(ctx, args)
 	if err != nil {
 		return err
 	}
@@ -102,12 +105,10 @@ func (m MoviesWatchlistModel) UpdateWatchlistEntry(mwe *MoviesWatchlistEntry) er
 }
 
 func (m MoviesWatchlistModel) DeleteWatchlistEntry(id int64) error {
-	stmt := `DELETE FROM movies_watchlist WHERE id = $1`
-
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := m.DB.ExecContext(ctx, stmt, id)
+	_, err := m.Repository.DeleteWatchlistMovie(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -116,64 +117,24 @@ func (m MoviesWatchlistModel) DeleteWatchlistEntry(id int64) error {
 }
 
 func (m MoviesWatchlistModel) GetWatchlist(userID int64) (*MoviesWatchlist, error) {
-	stmt := `SELECT * FROM movies_watchlist WHERE user_id = $1`
-
 	var mw MoviesWatchlist
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := m.DB.QueryContext(ctx, stmt, userID)
+	rows, err := m.Repository.ListWatchlistMovies(ctx, int32(userID))
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var mwe MoviesWatchlistEntry
-		err := rows.Scan(
-			&mwe.ID,
-			&mwe.UserID,
-			&mwe.MovieID,
-			&mwe.AddedAt,
-			&mwe.UpdateAt,
-			&mwe.Watched,
-		)
-		if err != nil {
-			return nil, err
-		}
-		mw.Entries = append(mw.Entries, &mwe)
-	}
-
-	return &mw, nil
-}
-
-func (m MoviesWatchlistModel) GetByWatchStatus(userID int64, status bool) (*MoviesWatchlist, error) {
-	stmt := `SELECT * FROM movies_watchlist WHERE user_id = $1 AND watched = $2`
-
-	var mw MoviesWatchlist
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	rows, err := m.DB.QueryContext(ctx, stmt, userID, status)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var mwe MoviesWatchlistEntry
-		err := rows.Scan(
-			&mwe.ID,
-			&mwe.UserID,
-			&mwe.MovieID,
-			&mwe.AddedAt,
-			&mwe.UpdateAt,
-			&mwe.Watched,
-		)
-		if err != nil {
-			return nil, err
+	for _, mweRes := range rows {
+		mwe := MoviesWatchlistEntry{
+			ID:       mweRes.ID,
+			UserID:   int64(mweRes.UserID),
+			MovieID:  int64(mweRes.MovieID),
+			AddedAt:  mweRes.AddedAt,
+			UpdateAt: mweRes.UpdatedAt,
+			Watched:  mweRes.Watched,
 		}
 		mw.Entries = append(mw.Entries, &mwe)
 	}
@@ -182,24 +143,27 @@ func (m MoviesWatchlistModel) GetByWatchStatus(userID int64, status bool) (*Movi
 }
 
 func (m MoviesWatchlistModel) GetWatchlistEntryByUserAndMovie(userID, movieID int64) (*MoviesWatchlistEntry, error) {
-	stmt := `SELECT * FROM movies_watchlist WHERE user_id = $1 AND movie_id = $2`
-
+	args := repository.GetWatchlistMovieByMovieIdParams{
+		UserID:  int32(userID),
+		MovieID: int32(movieID),
+	}
 	var mwe MoviesWatchlistEntry
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := m.DB.QueryRowContext(ctx, stmt, userID, movieID).Scan(
-		&mwe.ID,
-		&mwe.UserID,
-		&mwe.MovieID,
-		&mwe.AddedAt,
-		&mwe.UpdateAt,
-		&mwe.Watched,
-	)
-
+	mweRes, err := m.Repository.GetWatchlistMovieByMovieId(ctx, args)
 	if err != nil {
 		return nil, err
+	}
+
+	mwe = MoviesWatchlistEntry{
+		ID:       mweRes.ID,
+		UserID:   int64(mweRes.UserID),
+		MovieID:  int64(mweRes.MovieID),
+		AddedAt:  mweRes.AddedAt,
+		UpdateAt: mweRes.UpdatedAt,
+		Watched:  mweRes.Watched,
 	}
 
 	return &mwe, nil

@@ -1,8 +1,9 @@
 package data
 
 import (
-	"database/sql"
 	"errors"
+
+	"github.com/kozakbalint/szakdoga/api/internal/repository"
 )
 
 var (
@@ -17,11 +18,19 @@ type Models struct {
 	MoviesWatchlist MoviesWatchlistModel
 }
 
-func NewModels(db *sql.DB) Models {
+func NewModels(repo *repository.Queries) Models {
 	return Models{
-		Tokens:          TokenModel{DB: db},
-		Users:           UserModel{DB: db},
-		Movies:          MovieModel{DB: db},
-		MoviesWatchlist: MoviesWatchlistModel{DB: db},
+		Tokens: TokenModel{
+			Repository: repo,
+		},
+		Users: UserModel{
+			Repository: repo,
+		},
+		Movies: MovieModel{
+			Repository: repo,
+		},
+		MoviesWatchlist: MoviesWatchlistModel{
+			Repository: repo,
+		},
 	}
 }

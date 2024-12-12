@@ -1,21 +1,24 @@
-package main
+package middleware
 
 import (
-	"errors"
+	e "errors"
 	"fmt"
 	"net/http"
 	"strings"
 
+	"github.com/kozakbalint/szakdoga/api/internal/config"
+	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
+	"github.com/kozakbalint/szakdoga/api/internal/errors"
 	"github.com/kozakbalint/szakdoga/api/internal/validator"
 )
 
-func (app *application) recoverPanic(next http.Handler) http.Handler {
+func RecoverPanic(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
 				w.Header().Set("Connection", "close")
-				app.serverErrorResponse(w, r, fmt.Errorf("%s", err))
+				errors.ServerErrorResponse(w, r, fmt.Errorf("%s", err))
 			}
 		}()
 
@@ -23,7 +26,7 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 	})
 }
 
-func (app *application) enableCORS(next http.Handler) http.Handler {
+func EnableCORS(c *config.Config, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Vary", "Origin")
 
@@ -32,8 +35,8 @@ func (app *application) enableCORS(next http.Handler) http.Handler {
 		origin := r.Header.Get("Origin")
 
 		if origin != "" {
-			for i := range app.config.cors.trustedOrigins {
-				if origin == app.config.cors.trustedOrigins[i] {
+			for i := range c.CORS.TrustedOrigins {
+				if origin == c.CORS.TrustedOrigins[i] {
 					w.Header().Set("Access-Control-Allow-Origin", origin)
 
 					if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
@@ -52,56 +55,57 @@ func (app *application) enableCORS(next http.Handler) http.Handler {
 	})
 }
 
-func (app *application) authenticate(next http.Handler) http.Handler {
+func Authenticate(models *data.Models, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Vary", "Authorization")
 
 		authorizationHeader := r.Header.Get("Authorization")
 
 		if authorizationHeader == "" {
-			r = app.contextSetUser(r, data.AnonymousUser)
+			r = context.SetUser(r, data.AnonymousUser)
 			next.ServeHTTP(w, r)
 			return
 		}
 
 		headerParts := strings.Split(authorizationHeader, " ")
 		if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-			app.invalidAuthenticationTokenResponse(w, r)
+			errors.InvalidAuthenticationTokenResponse(w, r)
 			return
 		}
 
 		token := headerParts[1]
 
 		v := validator.New()
+		data.ValidateTokenPlaintext(v, token)
 
-		if data.ValidateTokenPlaintext(v, token); !v.Valid() {
-			app.invalidAuthenticationTokenResponse(w, r)
+		if !v.Valid() {
+			errors.InvalidAuthenticationTokenResponse(w, r)
 			return
 		}
 
-		user, err := app.models.Users.GetForToken(token)
+		user, err := models.Users.GetForToken(token)
 		if err != nil {
 			switch {
-			case errors.Is(err, data.ErrRecordNotFound):
-				app.invalidAuthenticationTokenResponse(w, r)
+			case e.Is(err, data.ErrRecordNotFound):
+				errors.InvalidAuthenticationTokenResponse(w, r)
 			default:
-				app.serverErrorResponse(w, r, err)
+				errors.ServerErrorResponse(w, r, err)
 			}
 			return
 		}
 
-		r = app.contextSetUser(r, user)
+		r = context.SetUser(r, user)
 
 		next.ServeHTTP(w, r)
 	})
 }
 
-func (app *application) requireAuthenticatedUser(next http.HandlerFunc) http.HandlerFunc {
+func RequireAuthenticatedUser(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := app.contextGetUser(r)
+		user := context.GetUser(r)
 
 		if user.IsAnonymous() {
-			app.authenticationRequiredResponse(w, r)
+			errors.AuthenticationRequiredResponse(w, r)
 			return
 		}
 
