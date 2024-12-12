@@ -1,7 +1,9 @@
 package context
 
 import (
+	"context"
 	"log/slog"
+	"net/http"
 
 	tmdb "github.com/cyruzin/golang-tmdb"
 	"github.com/kozakbalint/szakdoga/api/internal/config"
@@ -17,4 +19,22 @@ type ServerContext struct {
 	Logger     slog.Logger
 	Tmdb       *tmdb.Client
 	Models     data.Models
+}
+
+type contextKey string
+
+const userContextKey = contextKey("user")
+
+func ContextSetUser(r *http.Request, user *data.User) *http.Request {
+	ctx := context.WithValue(r.Context(), userContextKey, user)
+	return r.WithContext(ctx)
+}
+
+func ContextGetUser(r *http.Request) *data.User {
+	user, ok := r.Context().Value(userContextKey).(*data.User)
+	if !ok {
+		panic("missing user value in request context")
+	}
+
+	return user
 }

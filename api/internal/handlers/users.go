@@ -4,6 +4,7 @@ import (
 	e "errors"
 	"net/http"
 
+	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
@@ -65,7 +66,7 @@ func (h *UsersHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *UsersHandler) GetRequestUserHandler(w http.ResponseWriter, r *http.Request) {
-	user := utils.ContextGetUser(r)
+	user := context.ContextGetUser(r)
 
 	if user.IsAnonymous() {
 		errors.AuthenticationRequiredResponse(w, r)

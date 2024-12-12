@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
@@ -74,7 +75,7 @@ func (h *TokensHandler) CreateAuthenticationTokenHandler(w http.ResponseWriter, 
 }
 
 func (h *TokensHandler) InvalidateAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
-	user := utils.ContextGetUser(r)
+	user := context.ContextGetUser(r)
 
 	err := h.Models.Tokens.DeleteAllForUser(user.ID)
 	if err != nil {

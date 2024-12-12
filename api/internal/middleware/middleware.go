@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/kozakbalint/szakdoga/api/internal/config"
+	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
-	"github.com/kozakbalint/szakdoga/api/internal/utils"
 	"github.com/kozakbalint/szakdoga/api/internal/validator"
 )
 
@@ -62,7 +62,7 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 		authorizationHeader := r.Header.Get("Authorization")
 
 		if authorizationHeader == "" {
-			r = utils.ContextSetUser(r, data.AnonymousUser)
+			r = context.ContextSetUser(r, data.AnonymousUser)
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -93,7 +93,7 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 			return
 		}
 
-		r = utils.ContextSetUser(r, user)
+		r = context.ContextSetUser(r, user)
 
 		next.ServeHTTP(w, r)
 	})
@@ -101,7 +101,7 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 
 func RequireAuthenticatedUser(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := utils.ContextGetUser(r)
+		user := context.ContextGetUser(r)
 
 		if user.IsAnonymous() {
 			errors.AuthenticationRequiredResponse(w, r)

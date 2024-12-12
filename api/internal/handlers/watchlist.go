@@ -5,6 +5,7 @@ import (
 	"time"
 
 	tmdb "github.com/cyruzin/golang-tmdb"
+	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
@@ -26,7 +27,7 @@ type MovieWatchlistResponse struct {
 }
 
 func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := utils.ContextGetUser(r)
+	user := context.ContextGetUser(r)
 	if user == nil {
 		errors.AuthenticationRequiredResponse(w, r)
 		return
@@ -61,7 +62,7 @@ func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *h
 }
 
 func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := utils.ContextGetUser(r)
+	user := context.ContextGetUser(r)
 	if user == nil {
 		errors.AuthenticationRequiredResponse(w, r)
 		return
@@ -137,7 +138,7 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 }
 
 func (h *WatchlistHandler) RemoveMovieFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := utils.ContextGetUser(r)
+	user := context.ContextGetUser(r)
 	if user == nil {
 		errors.AuthenticationRequiredResponse(w, r)
 		return
