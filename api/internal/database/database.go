@@ -98,7 +98,7 @@ func (s *service) GetQueries() *repository.Queries {
 
 // runMigrations applies database migrations using the golang-migrate package.
 func runMigrations(connStr string) error {
-	m, err := migrate.New("file://internal/database/migrations", connStr)
+	m, err := migrate.New("file://migrations", connStr)
 	if err != nil {
 		return fmt.Errorf("failed to initialize migrations: %w", err)
 	}

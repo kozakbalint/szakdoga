@@ -24,6 +24,8 @@ services:
       - "$API_PORT:$API_PORT"
     volumes:
       - ./api:/app
+      - ./api/.env:/.env
+      - ./api/migrations:/migrations
     depends_on:
       - db
     networks:
@@ -38,6 +40,12 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U screenlog -d screenlog'"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     networks:
       - backend
 
