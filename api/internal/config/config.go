@@ -39,7 +39,7 @@ func Load() (Config, error) {
 		return Config{}, err
 	}
 
-	port, err := strconv.Atoi(os.Getenv("PORT"))
+	port, err := strconv.Atoi(os.Getenv("API_PORT"))
 	if err != nil {
 		port = 4000
 	}
