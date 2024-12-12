@@ -88,6 +88,9 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 	}
 
 	voterAverage, err := utils.ConvertNumericToFloat32(movieRes.VoteAverage)
+	if err != nil {
+		return nil, err
+	}
 
 	movie = Movie{
 		ID:          movieRes.ID,
@@ -124,6 +127,9 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 	}
 
 	voterAverage, err := utils.ConvertNumericToFloat32(movieRes.VoteAverage)
+	if err != nil {
+		return nil, err
+	}
 
 	movie = Movie{
 		ID:          movieRes.ID,

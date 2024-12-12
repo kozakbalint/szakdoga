@@ -23,17 +23,17 @@ type Server struct {
 }
 
 func NewServer() *http.Server {
-	config, err := config.Load()
+	c, err := config.Load()
 	if err != nil {
 		fmt.Println("Error loading config: ", err)
 	}
 
-	db, err := database.New(&config)
+	db, err := database.New(&c)
 	if err != nil {
 		fmt.Println("Error connecting to database: ", err)
 	}
 
-	tmdb, err := tmdb.Init(config.TMDB.APIKey)
+	tmdbClient, err := tmdb.Init(c.TMDB.APIKey)
 	if err != nil {
 		fmt.Println("Error connecting to tmdb: ", err)
 	}
@@ -45,13 +45,13 @@ func NewServer() *http.Server {
 		Logger:     *logger,
 		DB:         db,
 		Repository: db.GetQueries(),
-		Config:     &config,
-		Tmdb:       tmdb,
+		Config:     &c,
+		Tmdb:       tmdbClient,
 		Models:     data.NewModels(db.GetQueries()),
 	}
 
 	newServer := &Server{
-		Port:          config.Port,
+		Port:          c.Port,
 		Logger:        *logger,
 		ServerContext: serverContext,
 	}

@@ -19,7 +19,7 @@ type MovieResponse struct {
 	ReleaseDate string  `json:"release_date"`
 	Genres      Genres  `json:"genres"`
 	Runtime     int     `json:"runtime"`
-	PosterUrl   string  `json:"poster_url"`
+	PosterURL   string  `json:"poster_url"`
 	Popularity  float32 `json:"popularity"`
 	VoteAverage float32 `json:"vote_average"`
 }
@@ -29,7 +29,7 @@ type Genres []struct {
 	Name string `json:"name"`
 }
 
-func (h *MovieHandler) GetMovieByIdHandler(w http.ResponseWriter, r *http.Request) {
+func (h *MovieHandler) GetMovieByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
@@ -42,9 +42,9 @@ func (h *MovieHandler) GetMovieByIdHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	poster_url := ""
+	posterURL := ""
 	if movie.PosterPath != "" {
-		poster_url = tmdb.GetImageURL(movie.PosterPath, "w500")
+		posterURL = tmdb.GetImageURL(movie.PosterPath, "w500")
 	}
 
 	response := MovieResponse{
@@ -54,7 +54,7 @@ func (h *MovieHandler) GetMovieByIdHandler(w http.ResponseWriter, r *http.Reques
 		ReleaseDate: movie.ReleaseDate,
 		Genres:      movie.Genres,
 		Runtime:     movie.Runtime,
-		PosterUrl:   poster_url,
+		PosterURL:   posterURL,
 		Popularity:  movie.Popularity,
 		VoteAverage: movie.VoteAverage,
 	}

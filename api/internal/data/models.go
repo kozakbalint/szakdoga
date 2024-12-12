@@ -18,19 +18,19 @@ type Models struct {
 	MoviesWatchlist MoviesWatchlistModel
 }
 
-func NewModels(repository *repository.Queries) Models {
+func NewModels(repo *repository.Queries) Models {
 	return Models{
 		Tokens: TokenModel{
-			Repository: repository,
+			Repository: repo,
 		},
 		Users: UserModel{
-			Repository: repository,
+			Repository: repo,
 		},
 		Movies: MovieModel{
-			Repository: repository,
+			Repository: repo,
 		},
 		MoviesWatchlist: MoviesWatchlistModel{
-			Repository: repository,
+			Repository: repo,
 		},
 	}
 }

@@ -26,7 +26,7 @@ func RecoverPanic(next http.Handler) http.Handler {
 	})
 }
 
-func EnableCORS(config config.Config, next http.Handler) http.Handler {
+func EnableCORS(c *config.Config, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Vary", "Origin")
 
@@ -35,8 +35,8 @@ func EnableCORS(config config.Config, next http.Handler) http.Handler {
 		origin := r.Header.Get("Origin")
 
 		if origin != "" {
-			for i := range config.CORS.TrustedOrigins {
-				if origin == config.CORS.TrustedOrigins[i] {
+			for i := range c.CORS.TrustedOrigins {
+				if origin == c.CORS.TrustedOrigins[i] {
 					w.Header().Set("Access-Control-Allow-Origin", origin)
 
 					if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
@@ -62,7 +62,7 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 		authorizationHeader := r.Header.Get("Authorization")
 
 		if authorizationHeader == "" {
-			r = context.ContextSetUser(r, data.AnonymousUser)
+			r = context.SetUser(r, data.AnonymousUser)
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -76,8 +76,9 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 		token := headerParts[1]
 
 		v := validator.New()
+		data.ValidateTokenPlaintext(v, token)
 
-		if data.ValidateTokenPlaintext(v, token); !v.Valid() {
+		if !v.Valid() {
 			errors.InvalidAuthenticationTokenResponse(w, r)
 			return
 		}
@@ -93,7 +94,7 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 			return
 		}
 
-		r = context.ContextSetUser(r, user)
+		r = context.SetUser(r, user)
 
 		next.ServeHTTP(w, r)
 	})
@@ -101,7 +102,7 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 
 func RequireAuthenticatedUser(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := context.ContextGetUser(r)
+		user := context.GetUser(r)
 
 		if user.IsAnonymous() {
 			errors.AuthenticationRequiredResponse(w, r)

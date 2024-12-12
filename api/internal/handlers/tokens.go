@@ -75,7 +75,7 @@ func (h *TokensHandler) CreateAuthenticationTokenHandler(w http.ResponseWriter, 
 }
 
 func (h *TokensHandler) InvalidateAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.ContextGetUser(r)
+	user := context.GetUser(r)
 
 	err := h.Models.Tokens.DeleteAllForUser(user.ID)
 	if err != nil {

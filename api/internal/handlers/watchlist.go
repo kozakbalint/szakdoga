@@ -27,7 +27,7 @@ type MovieWatchlistResponse struct {
 }
 
 func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.ContextGetUser(r)
+	user := context.GetUser(r)
 	if user == nil {
 		errors.AuthenticationRequiredResponse(w, r)
 		return
@@ -62,7 +62,7 @@ func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *h
 }
 
 func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.ContextGetUser(r)
+	user := context.GetUser(r)
 	if user == nil {
 		errors.AuthenticationRequiredResponse(w, r)
 		return
@@ -90,26 +90,26 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 	}
 
 	if movie == nil {
-		tmdb_movie, err := h.Tmdb.GetMovieDetails(int(input.TmdbID), nil)
-		if err != nil || tmdb_movie == nil {
+		tmdbMovie, err := h.Tmdb.GetMovieDetails(int(input.TmdbID), nil)
+		if err != nil || tmdbMovie == nil {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
 
 		genres := []string{}
-		for _, genre := range tmdb_movie.Genres {
+		for _, genre := range tmdbMovie.Genres {
 			genres = append(genres, genre.Name)
 		}
 
 		movie = &data.Movie{
 			TmdbID:      int(input.TmdbID),
-			Title:       tmdb_movie.Title,
-			ReleaseDate: tmdb_movie.ReleaseDate,
-			PosterURL:   tmdb.GetImageURL(tmdb_movie.PosterPath, "w500"),
-			Overview:    tmdb_movie.Overview,
+			Title:       tmdbMovie.Title,
+			ReleaseDate: tmdbMovie.ReleaseDate,
+			PosterURL:   tmdb.GetImageURL(tmdbMovie.PosterPath, "w500"),
+			Overview:    tmdbMovie.Overview,
 			Genres:      genres,
-			VoteAverage: tmdb_movie.VoteAverage,
-			Runtime:     tmdb_movie.Runtime,
+			VoteAverage: tmdbMovie.VoteAverage,
+			Runtime:     tmdbMovie.Runtime,
 		}
 
 		movie, err = h.Models.Movies.Insert(movie)
@@ -125,7 +125,7 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 		Watched: false,
 	}
 
-	moviesWatchlistEntry, err = h.Models.MoviesWatchlist.Insert(moviesWatchlistEntry)
+	_, err = h.Models.MoviesWatchlist.Insert(moviesWatchlistEntry)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -138,7 +138,7 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 }
 
 func (h *WatchlistHandler) RemoveMovieFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.ContextGetUser(r)
+	user := context.GetUser(r)
 	if user == nil {
 		errors.AuthenticationRequiredResponse(w, r)
 		return

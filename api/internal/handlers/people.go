@@ -17,11 +17,11 @@ type PersonResponse struct {
 	Name       string  `json:"name"`
 	Biography  string  `json:"biography"`
 	Birthday   string  `json:"birthday"`
-	ProfileUrl string  `json:"profile_url"`
+	ProfileURL string  `json:"profile_url"`
 	Popularity float32 `json:"popularity"`
 }
 
-func (h *PeopleHandler) GetPersonByIdHandler(w http.ResponseWriter, r *http.Request) {
+func (h *PeopleHandler) GetPersonByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
@@ -34,9 +34,9 @@ func (h *PeopleHandler) GetPersonByIdHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	profile_url := ""
+	profileURL := ""
 	if person.ProfilePath != "" {
-		profile_url = tmdb.GetImageURL(person.ProfilePath, "w185")
+		profileURL = tmdb.GetImageURL(person.ProfilePath, "w185")
 	}
 
 	response := PersonResponse{
@@ -44,7 +44,7 @@ func (h *PeopleHandler) GetPersonByIdHandler(w http.ResponseWriter, r *http.Requ
 		Name:       person.Name,
 		Biography:  person.Biography,
 		Birthday:   person.Birthday,
-		ProfileUrl: profile_url,
+		ProfileURL: profileURL,
 		Popularity: person.Popularity,
 	}
 

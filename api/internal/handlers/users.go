@@ -42,7 +42,8 @@ func (h *UsersHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	v := validator.New()
-	if data.ValidateUser(v, user); !v.Valid() {
+	data.ValidateUser(v, user)
+	if !v.Valid() {
 		errors.FailedValidationResponse(w, r, v.Errors)
 		return
 	}
@@ -66,7 +67,7 @@ func (h *UsersHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *UsersHandler) GetRequestUserHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.ContextGetUser(r)
+	user := context.GetUser(r)
 
 	if user.IsAnonymous() {
 		errors.AuthenticationRequiredResponse(w, r)

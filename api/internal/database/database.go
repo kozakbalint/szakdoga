@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
+	// Import the postgres driver for golang-migrate
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	// Import the file source driver for golang-migrate
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/kozakbalint/szakdoga/api/internal/config"

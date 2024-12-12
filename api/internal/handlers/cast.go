@@ -16,7 +16,7 @@ type MovieCastResponse struct {
 	ID         int64   `json:"id"`
 	Name       string  `json:"name"`
 	Character  string  `json:"character"`
-	ProfileUrl string  `json:"profile_url"`
+	ProfileURL string  `json:"profile_url"`
 	Popularity float32 `json:"popularity"`
 }
 
@@ -24,7 +24,7 @@ type TvCastResponse struct {
 	ID                int64   `json:"id"`
 	Name              string  `json:"name"`
 	Roles             []Role  `json:"roles"`
-	ProfileUrl        string  `json:"profile_url"`
+	ProfileURL        string  `json:"profile_url"`
 	TotalEpisodeCount int     `json:"total_episode_count"`
 	Popularity        float64 `json:"popularity"`
 }
@@ -48,17 +48,18 @@ func (h *CastHandler) GetMovieCastHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	var response []MovieCastResponse
-	for _, cast := range movie.Cast {
-		profile_url := ""
+	for i := range movie.Cast {
+		cast := &movie.Cast[i]
+		profileURL := ""
 		if cast.ProfilePath != "" {
-			profile_url = tmdb.GetImageURL(cast.ProfilePath, "w185")
+			profileURL = tmdb.GetImageURL(cast.ProfilePath, "w185")
 		}
 
 		response = append(response, MovieCastResponse{
 			ID:         cast.ID,
 			Name:       cast.Name,
 			Character:  cast.Character,
-			ProfileUrl: profile_url,
+			ProfileURL: profileURL,
 			Popularity: cast.Popularity,
 		})
 	}
@@ -83,10 +84,11 @@ func (h *CastHandler) GetTvCastHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var response []TvCastResponse
-	for _, cast := range tv.Cast {
-		profile_url := ""
+	for i := range tv.Cast {
+		cast := &tv.Cast[i]
+		profileURL := ""
 		if cast.ProfilePath != "" {
-			profile_url = tmdb.GetImageURL(cast.ProfilePath, "w185")
+			profileURL = tmdb.GetImageURL(cast.ProfilePath, "w185")
 		}
 
 		roles := []Role{}
@@ -101,7 +103,7 @@ func (h *CastHandler) GetTvCastHandler(w http.ResponseWriter, r *http.Request) {
 			ID:                cast.ID,
 			Name:              cast.Name,
 			Roles:             roles,
-			ProfileUrl:        profile_url,
+			ProfileURL:        profileURL,
 			TotalEpisodeCount: cast.TotalEpisodeCount,
 			Popularity:        cast.Popularity,
 		})

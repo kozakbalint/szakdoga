@@ -87,7 +87,7 @@ func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchl
 
 func (m MoviesWatchlistModel) UpdateWatchlistEntry(mwe *MoviesWatchlistEntry) error {
 	args := repository.UpdateWatchlistMovieParams{
-		ID:      int64(mwe.ID),
+		ID:      mwe.ID,
 		UserID:  int32(mwe.UserID),
 		MovieID: int32(mwe.MovieID),
 		Watched: mwe.Watched,

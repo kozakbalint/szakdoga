@@ -17,7 +17,7 @@ type MovieSearchResponse struct {
 	ID          int64   `json:"id"`
 	Title       string  `json:"title"`
 	Overview    string  `json:"overview"`
-	PosterUrl   string  `json:"poster_url"`
+	PosterURL   string  `json:"poster_url"`
 	ReleaseDate string  `json:"release_date"`
 	Popularity  float32 `json:"popularity"`
 }
@@ -26,7 +26,7 @@ type TvSearchResponse struct {
 	ID           int64   `json:"id"`
 	Name         string  `json:"name"`
 	Overview     string  `json:"overview"`
-	PosterUrl    string  `json:"poster_url"`
+	PosterURL    string  `json:"poster_url"`
 	FirstAirDate string  `json:"first_air_date"`
 	Popularity   float32 `json:"popularity"`
 }
@@ -34,7 +34,7 @@ type TvSearchResponse struct {
 type PersonSearchResponse struct {
 	ID         int64   `json:"id"`
 	Name       string  `json:"name"`
-	ProfileUrl string  `json:"profile_url"`
+	ProfileURL string  `json:"profile_url"`
 	Popularity float32 `json:"popularity"`
 }
 
@@ -57,16 +57,17 @@ func (h *SearchHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	var response []MovieSearchResponse
-	for _, movie := range movies.Results {
-		poster_url := ""
+	for i := range movies.Results {
+		movie := &movies.Results[i]
+		posterURL := ""
 		if movie.PosterPath != "" {
-			poster_url = tmdb.GetImageURL(movie.PosterPath, "w92")
+			posterURL = tmdb.GetImageURL(movie.PosterPath, "w92")
 		}
 		response = append(response, MovieSearchResponse{
 			ID:          movie.ID,
 			Title:       movie.Title,
 			Overview:    movie.Overview,
-			PosterUrl:   poster_url,
+			PosterURL:   posterURL,
 			ReleaseDate: movie.ReleaseDate,
 			Popularity:  movie.Popularity,
 		})
@@ -97,15 +98,16 @@ func (h *SearchHandler) SearchPeopleHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	var response []PersonSearchResponse
-	for _, person := range people.Results {
-		profile_url := ""
+	for i := range people.Results {
+		person := &people.Results[i]
+		profileURL := ""
 		if person.ProfilePath != "" {
-			profile_url = tmdb.GetImageURL(person.ProfilePath, "w185")
+			profileURL = tmdb.GetImageURL(person.ProfilePath, "w185")
 		}
 		response = append(response, PersonSearchResponse{
 			ID:         person.ID,
 			Name:       person.Name,
-			ProfileUrl: profile_url,
+			ProfileURL: profileURL,
 			Popularity: person.Popularity,
 		})
 	}
@@ -135,17 +137,18 @@ func (h *SearchHandler) SearchTvHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	var response []TvSearchResponse
-	for _, show := range tv.Results {
-		posterUrl := ""
+	for i := range tv.Results {
+		show := &tv.Results[i]
+		posterURL := ""
 		if show.PosterPath != "" {
-			posterUrl = tmdb.GetImageURL(show.PosterPath, "w92")
+			posterURL = tmdb.GetImageURL(show.PosterPath, "w92")
 		}
 
 		response = append(response, TvSearchResponse{
 			ID:           show.ID,
 			Name:         show.Name,
 			Overview:     show.Overview,
-			PosterUrl:    posterUrl,
+			PosterURL:    posterURL,
 			FirstAirDate: show.FirstAirDate,
 			Popularity:   show.Popularity,
 		})

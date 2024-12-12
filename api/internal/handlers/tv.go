@@ -17,7 +17,7 @@ type TvResponse struct {
 	Name             string  `json:"name"`
 	Overview         string  `json:"overview"`
 	FirstAirDate     string  `json:"first_air_date"`
-	PosterUrl        string  `json:"poster_url"`
+	PosterURL        string  `json:"poster_url"`
 	Genres           Genres  `json:"genres"`
 	NumberOfSeasons  int     `json:"number_of_seasons"`
 	NumberOfEpisodes int     `json:"number_of_episodes"`
@@ -36,7 +36,7 @@ type SeasonsWithoutEpisodes struct {
 	EpisodeCount int     `json:"episode_count"`
 	Name         string  `json:"name"`
 	Overview     string  `json:"overview"`
-	PosterUrl    string  `json:"poster_url"`
+	PosterURL    string  `json:"poster_url"`
 	VoteAverage  float32 `json:"vote_average"`
 }
 
@@ -50,13 +50,13 @@ type Season struct {
 	EpisodeCount int       `json:"episode_count"`
 	Name         string    `json:"name"`
 	Overview     string    `json:"overview"`
-	PosterUrl    string    `json:"poster_url"`
+	PosterURL    string    `json:"poster_url"`
 	VoteAverage  float32   `json:"vote_average"`
 	Episodes     []Episode `json:"episodes"`
 }
 
 type TvEpisodeResponse struct {
-	TvId         int64   `json:"tv_id"`
+	TvID         int64   `json:"tv_id"`
 	SeasonNumber int     `json:"season_number"`
 	Episode      Episode `json:"episode"`
 }
@@ -67,11 +67,11 @@ type Episode struct {
 	Name          string  `json:"name"`
 	Overview      string  `json:"overview"`
 	Runtime       int     `json:"runtime"`
-	StillUrl      string  `json:"still_url"`
+	StillURL      string  `json:"still_url"`
 	VoteAverage   float32 `json:"vote_average"`
 }
 
-func (h *TvHandler) GetTvByIdHandler(w http.ResponseWriter, r *http.Request) {
+func (h *TvHandler) GetTvByIDHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
@@ -84,9 +84,9 @@ func (h *TvHandler) GetTvByIdHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	poster_url := ""
+	posterURL := ""
 	if tv.PosterPath != "" {
-		poster_url = tmdb.GetImageURL(tv.PosterPath, "w500")
+		posterURL = tmdb.GetImageURL(tv.PosterPath, "w500")
 	}
 
 	response := TvResponse{
@@ -94,7 +94,7 @@ func (h *TvHandler) GetTvByIdHandler(w http.ResponseWriter, r *http.Request) {
 		Name:             tv.Name,
 		Overview:         tv.Overview,
 		FirstAirDate:     tv.FirstAirDate,
-		PosterUrl:        poster_url,
+		PosterURL:        posterURL,
 		Genres:           tv.Genres,
 		NumberOfSeasons:  tv.NumberOfSeasons,
 		NumberOfEpisodes: tv.NumberOfEpisodes,
@@ -124,20 +124,20 @@ func (h *TvHandler) GetTvSeasonsHandler(w http.ResponseWriter, r *http.Request) 
 		TvID:        tvID,
 		SeasonCount: tvDetails.NumberOfSeasons,
 	}
-	for _, season := range tvDetails.Seasons {
+	for i := range tvDetails.Seasons {
+		season := &tvDetails.Seasons[i]
 		if season.SeasonNumber == 0 {
 			continue
 		}
 
-		var posterUrl = ""
-		posterUrl = tmdb.GetImageURL(season.PosterPath, "w500")
+		posterURL := tmdb.GetImageURL(season.PosterPath, "w500")
 
 		tvSeasonsResponse.SeasonsWithoutEpisodes = append(tvSeasonsResponse.SeasonsWithoutEpisodes, SeasonsWithoutEpisodes{
 			SeasonNumber: season.SeasonNumber,
 			EpisodeCount: season.EpisodeCount,
 			Name:         season.Name,
 			Overview:     season.Overview,
-			PosterUrl:    posterUrl,
+			PosterURL:    posterURL,
 			VoteAverage:  season.VoteAverage,
 		})
 	}
@@ -160,20 +160,21 @@ func (h *TvHandler) GetTvEpisodesHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	seasonDetails, err := h.Tmdb.GetTVSeasonDetails(int(tvID), int(seasonNumber), nil)
+	seasonDetails, err := h.Tmdb.GetTVSeasonDetails(int(tvID), seasonNumber, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 	var episodes []Episode
-	for _, episode := range seasonDetails.Episodes {
+	for i := range seasonDetails.Episodes {
+		episode := &seasonDetails.Episodes[i]
 		episodes = append(episodes, Episode{
 			AirDate:       episode.AirDate,
 			EpisodeNumber: episode.EpisodeNumber,
 			Name:          episode.Name,
 			Overview:      episode.Overview,
 			Runtime:       episode.Runtime,
-			StillUrl:      tmdb.GetImageURL(episode.StillPath, "w500"),
+			StillURL:      tmdb.GetImageURL(episode.StillPath, "w500"),
 			VoteAverage:   episode.VoteAverage,
 		})
 	}
@@ -186,7 +187,7 @@ func (h *TvHandler) GetTvEpisodesHandler(w http.ResponseWriter, r *http.Request)
 			Name:         seasonDetails.Name,
 			Overview:     seasonDetails.Overview,
 			VoteAverage:  seasonDetails.VoteAverage,
-			PosterUrl:    tmdb.GetImageURL(seasonDetails.PosterPath, "w500"),
+			PosterURL:    tmdb.GetImageURL(seasonDetails.PosterPath, "w500"),
 			Episodes:     episodes,
 		},
 	}
@@ -214,14 +215,14 @@ func (h *TvHandler) GetTvEpisodeHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	episode, err := h.Tmdb.GetTVEpisodeDetails(int(tvID), int(seasonNumber), int(episodeNumber), nil)
+	episode, err := h.Tmdb.GetTVEpisodeDetails(int(tvID), seasonNumber, episodeNumber, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
 	episodeDetails := TvEpisodeResponse{
-		TvId:         tvID,
+		TvID:         tvID,
 		SeasonNumber: seasonNumber,
 		Episode: Episode{
 			AirDate:       episode.AirDate,
@@ -229,7 +230,7 @@ func (h *TvHandler) GetTvEpisodeHandler(w http.ResponseWriter, r *http.Request) 
 			Name:          episode.Name,
 			Overview:      episode.Overview,
 			Runtime:       episode.Runtime,
-			StillUrl:      tmdb.GetImageURL(episode.StillPath, "w500"),
+			StillURL:      tmdb.GetImageURL(episode.StillPath, "w500"),
 			VoteAverage:   episode.VoteAverage,
 		},
 	}
