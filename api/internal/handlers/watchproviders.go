@@ -1,21 +1,38 @@
-package main
+package handlers
 
 import (
 	"net/http"
 
 	tmdb "github.com/cyruzin/golang-tmdb"
+	"github.com/kozakbalint/szakdoga/api/internal/errors"
+	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
 
-func (app *application) watchMovieHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := app.readIDParam(r)
+type WatchProviderHandler struct {
+	Tmdb *tmdb.Client
+}
+
+type WatchProviderResponse struct {
+	Streaming []Watchprovider `json:"streaming"`
+	Buy       []Watchprovider `json:"buy"`
+}
+
+type Watchprovider struct {
+	ID      int64  `json:"id"`
+	LogoURL string `json:"logo_url"`
+	Name    string `json:"name"`
+}
+
+func (h *WatchProviderHandler) WatchProvidersMovieHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
-		app.badRequestResponse(w, r, err)
+		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
-	providers, err := app.tmdb.GetMovieWatchProviders(int(id), nil)
+	providers, err := h.Tmdb.GetMovieWatchProviders(int(id), nil)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 	huProviders := providers.Results["HU"]
@@ -35,22 +52,22 @@ func (app *application) watchMovieHandler(w http.ResponseWriter, r *http.Request
 		})
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"providers": response}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": response}, nil)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (app *application) watchTvHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := app.readIDParam(r)
+func (h *WatchProviderHandler) WatchProvidersTvHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
-		app.badRequestResponse(w, r, err)
+		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
-	providers, err := app.tmdb.GetTVWatchProviders(int(id), nil)
+	providers, err := h.Tmdb.GetTVWatchProviders(int(id), nil)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 	huProviders := providers.Results["HU"]
@@ -70,8 +87,8 @@ func (app *application) watchTvHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"providers": response}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": response}, nil)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		errors.ServerErrorResponse(w, r, err)
 	}
 }

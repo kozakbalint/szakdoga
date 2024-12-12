@@ -4,10 +4,10 @@ import (
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
-	"database/sql"
 	"encoding/base32"
 	"time"
 
+	"github.com/kozakbalint/szakdoga/api/internal/repository"
 	"github.com/kozakbalint/szakdoga/api/internal/validator"
 )
 
@@ -24,7 +24,7 @@ func ValidateTokenPlaintext(v *validator.Validator, tokenPlaintext string) {
 }
 
 type TokenModel struct {
-	DB *sql.DB
+	Repository *repository.Queries
 }
 
 func (m TokenModel) New(userID int64, ttl time.Duration) (*Token, error) {
@@ -38,29 +38,24 @@ func (m TokenModel) New(userID int64, ttl time.Duration) (*Token, error) {
 }
 
 func (m TokenModel) Insert(token *Token) error {
-	query := `
-		INSERT INTO tokens (hash, user_id, expiry)
-		VALUES ($1, $2, $3)
-	`
+	args := repository.InsertTokenParams{
+		Hash:   token.Hash,
+		UserID: token.UserID,
+		Expiry: token.Expiry,
+	}
 
-	args := []interface{}{token.Hash, token.UserID, token.Expiry}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := m.DB.ExecContext(ctx, query, args...)
+	_, err := m.Repository.InsertToken(ctx, args)
 	return err
 }
 
 func (m TokenModel) DeleteAllForUser(userID int64) error {
-	query := `
-		DELETE FROM tokens
-		WHERE user_id = $1
-	`
-
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := m.DB.ExecContext(ctx, query, userID)
+	_, err := m.Repository.DeleteAllTokens(ctx, userID)
 	return err
 }
 
