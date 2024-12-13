@@ -16,7 +16,7 @@ RETURNING *;
 
 -- name: DeleteWatchedMovie :one
 DELETE FROM watched_movies
-WHERE id = $1
+WHERE id = $1 AND user_id = $2
 RETURNING *;
 
 -- name: ListWatchedMovies :many

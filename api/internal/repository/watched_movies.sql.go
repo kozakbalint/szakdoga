@@ -12,12 +12,17 @@ import (
 
 const deleteWatchedMovie = `-- name: DeleteWatchedMovie :one
 DELETE FROM watched_movies
-WHERE id = $1
+WHERE id = $1 AND user_id = $2
 RETURNING id, user_id, movie_id, watched_at
 `
 
-func (q *Queries) DeleteWatchedMovie(ctx context.Context, id int32) (WatchedMovie, error) {
-	row := q.db.QueryRow(ctx, deleteWatchedMovie, id)
+type DeleteWatchedMovieParams struct {
+	ID     int32 `json:"id"`
+	UserID int32 `json:"user_id"`
+}
+
+func (q *Queries) DeleteWatchedMovie(ctx context.Context, arg DeleteWatchedMovieParams) (WatchedMovie, error) {
+	row := q.db.QueryRow(ctx, deleteWatchedMovie, arg.ID, arg.UserID)
 	var i WatchedMovie
 	err := row.Scan(
 		&i.ID,
