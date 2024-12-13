@@ -5,9 +5,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
-	"github.com/kozakbalint/szakdoga/api/internal/utils"
 	"github.com/lib/pq"
 )
 
@@ -31,11 +29,6 @@ type MovieModel struct {
 }
 
 func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
-	var voterAverage pgtype.Numeric
-	if err := voterAverage.Scan(movie.VoteAverage); err != nil {
-		return nil, err
-	}
-
 	args := repository.InsertMovieParams{
 		TmdbID:      int32(movie.TmdbID),
 		Title:       movie.Title,
@@ -43,7 +36,7 @@ func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
 		PosterUrl:   movie.PosterURL,
 		Overview:    movie.Overview,
 		Genres:      pq.StringArray(movie.Genres),
-		VoteAverage: voterAverage,
+		VoteAverage: float64(movie.VoteAverage),
 		Runtime:     int32(movie.Runtime),
 	}
 
@@ -87,11 +80,6 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 		return nil, err
 	}
 
-	voterAverage, err := utils.ConvertNumericToFloat32(movieRes.VoteAverage)
-	if err != nil {
-		return nil, err
-	}
-
 	movie = Movie{
 		ID:          movieRes.ID,
 		TmdbID:      int(movieRes.TmdbID),
@@ -102,7 +90,7 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 		PosterURL:   movieRes.PosterUrl,
 		Overview:    movieRes.Overview,
 		Genres:      movieRes.Genres,
-		VoteAverage: voterAverage,
+		VoteAverage: float32(movieRes.VoteAverage),
 		Runtime:     int(movieRes.Runtime),
 		Version:     int(movieRes.Version),
 	}
@@ -126,11 +114,6 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 		}
 	}
 
-	voterAverage, err := utils.ConvertNumericToFloat32(movieRes.VoteAverage)
-	if err != nil {
-		return nil, err
-	}
-
 	movie = Movie{
 		ID:          movieRes.ID,
 		TmdbID:      int(movieRes.TmdbID),
@@ -141,7 +124,7 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 		PosterURL:   movieRes.PosterUrl,
 		Overview:    movieRes.Overview,
 		Genres:      movieRes.Genres,
-		VoteAverage: voterAverage,
+		VoteAverage: float32(movieRes.VoteAverage),
 		Runtime:     int(movieRes.Runtime),
 		Version:     int(movieRes.Version),
 	}
@@ -150,10 +133,6 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 }
 
 func (m MovieModel) Update(movie *Movie) error {
-	var voterAverage pgtype.Numeric
-	if err := voterAverage.Scan(movie.VoteAverage); err != nil {
-		return err
-	}
 	args := repository.UpdateMovieParams{
 		ID:          movie.ID,
 		Title:       movie.Title,
@@ -161,7 +140,7 @@ func (m MovieModel) Update(movie *Movie) error {
 		PosterUrl:   movie.PosterURL,
 		Overview:    movie.Overview,
 		Genres:      pq.StringArray(movie.Genres),
-		VoteAverage: voterAverage,
+		VoteAverage: float64(movie.VoteAverage),
 		Runtime:     int32(movie.Runtime),
 		Version:     int32(movie.Version),
 	}

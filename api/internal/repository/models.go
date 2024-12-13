@@ -6,23 +6,21 @@ package repository
 
 import (
 	"time"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Movie struct {
-	ID            int64          `json:"id"`
-	TmdbID        int32          `json:"tmdb_id"`
-	CreatedAt     time.Time      `json:"created_at"`
-	LastFetchedAt time.Time      `json:"last_fetched_at"`
-	Title         string         `json:"title"`
-	ReleaseDate   string         `json:"release_date"`
-	PosterUrl     string         `json:"poster_url"`
-	Overview      string         `json:"overview"`
-	Genres        []string       `json:"genres"`
-	VoteAverage   pgtype.Numeric `json:"vote_average"`
-	Runtime       int32          `json:"runtime"`
-	Version       int32          `json:"version"`
+	ID            int64     `json:"id"`
+	TmdbID        int32     `json:"tmdb_id"`
+	CreatedAt     time.Time `json:"created_at"`
+	LastFetchedAt time.Time `json:"last_fetched_at"`
+	Title         string    `json:"title"`
+	ReleaseDate   string    `json:"release_date"`
+	PosterUrl     string    `json:"poster_url"`
+	Overview      string    `json:"overview"`
+	Genres        []string  `json:"genres"`
+	VoteAverage   float64   `json:"vote_average"`
+	Runtime       int32     `json:"runtime"`
+	Version       int32     `json:"version"`
 }
 
 type Token struct {

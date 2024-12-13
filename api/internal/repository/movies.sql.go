@@ -7,8 +7,6 @@ package repository
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const deleteMovie = `-- name: DeleteMovie :one
@@ -93,14 +91,14 @@ RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_
 `
 
 type InsertMovieParams struct {
-	TmdbID      int32          `json:"tmdb_id"`
-	Title       string         `json:"title"`
-	ReleaseDate string         `json:"release_date"`
-	PosterUrl   string         `json:"poster_url"`
-	Overview    string         `json:"overview"`
-	Genres      []string       `json:"genres"`
-	VoteAverage pgtype.Numeric `json:"vote_average"`
-	Runtime     int32          `json:"runtime"`
+	TmdbID      int32    `json:"tmdb_id"`
+	Title       string   `json:"title"`
+	ReleaseDate string   `json:"release_date"`
+	PosterUrl   string   `json:"poster_url"`
+	Overview    string   `json:"overview"`
+	Genres      []string `json:"genres"`
+	VoteAverage float64  `json:"vote_average"`
+	Runtime     int32    `json:"runtime"`
 }
 
 func (q *Queries) InsertMovie(ctx context.Context, arg InsertMovieParams) (Movie, error) {
@@ -140,15 +138,15 @@ RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_
 `
 
 type UpdateMovieParams struct {
-	ID          int64          `json:"id"`
-	Title       string         `json:"title"`
-	ReleaseDate string         `json:"release_date"`
-	PosterUrl   string         `json:"poster_url"`
-	Overview    string         `json:"overview"`
-	Genres      []string       `json:"genres"`
-	VoteAverage pgtype.Numeric `json:"vote_average"`
-	Runtime     int32          `json:"runtime"`
-	Version     int32          `json:"version"`
+	ID          int64    `json:"id"`
+	Title       string   `json:"title"`
+	ReleaseDate string   `json:"release_date"`
+	PosterUrl   string   `json:"poster_url"`
+	Overview    string   `json:"overview"`
+	Genres      []string `json:"genres"`
+	VoteAverage float64  `json:"vote_average"`
+	Runtime     int32    `json:"runtime"`
+	Version     int32    `json:"version"`
 }
 
 func (q *Queries) UpdateMovie(ctx context.Context, arg UpdateMovieParams) (Movie, error) {
