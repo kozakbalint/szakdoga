@@ -11,22 +11,22 @@ import (
 
 var ErrDuplicateRecord = errors.New("duplicate record")
 
-type MoviesWatchlist struct {
-	Entries []*MoviesWatchlistEntry `json:"entries"`
+type WatchlistMovies struct {
+	Entries []*WatchlistMoviesEntry `json:"entries"`
 }
 
-type MoviesWatchlistEntry struct {
+type WatchlistMoviesEntry struct {
 	ID      int64     `json:"id"`
 	UserID  int64     `json:"user_id"`
 	MovieID int64     `json:"movie_id"`
 	AddedAt time.Time `json:"added_at"`
 }
 
-type MoviesWatchlistModel struct {
+type WatchlistMoviesModel struct {
 	Repository *repository.Queries
 }
 
-func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlistEntry, error) {
+func (m WatchlistMoviesModel) Insert(mwe *WatchlistMoviesEntry) (*WatchlistMoviesEntry, error) {
 	args := repository.InsertWatchlistMovieParams{
 		UserID:  int32(mwe.UserID),
 		MovieID: int32(mwe.MovieID),
@@ -43,7 +43,7 @@ func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlis
 		return nil, err
 	}
 
-	mwe = &MoviesWatchlistEntry{
+	mwe = &WatchlistMoviesEntry{
 		ID:      mweRes.ID,
 		UserID:  int64(mweRes.UserID),
 		MovieID: int64(mweRes.MovieID),
@@ -53,12 +53,12 @@ func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlis
 	return mwe, nil
 }
 
-func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchlistEntry, error) {
+func (m WatchlistMoviesModel) GetWatchlistEntry(userID, id int64) (*WatchlistMoviesEntry, error) {
 	args := repository.GetWatchlistMovieParams{
 		UserID: int32(userID),
 		ID:     id,
 	}
-	var mwe MoviesWatchlistEntry
+	var mwe WatchlistMoviesEntry
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -68,7 +68,7 @@ func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchl
 		return nil, err
 	}
 
-	mwe = MoviesWatchlistEntry{
+	mwe = WatchlistMoviesEntry{
 		ID:      mweRes.ID,
 		UserID:  int64(mweRes.UserID),
 		MovieID: int64(mweRes.MovieID),
@@ -78,7 +78,7 @@ func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchl
 	return &mwe, nil
 }
 
-func (m MoviesWatchlistModel) UpdateWatchlistEntry(mwe *MoviesWatchlistEntry) error {
+func (m WatchlistMoviesModel) UpdateWatchlistEntry(mwe *WatchlistMoviesEntry) error {
 	args := repository.UpdateWatchlistMovieParams{
 		ID:      mwe.ID,
 		UserID:  int32(mwe.UserID),
@@ -96,7 +96,7 @@ func (m MoviesWatchlistModel) UpdateWatchlistEntry(mwe *MoviesWatchlistEntry) er
 	return nil
 }
 
-func (m MoviesWatchlistModel) DeleteWatchlistEntry(id int64) error {
+func (m WatchlistMoviesModel) DeleteWatchlistEntry(id int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -108,8 +108,8 @@ func (m MoviesWatchlistModel) DeleteWatchlistEntry(id int64) error {
 	return nil
 }
 
-func (m MoviesWatchlistModel) GetWatchlist(userID int64) (*MoviesWatchlist, error) {
-	var mw MoviesWatchlist
+func (m WatchlistMoviesModel) GetWatchlist(userID int64) (*WatchlistMovies, error) {
+	var mw WatchlistMovies
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -120,7 +120,7 @@ func (m MoviesWatchlistModel) GetWatchlist(userID int64) (*MoviesWatchlist, erro
 	}
 
 	for _, mweRes := range rows {
-		mwe := MoviesWatchlistEntry{
+		mwe := WatchlistMoviesEntry{
 			ID:      mweRes.ID,
 			UserID:  int64(mweRes.UserID),
 			MovieID: int64(mweRes.MovieID),
@@ -132,12 +132,12 @@ func (m MoviesWatchlistModel) GetWatchlist(userID int64) (*MoviesWatchlist, erro
 	return &mw, nil
 }
 
-func (m MoviesWatchlistModel) GetWatchlistEntryByUserAndMovie(userID, movieID int64) (*MoviesWatchlistEntry, error) {
+func (m WatchlistMoviesModel) GetWatchlistEntryByUserAndMovie(userID, movieID int64) (*WatchlistMoviesEntry, error) {
 	args := repository.GetWatchlistMovieByMovieIdParams{
 		UserID:  int32(userID),
 		MovieID: int32(movieID),
 	}
-	var mwe MoviesWatchlistEntry
+	var mwe WatchlistMoviesEntry
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -147,7 +147,7 @@ func (m MoviesWatchlistModel) GetWatchlistEntryByUserAndMovie(userID, movieID in
 		return nil, err
 	}
 
-	mwe = MoviesWatchlistEntry{
+	mwe = WatchlistMoviesEntry{
 		ID:      mweRes.ID,
 		UserID:  int64(mweRes.UserID),
 		MovieID: int64(mweRes.MovieID),

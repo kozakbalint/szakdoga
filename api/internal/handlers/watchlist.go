@@ -31,7 +31,7 @@ func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	moviesWatchlist, err := h.Models.MoviesWatchlist.GetWatchlist(user.ID)
+	moviesWatchlist, err := h.Models.WatchlistMovies.GetWatchlist(user.ID)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -115,12 +115,12 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 		}
 	}
 
-	moviesWatchlistEntry := &data.MoviesWatchlistEntry{
+	moviesWatchlistEntry := &data.WatchlistMoviesEntry{
 		UserID:  user.ID,
 		MovieID: movie.ID,
 	}
 
-	_, err = h.Models.MoviesWatchlist.Insert(moviesWatchlistEntry)
+	_, err = h.Models.WatchlistMovies.Insert(moviesWatchlistEntry)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -145,7 +145,7 @@ func (h *WatchlistHandler) RemoveMovieFromWatchlistHandler(w http.ResponseWriter
 		return
 	}
 
-	_, err = h.Models.MoviesWatchlist.GetWatchlistEntry(user.ID, id)
+	_, err = h.Models.WatchlistMovies.GetWatchlistEntry(user.ID, id)
 	if err != nil {
 		switch err {
 		case data.ErrRecordNotFound:
@@ -156,7 +156,7 @@ func (h *WatchlistHandler) RemoveMovieFromWatchlistHandler(w http.ResponseWriter
 		return
 	}
 
-	err = h.Models.MoviesWatchlist.DeleteWatchlistEntry(id)
+	err = h.Models.WatchlistMovies.DeleteWatchlistEntry(id)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return

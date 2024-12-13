@@ -15,7 +15,7 @@ type Models struct {
 	Tokens          TokenModel
 	Users           UserModel
 	Movies          MovieModel
-	MoviesWatchlist MoviesWatchlistModel
+	WatchlistMovies WatchlistMoviesModel
 	WatchedMovies   WatchedMoviesModel
 }
 
@@ -30,7 +30,7 @@ func NewModels(repo *repository.Queries) Models {
 		Movies: MovieModel{
 			Repository: repo,
 		},
-		MoviesWatchlist: MoviesWatchlistModel{
+		WatchlistMovies: WatchlistMoviesModel{
 			Repository: repo,
 		},
 		WatchedMovies: WatchedMoviesModel{
