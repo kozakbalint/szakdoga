@@ -8,14 +8,12 @@ import (
 	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
-	"github.com/kozakbalint/szakdoga/api/internal/repository"
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
 
 type WatchlistHandler struct {
-	Tmdb       *tmdb.Client
-	Models     *data.Models
-	Repository *repository.Queries
+	Tmdb   *tmdb.Client
+	Models *data.Models
 }
 
 type MovieWatchlistResponse struct {

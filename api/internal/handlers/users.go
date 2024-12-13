@@ -7,14 +7,12 @@ import (
 	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
-	"github.com/kozakbalint/szakdoga/api/internal/repository"
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 	"github.com/kozakbalint/szakdoga/api/internal/validator"
 )
 
 type UsersHandler struct {
-	Models     *data.Models
-	Repository *repository.Queries
+	Models *data.Models
 }
 
 func (h *UsersHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
