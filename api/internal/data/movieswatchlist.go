@@ -16,12 +16,10 @@ type MoviesWatchlist struct {
 }
 
 type MoviesWatchlistEntry struct {
-	ID       int64     `json:"id"`
-	UserID   int64     `json:"user_id"`
-	MovieID  int64     `json:"movie_id"`
-	AddedAt  time.Time `json:"added_at"`
-	UpdateAt time.Time `json:"updated_at"`
-	Watched  bool      `json:"watched"`
+	ID      int64     `json:"id"`
+	UserID  int64     `json:"user_id"`
+	MovieID int64     `json:"movie_id"`
+	AddedAt time.Time `json:"added_at"`
 }
 
 type MoviesWatchlistModel struct {
@@ -32,7 +30,6 @@ func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlis
 	args := repository.InsertWatchlistMovieParams{
 		UserID:  int32(mwe.UserID),
 		MovieID: int32(mwe.MovieID),
-		Watched: mwe.Watched,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -47,12 +44,10 @@ func (m MoviesWatchlistModel) Insert(mwe *MoviesWatchlistEntry) (*MoviesWatchlis
 	}
 
 	mwe = &MoviesWatchlistEntry{
-		ID:       mweRes.ID,
-		UserID:   int64(mweRes.UserID),
-		MovieID:  int64(mweRes.MovieID),
-		AddedAt:  mweRes.AddedAt,
-		UpdateAt: mweRes.UpdatedAt,
-		Watched:  mweRes.Watched,
+		ID:      mweRes.ID,
+		UserID:  int64(mweRes.UserID),
+		MovieID: int64(mweRes.MovieID),
+		AddedAt: mweRes.AddedAt,
 	}
 
 	return mwe, nil
@@ -74,12 +69,10 @@ func (m MoviesWatchlistModel) GetWatchlistEntry(userID, id int64) (*MoviesWatchl
 	}
 
 	mwe = MoviesWatchlistEntry{
-		ID:       mweRes.ID,
-		UserID:   int64(mweRes.UserID),
-		MovieID:  int64(mweRes.MovieID),
-		AddedAt:  mweRes.AddedAt,
-		UpdateAt: mweRes.UpdatedAt,
-		Watched:  mweRes.Watched,
+		ID:      mweRes.ID,
+		UserID:  int64(mweRes.UserID),
+		MovieID: int64(mweRes.MovieID),
+		AddedAt: mweRes.AddedAt,
 	}
 
 	return &mwe, nil
@@ -90,7 +83,6 @@ func (m MoviesWatchlistModel) UpdateWatchlistEntry(mwe *MoviesWatchlistEntry) er
 		ID:      mwe.ID,
 		UserID:  int32(mwe.UserID),
 		MovieID: int32(mwe.MovieID),
-		Watched: mwe.Watched,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -129,12 +121,10 @@ func (m MoviesWatchlistModel) GetWatchlist(userID int64) (*MoviesWatchlist, erro
 
 	for _, mweRes := range rows {
 		mwe := MoviesWatchlistEntry{
-			ID:       mweRes.ID,
-			UserID:   int64(mweRes.UserID),
-			MovieID:  int64(mweRes.MovieID),
-			AddedAt:  mweRes.AddedAt,
-			UpdateAt: mweRes.UpdatedAt,
-			Watched:  mweRes.Watched,
+			ID:      mweRes.ID,
+			UserID:  int64(mweRes.UserID),
+			MovieID: int64(mweRes.MovieID),
+			AddedAt: mweRes.AddedAt,
 		}
 		mw.Entries = append(mw.Entries, &mwe)
 	}
@@ -158,12 +148,10 @@ func (m MoviesWatchlistModel) GetWatchlistEntryByUserAndMovie(userID, movieID in
 	}
 
 	mwe = MoviesWatchlistEntry{
-		ID:       mweRes.ID,
-		UserID:   int64(mweRes.UserID),
-		MovieID:  int64(mweRes.MovieID),
-		AddedAt:  mweRes.AddedAt,
-		UpdateAt: mweRes.UpdatedAt,
-		Watched:  mweRes.Watched,
+		ID:      mweRes.ID,
+		UserID:  int64(mweRes.UserID),
+		MovieID: int64(mweRes.MovieID),
+		AddedAt: mweRes.AddedAt,
 	}
 
 	return &mwe, nil

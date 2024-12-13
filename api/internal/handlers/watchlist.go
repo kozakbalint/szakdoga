@@ -47,11 +47,9 @@ func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *h
 			return
 		}
 		watchlistResponse = append(watchlistResponse, MovieWatchlistResponse{
-			ID:       entry.ID,
-			Movie:    *movie,
-			AddedAt:  entry.AddedAt,
-			UpdateAt: entry.UpdateAt,
-			Watched:  entry.Watched,
+			ID:      entry.ID,
+			Movie:   *movie,
+			AddedAt: entry.AddedAt,
 		})
 	}
 
@@ -122,7 +120,6 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 	moviesWatchlistEntry := &data.MoviesWatchlistEntry{
 		UserID:  user.ID,
 		MovieID: movie.ID,
-		Watched: false,
 	}
 
 	_, err = h.Models.MoviesWatchlist.Insert(moviesWatchlistEntry)

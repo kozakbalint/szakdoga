@@ -25,15 +25,6 @@ type Movie struct {
 	Version       int32          `json:"version"`
 }
 
-type MoviesWatchlist struct {
-	ID        int64     `json:"id"`
-	UserID    int32     `json:"user_id"`
-	MovieID   int32     `json:"movie_id"`
-	AddedAt   time.Time `json:"added_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Watched   bool      `json:"watched"`
-}
-
 type Token struct {
 	Hash   []byte    `json:"hash"`
 	UserID int64     `json:"user_id"`
@@ -47,4 +38,18 @@ type User struct {
 	Email        string    `json:"email"`
 	PasswordHash []byte    `json:"password_hash"`
 	Version      int32     `json:"version"`
+}
+
+type WatchedMovie struct {
+	ID        int32     `json:"id"`
+	UserID    int32     `json:"user_id"`
+	MovieID   int32     `json:"movie_id"`
+	WatchedAt time.Time `json:"watched_at"`
+}
+
+type WatchlistMovie struct {
+	ID      int64     `json:"id"`
+	UserID  int32     `json:"user_id"`
+	MovieID int32     `json:"movie_id"`
+	AddedAt time.Time `json:"added_at"`
 }
