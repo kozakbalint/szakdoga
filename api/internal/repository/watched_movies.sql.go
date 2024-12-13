@@ -50,7 +50,7 @@ func (q *Queries) GetWatchedMovie(ctx context.Context, arg GetWatchedMovieParams
 	return i, err
 }
 
-const getWatchedMovieByMovieId = `-- name: GetWatchedMovieByMovieId :one
+const getWatchedMovieByMovieId = `-- name: GetWatchedMovieByMovieId :many
 SELECT id, user_id, movie_id, watched_at FROM watched_movies
 WHERE user_id = $1 AND movie_id = $2
 `
@@ -60,16 +60,29 @@ type GetWatchedMovieByMovieIdParams struct {
 	MovieID int32 `json:"movie_id"`
 }
 
-func (q *Queries) GetWatchedMovieByMovieId(ctx context.Context, arg GetWatchedMovieByMovieIdParams) (WatchedMovie, error) {
-	row := q.db.QueryRow(ctx, getWatchedMovieByMovieId, arg.UserID, arg.MovieID)
-	var i WatchedMovie
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.MovieID,
-		&i.WatchedAt,
-	)
-	return i, err
+func (q *Queries) GetWatchedMovieByMovieId(ctx context.Context, arg GetWatchedMovieByMovieIdParams) ([]WatchedMovie, error) {
+	rows, err := q.db.Query(ctx, getWatchedMovieByMovieId, arg.UserID, arg.MovieID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []WatchedMovie
+	for rows.Next() {
+		var i WatchedMovie
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.MovieID,
+			&i.WatchedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const insertWatchedMovie = `-- name: InsertWatchedMovie :one

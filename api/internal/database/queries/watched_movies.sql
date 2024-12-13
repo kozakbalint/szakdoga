@@ -23,6 +23,6 @@ RETURNING *;
 SELECT * FROM watched_movies
 WHERE user_id = $1;
 
--- name: GetWatchedMovieByMovieId :one
+-- name: GetWatchedMovieByMovieId :many
 SELECT * FROM watched_movies
 WHERE user_id = $1 AND movie_id = $2;
