@@ -16,6 +16,7 @@ type Models struct {
 	Users           UserModel
 	Movies          MovieModel
 	MoviesWatchlist MoviesWatchlistModel
+	WatchedMovies   WatchedMoviesModel
 }
 
 func NewModels(repo *repository.Queries) Models {
@@ -30,6 +31,9 @@ func NewModels(repo *repository.Queries) Models {
 			Repository: repo,
 		},
 		MoviesWatchlist: MoviesWatchlistModel{
+			Repository: repo,
+		},
+		WatchedMovies: WatchedMoviesModel{
 			Repository: repo,
 		},
 	}
