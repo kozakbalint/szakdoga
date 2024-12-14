@@ -2,12 +2,9 @@ package data
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
-	"github.com/kozakbalint/szakdoga/api/internal/utils"
 	"github.com/lib/pq"
 )
 
@@ -31,11 +28,6 @@ type MovieModel struct {
 }
 
 func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
-	var voterAverage pgtype.Numeric
-	if err := voterAverage.Scan(movie.VoteAverage); err != nil {
-		return nil, err
-	}
-
 	args := repository.InsertMovieParams{
 		TmdbID:      int32(movie.TmdbID),
 		Title:       movie.Title,
@@ -43,7 +35,7 @@ func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
 		PosterUrl:   movie.PosterURL,
 		Overview:    movie.Overview,
 		Genres:      pq.StringArray(movie.Genres),
-		VoteAverage: voterAverage,
+		VoteAverage: float64(movie.VoteAverage),
 		Runtime:     int32(movie.Runtime),
 	}
 
@@ -52,10 +44,7 @@ func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
 
 	movieRes, err := m.Repository.InsertMovie(ctx, args)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-			return nil, ErrDuplicateRecord
-		}
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	movie = &Movie{
@@ -84,12 +73,7 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 
 	movieRes, err := m.Repository.GetMovie(ctx, id)
 	if err != nil {
-		return nil, err
-	}
-
-	voterAverage, err := utils.ConvertNumericToFloat32(movieRes.VoteAverage)
-	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	movie = Movie{
@@ -102,7 +86,7 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 		PosterURL:   movieRes.PosterUrl,
 		Overview:    movieRes.Overview,
 		Genres:      movieRes.Genres,
-		VoteAverage: voterAverage,
+		VoteAverage: float32(movieRes.VoteAverage),
 		Runtime:     int(movieRes.Runtime),
 		Version:     int(movieRes.Version),
 	}
@@ -118,17 +102,7 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 
 	movieRes, err := m.Repository.GetMovieByTmdbId(ctx, int32(tmdbID))
 	if err != nil {
-		switch err {
-		case sql.ErrNoRows:
-			return nil, ErrRecordNotFound
-		default:
-			return nil, err
-		}
-	}
-
-	voterAverage, err := utils.ConvertNumericToFloat32(movieRes.VoteAverage)
-	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	movie = Movie{
@@ -141,7 +115,7 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 		PosterURL:   movieRes.PosterUrl,
 		Overview:    movieRes.Overview,
 		Genres:      movieRes.Genres,
-		VoteAverage: voterAverage,
+		VoteAverage: float32(movieRes.VoteAverage),
 		Runtime:     int(movieRes.Runtime),
 		Version:     int(movieRes.Version),
 	}
@@ -150,10 +124,6 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 }
 
 func (m MovieModel) Update(movie *Movie) error {
-	var voterAverage pgtype.Numeric
-	if err := voterAverage.Scan(movie.VoteAverage); err != nil {
-		return err
-	}
 	args := repository.UpdateMovieParams{
 		ID:          movie.ID,
 		Title:       movie.Title,
@@ -161,7 +131,7 @@ func (m MovieModel) Update(movie *Movie) error {
 		PosterUrl:   movie.PosterURL,
 		Overview:    movie.Overview,
 		Genres:      pq.StringArray(movie.Genres),
-		VoteAverage: voterAverage,
+		VoteAverage: float64(movie.VoteAverage),
 		Runtime:     int32(movie.Runtime),
 		Version:     int32(movie.Version),
 	}
@@ -171,12 +141,7 @@ func (m MovieModel) Update(movie *Movie) error {
 
 	_, err := m.Repository.UpdateMovie(ctx, args)
 	if err != nil {
-		switch {
-		case err == sql.ErrNoRows:
-			return ErrEditConflict
-		default:
-			return err
-		}
+		return WrapError(err)
 	}
 
 	return nil
@@ -188,7 +153,7 @@ func (m MovieModel) Delete(id int64) error {
 
 	_, err := m.Repository.DeleteMovie(ctx, id)
 	if err != nil {
-		return err
+		return WrapError(err)
 	}
 
 	return nil

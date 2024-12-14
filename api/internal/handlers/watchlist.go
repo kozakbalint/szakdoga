@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	e "errors"
 	"net/http"
 	"time"
 
@@ -8,14 +9,12 @@ import (
 	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
-	"github.com/kozakbalint/szakdoga/api/internal/repository"
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
 
 type WatchlistHandler struct {
-	Tmdb       *tmdb.Client
-	Models     *data.Models
-	Repository *repository.Queries
+	Tmdb   *tmdb.Client
+	Models *data.Models
 }
 
 type MovieWatchlistResponse struct {
@@ -33,7 +32,7 @@ func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	moviesWatchlist, err := h.Models.MoviesWatchlist.GetWatchlist(user.ID)
+	moviesWatchlist, err := h.Models.WatchlistMovies.GetWatchlist(user.ID)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -47,11 +46,9 @@ func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *h
 			return
 		}
 		watchlistResponse = append(watchlistResponse, MovieWatchlistResponse{
-			ID:       entry.ID,
-			Movie:    *movie,
-			AddedAt:  entry.AddedAt,
-			UpdateAt: entry.UpdateAt,
-			Watched:  entry.Watched,
+			ID:      entry.ID,
+			Movie:   *movie,
+			AddedAt: entry.AddedAt,
 		})
 	}
 
@@ -80,10 +77,7 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 
 	movie, err := h.Models.Movies.GetByTmdbID(int(input.TmdbID))
 	if err != nil {
-		switch err {
-		case data.ErrRecordNotFound:
-			break
-		default:
+		if !e.Is(err, data.ErrNotFound) {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
@@ -119,13 +113,12 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 		}
 	}
 
-	moviesWatchlistEntry := &data.MoviesWatchlistEntry{
+	moviesWatchlistEntry := &data.WatchlistMoviesEntry{
 		UserID:  user.ID,
 		MovieID: movie.ID,
-		Watched: false,
 	}
 
-	_, err = h.Models.MoviesWatchlist.Insert(moviesWatchlistEntry)
+	_, err = h.Models.WatchlistMovies.Insert(moviesWatchlistEntry)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -150,18 +143,17 @@ func (h *WatchlistHandler) RemoveMovieFromWatchlistHandler(w http.ResponseWriter
 		return
 	}
 
-	_, err = h.Models.MoviesWatchlist.GetWatchlistEntry(user.ID, id)
+	_, err = h.Models.WatchlistMovies.GetWatchlistEntry(user.ID, id)
 	if err != nil {
-		switch err {
-		case data.ErrRecordNotFound:
+		if e.Is(err, data.ErrNotFound) {
 			errors.NotFoundResponse(w, r)
-		default:
-			errors.ServerErrorResponse(w, r, err)
+			return
 		}
+		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = h.Models.MoviesWatchlist.DeleteWatchlistEntry(id)
+	err = h.Models.WatchlistMovies.DeleteWatchlistEntry(id)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return

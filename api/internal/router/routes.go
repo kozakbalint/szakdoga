@@ -43,5 +43,10 @@ func New(ctx *context.ServerContext) http.Handler {
 	router.HandlerFunc(http.MethodPost, "/v1/watchlist/movies", middleware.RequireAuthenticatedUser(h.WatchlistHandler.AddMovieToWatchlistHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/watchlist/movies/:id", middleware.RequireAuthenticatedUser(h.WatchlistHandler.RemoveMovieFromWatchlistHandler))
 
+	router.HandlerFunc(http.MethodGet, "/v1/watched/movies", middleware.RequireAuthenticatedUser(h.WatchedHandler.GetWatchedMoviesHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/watched/movies/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.GetWatchDatesByMovieHandler))
+	router.HandlerFunc(http.MethodPost, "/v1/watched/movies", middleware.RequireAuthenticatedUser(h.WatchedHandler.AddWatchedMovieHandler))
+	router.HandlerFunc(http.MethodDelete, "/v1/watched/movies/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.RemoveWatchedMovieHandler))
+
 	return middleware.RecoverPanic(middleware.EnableCORS(ctx.Config, middleware.Authenticate(&ctx.Models, router)))
 }
