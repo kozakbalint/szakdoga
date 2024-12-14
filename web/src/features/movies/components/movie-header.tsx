@@ -70,9 +70,9 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
       </div>
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
         <div>
-          {onWatchlist ? (
+          {onWatchlist != null ? (
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   onClick={() => {
                     removeMovieFromWatchlistMutation.mutate({
@@ -93,7 +93,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
             </Tooltip>
           ) : (
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   onClick={() => {
                     addMovieToWatchlistMutation.mutate({ tmdb_id: movie.id });
