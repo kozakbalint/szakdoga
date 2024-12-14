@@ -1,4 +1,4 @@
-import { BadgeCheck, ChevronsUpDown, LogOut, Settings } from 'lucide-react';
+import { UserRound, ChevronsUpDown, LogOut, Settings } from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -84,7 +84,7 @@ export function NavUser({ user }: { user: User }) {
                   navigate({ to: '/app/profile' });
                 }}
               >
-                <BadgeCheck />
+                <UserRound />
                 <p className="px-2">Account</p>
               </DropdownMenuItem>
               <DropdownMenuItem
