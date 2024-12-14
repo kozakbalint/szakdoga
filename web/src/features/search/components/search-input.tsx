@@ -12,7 +12,6 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/cmdk';
-import { useDebounce } from '@uidotdev/usehooks';
 import { SearchPageMovies } from './search-page-movies';
 import { SearchPageTV } from './search-page-tv';
 import { SearchPagePeople } from './search-page-people';
@@ -95,7 +94,6 @@ export const SearchInput = () => {
 
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
-  const debouncedSearch = useDebounce(search, 500);
   const [shouldFilter, setShouldFilter] = React.useState(true);
   const [searchPlaceholder, setSearchPlaceholder] = React.useState('Search...');
   const [pages, setPages] = React.useState<string[]>([]);
@@ -180,6 +178,7 @@ export const SearchInput = () => {
                         setSearchPlaceholder(
                           group.title + ' ' + item.title + '...',
                         );
+                        setSearch('');
                       } else {
                         setOpen(false);
                       }
@@ -202,7 +201,7 @@ export const SearchInput = () => {
 
         {page === 'movies' && (
           <SearchPageMovies
-            searchTerm={debouncedSearch}
+            searchTerm={search}
             onSelect={(movie) => {
               navigate({ to: `/app/movies/${movie.id}` });
               setOpen(false);
@@ -211,7 +210,7 @@ export const SearchInput = () => {
         )}
         {page === 'tv-shows' && (
           <SearchPageTV
-            searchTerm={debouncedSearch}
+            searchTerm={search}
             onSelect={(tv) => {
               navigate({ to: `/app/tv/${tv.id}` });
               setOpen(false);
@@ -220,7 +219,7 @@ export const SearchInput = () => {
         )}
         {page === 'people' && (
           <SearchPagePeople
-            searchTerm={debouncedSearch}
+            searchTerm={search}
             onSelect={(person) => {
               navigate({ to: `/app/people/${person.id}` });
               setOpen(false);

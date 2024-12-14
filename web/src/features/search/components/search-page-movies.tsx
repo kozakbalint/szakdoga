@@ -9,6 +9,7 @@ import React from 'react';
 import { getMovieCastByIdQueryOptions } from '@/features/movies/api/get-movie-cast-by-id';
 import { getMovieWatchProvidersByIdQueryOptions } from '@/features/movies/api/get-movie-watch-providers-by-id';
 import { Spinner } from '@/components/ui/spinner';
+import { useDebounce } from '@uidotdev/usehooks';
 
 export interface SearchPageMoviesProps {
   searchTerm: string;
@@ -19,6 +20,7 @@ export const SearchPageMovies = ({
   searchTerm,
   onSelect,
 }: SearchPageMoviesProps) => {
+  const debouncedSearch = useDebounce(searchTerm, 500);
   const queryClient = useQueryClient();
 
   const currentItem = useCommandState((state) => state.value);
@@ -35,7 +37,7 @@ export const SearchPageMovies = ({
     }
   }, [currentItem, queryClient]);
 
-  const searchMoviesQuery = useSearchMovies({ q: searchTerm });
+  const searchMoviesQuery = useSearchMovies({ q: debouncedSearch });
   const movies = searchMoviesQuery.data?.movies;
 
   if (searchTerm.length === 0) {
