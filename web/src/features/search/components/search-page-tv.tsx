@@ -26,7 +26,8 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
       );
     };
     if (currentItem) {
-      const id = currentItem.split('-')[1];
+      const idString = currentItem.split('_');
+      const id = idString[idString.length - 1].split(':')[1];
       prefetchTv(id);
     }
   }, [currentItem, queryClient]);
@@ -70,7 +71,7 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
         {tv.map((tv) => (
           <CommandItem
             key={tv.id + tv.name}
-            value={tv.name + '-' + tv.id}
+            value={tv.name + '_tvID:' + tv.id}
             onSelect={() => {
               onSelect(tv);
             }}

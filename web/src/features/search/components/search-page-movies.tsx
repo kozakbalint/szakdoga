@@ -29,7 +29,8 @@ export const SearchPageMovies = ({
       queryClient.prefetchQuery(getMovieWatchProvidersByIdQueryOptions({ id }));
     };
     if (currentItem) {
-      const id = currentItem.split('-')[1];
+      const idString = currentItem.split('_');
+      const id = idString[idString.length - 1].split(':')[1];
       prefetchMovie(id);
     }
   }, [currentItem, queryClient]);
@@ -73,7 +74,7 @@ export const SearchPageMovies = ({
         {movies.map((movie) => (
           <CommandItem
             key={movie.id + movie.title}
-            value={movie.title + '-' + movie.id}
+            value={movie.title + '_movieID:' + movie.id}
             onSelect={() => {
               onSelect(movie);
             }}

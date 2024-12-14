@@ -25,7 +25,8 @@ export const SearchPagePeople = ({
       queryClient.prefetchQuery(getPersonByIdQueryOptions({ id }));
     };
     if (currentItem) {
-      const id = currentItem.split('-')[1];
+      const idString = currentItem.split('_');
+      const id = idString[idString.length - 1].split(':')[1];
       prefetchPerson(id);
     }
   }, [currentItem, queryClient]);
@@ -69,7 +70,7 @@ export const SearchPagePeople = ({
         {people.map((person) => (
           <CommandItem
             key={person.id + person.name}
-            value={person.name + '-' + person.id}
+            value={person.name + '_personID:' + person.id}
             onSelect={() => {
               onSelect(person);
             }}
