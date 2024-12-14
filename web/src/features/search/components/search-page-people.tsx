@@ -7,6 +7,7 @@ import { getPersonByIdQueryOptions } from '@/features/people/api/get-person-by-i
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { Spinner } from '@/components/ui/spinner';
+import { useDebounce } from '@uidotdev/usehooks';
 
 export interface SearchPagePeopleProps {
   searchTerm: string;
@@ -18,6 +19,7 @@ export const SearchPagePeople = ({
   onSelect,
 }: SearchPagePeopleProps) => {
   const queryClient = useQueryClient();
+  const debouncedSearch = useDebounce(searchTerm, 500);
 
   const currentItem = useCommandState((state) => state.value);
   React.useEffect(() => {
@@ -31,14 +33,14 @@ export const SearchPagePeople = ({
     }
   }, [currentItem, queryClient]);
 
-  const searchPeopleQuery = useSearchPeople({ q: searchTerm });
+  const searchPeopleQuery = useSearchPeople({ q: debouncedSearch });
   const people = searchPeopleQuery.data?.people;
 
   if (searchTerm.length === 0) {
     return (
       <CommandList className="h-[300px]">
         <CommandLoading className="px-4 py-2 flex justify-center">
-          <p>Type a movie title.</p>
+          <p>Type a person name.</p>
         </CommandLoading>
       </CommandList>
     );
@@ -58,7 +60,7 @@ export const SearchPagePeople = ({
     return (
       <CommandList className="h-[300px]">
         <CommandLoading className="px-4 py-2 flex justify-center">
-          <p>No movies found.</p>
+          <p>No person found.</p>
         </CommandLoading>
       </CommandList>
     );

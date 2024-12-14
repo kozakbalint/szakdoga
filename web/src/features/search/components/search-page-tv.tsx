@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { getTvSeasonByIdQueryOptions } from '@/features/tv/api/get-tv-season-by-id';
 import { Spinner } from '@/components/ui/spinner';
+import { useDebounce } from '@uidotdev/usehooks';
 
 export interface SearchPageTVProps {
   searchTerm: string;
@@ -16,6 +17,7 @@ export interface SearchPageTVProps {
 
 export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
   const queryClient = useQueryClient();
+  const debouncedSearch = useDebounce(searchTerm, 500);
 
   const currentItem = useCommandState((state) => state.value);
   React.useEffect(() => {
@@ -32,14 +34,14 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
     }
   }, [currentItem, queryClient]);
 
-  const searchTVQuery = useSearchTV({ q: searchTerm });
+  const searchTVQuery = useSearchTV({ q: debouncedSearch });
   const tv = searchTVQuery.data?.tv;
 
   if (searchTerm.length === 0) {
     return (
       <CommandList className="h-[300px]">
         <CommandLoading className="px-4 py-2 flex justify-center">
-          <p>Type a movie title.</p>
+          <p>Type a tv show title.</p>
         </CommandLoading>
       </CommandList>
     );
@@ -59,7 +61,7 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
     return (
       <CommandList className="h-[300px]">
         <CommandLoading className="px-4 py-2 flex justify-center">
-          <p>No movies found.</p>
+          <p>No tv show found.</p>
         </CommandLoading>
       </CommandList>
     );
