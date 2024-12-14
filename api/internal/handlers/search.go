@@ -73,6 +73,10 @@ func (h *SearchHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reque
 		})
 	}
 
+	if len(response) == 0 {
+		response = []MovieSearchResponse{}
+	}
+
 	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"movies": response}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
@@ -110,6 +114,10 @@ func (h *SearchHandler) SearchPeopleHandler(w http.ResponseWriter, r *http.Reque
 			ProfileURL: profileURL,
 			Popularity: person.Popularity,
 		})
+	}
+
+	if len(response) == 0 {
+		response = []PersonSearchResponse{}
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"people": response}, nil)
@@ -152,6 +160,10 @@ func (h *SearchHandler) SearchTvHandler(w http.ResponseWriter, r *http.Request) 
 			FirstAirDate: show.FirstAirDate,
 			Popularity:   show.Popularity,
 		})
+	}
+
+	if len(response) == 0 {
+		response = []TvSearchResponse{}
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"tv": response}, nil)
