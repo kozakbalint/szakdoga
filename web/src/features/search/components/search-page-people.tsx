@@ -6,6 +6,7 @@ import { useSearchPeople } from '../api/search-people';
 import { getPersonByIdQueryOptions } from '@/features/people/api/get-person-by-id';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
+import { Spinner } from '@/components/ui/spinner';
 
 export interface SearchPagePeopleProps {
   searchTerm: string;
@@ -32,11 +33,31 @@ export const SearchPagePeople = ({
   const searchPeopleQuery = useSearchPeople({ q: searchTerm });
   const people = searchPeopleQuery.data?.people;
 
-  if (people == null || people.length === 0 || people === undefined) {
+  if (searchTerm.length === 0) {
     return (
-      <CommandList>
-        <CommandLoading className="px-4 py-2">
-          <p>No people found...</p>
+      <CommandList className="h-[300px]">
+        <CommandLoading className="px-4 py-2 flex justify-center">
+          <p>Type a movie title.</p>
+        </CommandLoading>
+      </CommandList>
+    );
+  }
+
+  if (people == null || people === undefined) {
+    return (
+      <CommandList className="h-[300px]">
+        <CommandLoading className="flex justify-center py-4">
+          <Spinner />
+        </CommandLoading>
+      </CommandList>
+    );
+  }
+
+  if (people.length === 0) {
+    return (
+      <CommandList className="h-[300px]">
+        <CommandLoading className="px-4 py-2 flex justify-center">
+          <p>No movies found.</p>
         </CommandLoading>
       </CommandList>
     );
@@ -44,7 +65,7 @@ export const SearchPagePeople = ({
 
   return (
     <>
-      <CommandList>
+      <CommandList className="h-[300px]">
         {people.map((person) => (
           <CommandItem
             key={person.id + person.name}

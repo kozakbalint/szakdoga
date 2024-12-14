@@ -7,6 +7,7 @@ import { getTvByIdQueryOptions } from '@/features/tv/api/get-tv-by-id';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { getTvSeasonByIdQueryOptions } from '@/features/tv/api/get-tv-season-by-id';
+import { Spinner } from '@/components/ui/spinner';
 
 export interface SearchPageTVProps {
   searchTerm: string;
@@ -33,11 +34,31 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
   const searchTVQuery = useSearchTV({ q: searchTerm });
   const tv = searchTVQuery.data?.tv;
 
-  if (tv == null || tv.length === 0 || tv === undefined) {
+  if (searchTerm.length === 0) {
     return (
-      <CommandList>
-        <CommandLoading className="px-4 py-2">
-          <p>No tv shows found...</p>
+      <CommandList className="h-[300px]">
+        <CommandLoading className="px-4 py-2 flex justify-center">
+          <p>Type a movie title.</p>
+        </CommandLoading>
+      </CommandList>
+    );
+  }
+
+  if (tv == null || tv === undefined) {
+    return (
+      <CommandList className="h-[300px]">
+        <CommandLoading className="flex justify-center py-4">
+          <Spinner />
+        </CommandLoading>
+      </CommandList>
+    );
+  }
+
+  if (tv.length === 0) {
+    return (
+      <CommandList className="h-[300px]">
+        <CommandLoading className="px-4 py-2 flex justify-center">
+          <p>No movies found.</p>
         </CommandLoading>
       </CommandList>
     );
@@ -45,7 +66,7 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
 
   return (
     <>
-      <CommandList>
+      <CommandList className="h-[300px]">
         {tv.map((tv) => (
           <CommandItem
             key={tv.id + tv.name}

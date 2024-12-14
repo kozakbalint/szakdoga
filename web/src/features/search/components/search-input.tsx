@@ -167,7 +167,7 @@ export const SearchInput = () => {
         />
 
         {!page && (
-          <CommandList>
+          <CommandList className="h-[300px]">
             {commandGroups.map((group) => (
               <CommandGroup key={group.title} heading={group.title}>
                 {group.items.map((item) => (

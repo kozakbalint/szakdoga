@@ -8,6 +8,7 @@ import { useSearchMovies } from '../api/search-movies';
 import React from 'react';
 import { getMovieCastByIdQueryOptions } from '@/features/movies/api/get-movie-cast-by-id';
 import { getMovieWatchProvidersByIdQueryOptions } from '@/features/movies/api/get-movie-watch-providers-by-id';
+import { Spinner } from '@/components/ui/spinner';
 
 export interface SearchPageMoviesProps {
   searchTerm: string;
@@ -36,11 +37,31 @@ export const SearchPageMovies = ({
   const searchMoviesQuery = useSearchMovies({ q: searchTerm });
   const movies = searchMoviesQuery.data?.movies;
 
-  if (movies == null || movies.length === 0 || movies === undefined) {
+  if (searchTerm.length === 0) {
     return (
-      <CommandList>
-        <CommandLoading className="px-4 py-2">
-          <p>No movies found...</p>
+      <CommandList className="h-[300px]">
+        <CommandLoading className="px-4 py-2 flex justify-center">
+          <p>Type a movie title.</p>
+        </CommandLoading>
+      </CommandList>
+    );
+  }
+
+  if (movies == null || movies === undefined) {
+    return (
+      <CommandList className="h-[300px]">
+        <CommandLoading className="flex justify-center py-4">
+          <Spinner />
+        </CommandLoading>
+      </CommandList>
+    );
+  }
+
+  if (movies.length === 0) {
+    return (
+      <CommandList className="h-[300px]">
+        <CommandLoading className="px-4 py-2 flex justify-center">
+          <p>No movies found.</p>
         </CommandLoading>
       </CommandList>
     );
@@ -48,7 +69,7 @@ export const SearchPageMovies = ({
 
   return (
     <>
-      <CommandList className="h-full">
+      <CommandList className="h-[300px]">
         {movies.map((movie) => (
           <CommandItem
             key={movie.id + movie.title}
