@@ -35,8 +35,10 @@ func (h *WatchedHandler) AddWatchedMovieHandler(w http.ResponseWriter, r *http.R
 
 	movie, err := h.Models.Movies.GetByTmdbID(int(input.MovieID))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
+		if !e.Is(err, data.ErrNotFound) {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	if movie == nil {
@@ -95,8 +97,15 @@ func (h *WatchedHandler) GetWatchDatesByMovieHandler(w http.ResponseWriter, r *h
 	}
 
 	movie, err := h.Models.Movies.GetByTmdbID(int(movieID))
-	if err != nil || movie == nil {
-		errors.NotFoundResponse(w, r)
+	if movie == nil {
+		err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": []string{}}, nil)
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+		}
+		return
+	}
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
