@@ -12,19 +12,27 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useGetMovieWatchedDates } from '@/features/watched/movies/api/get-movie-watch-dates';
+import { MovieWatched } from './movie-watched';
 
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movieQuery = useGetMovieById({ id: movieId });
   const watchlistQuery = useGetMoviesWatchlist({});
+  const watchedDatesQuery = useGetMovieWatchedDates({ id: movieId });
   const addMovieToWatchlistMutation = useAddMovieToWatchlist();
   const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist();
 
-  if (movieQuery.isLoading || watchlistQuery.isLoading) {
+  if (
+    movieQuery.isLoading ||
+    watchlistQuery.isLoading ||
+    watchedDatesQuery.isLoading
+  ) {
     return <div>Loading...</div>;
   }
 
   const movie = movieQuery.data?.movie;
   const watchlist = watchlistQuery.data?.watchlist;
+  const watchedDates = watchedDatesQuery.data?.watched_dates || [];
   const onWatchlist = watchlist?.find((m) => m.movie.tmdb_id === movie?.id);
 
   if (!movie) {
@@ -69,46 +77,51 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
         </div>
       </div>
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
-        <div>
-          {onWatchlist != null ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => {
-                    removeMovieFromWatchlistMutation.mutate({
-                      id: onWatchlist?.id,
-                    });
-                  }}
-                  disabled={addMovieToWatchlistMutation.isPending}
-                  className="flex items-center"
-                  size={'icon'}
-                  variant={'outline'}
-                >
-                  <Heart fill="red" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                Remove from watchlist
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => {
-                    addMovieToWatchlistMutation.mutate({ tmdb_id: movie.id });
-                  }}
-                  disabled={addMovieToWatchlistMutation.isPending}
-                  className="flex items-center"
-                  size={'icon'}
-                  variant={'outline'}
-                >
-                  <Heart fill="none" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">Add to watchlist</TooltipContent>
-            </Tooltip>
-          )}
+        <div className="flex">
+          <div>
+            {onWatchlist ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      removeMovieFromWatchlistMutation.mutate({
+                        id: onWatchlist?.id,
+                      });
+                    }}
+                    disabled={addMovieToWatchlistMutation.isPending}
+                    className="flex items-center"
+                    size={'icon'}
+                    variant={'outline'}
+                  >
+                    <Heart fill="red" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  Remove from watchlist
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      addMovieToWatchlistMutation.mutate({ tmdb_id: movie.id });
+                    }}
+                    disabled={addMovieToWatchlistMutation.isPending}
+                    className="flex items-center"
+                    size={'icon'}
+                    variant={'outline'}
+                  >
+                    <Heart fill="none" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Add to watchlist</TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+          <div>
+            <MovieWatched movieID={movieId} watchedDates={watchedDates} />
+          </div>
         </div>
         <div>
           <MovieWatchProvider movieId={movieId} type="streming" />

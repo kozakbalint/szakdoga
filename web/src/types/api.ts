@@ -224,10 +224,22 @@ export type MovieWatchlistResponse = {
   id: number;
   movie: Movie;
   added_at: string;
-  updated_at: string;
-  watched: boolean;
 };
 
 export type MessageResponse = {
   message: string;
+};
+
+export type GetMovieWatchedResponse = {
+  watched: MovieWatchedResponse[] | null;
+};
+
+export type MovieWatchedResponse = {
+  id: number;
+  movie: Movie;
+  added_at: string;
+};
+
+export type GetMovieWatchedDatesResponse = {
+  watched_dates: string[] | null;
 };
