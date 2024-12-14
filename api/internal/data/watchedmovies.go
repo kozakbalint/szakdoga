@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
@@ -29,6 +30,7 @@ func (m *WatchedMoviesModel) AddWatchedMovie(userID, movieID int64) (*WatchedMov
 
 	watchedMovie, err := m.Repository.InsertWatchedMovie(ctx, args)
 	if err != nil {
+		fmt.Println(err)
 		return nil, WrapError(err)
 	}
 
@@ -95,6 +97,22 @@ func (m *WatchedMoviesModel) DeleteWatchedMovie(ID, userID int64) error {
 	defer cancel()
 
 	_, err := m.Repository.DeleteWatchedMovie(ctx, args)
+	if err != nil {
+		return WrapError(err)
+	}
+
+	return nil
+}
+
+func (m *WatchedMoviesModel) DeleteWatchedMoviesForMovie(userID, movieID int64) error {
+	args := repository.DeleteWatchedMovieByMovieIdParams{
+		UserID:  int32(userID),
+		MovieID: int32(movieID),
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	_, err := m.Repository.DeleteWatchedMovieByMovieId(ctx, args)
 	if err != nil {
 		return WrapError(err)
 	}

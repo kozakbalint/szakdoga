@@ -33,6 +33,29 @@ func (q *Queries) DeleteWatchedMovie(ctx context.Context, arg DeleteWatchedMovie
 	return i, err
 }
 
+const deleteWatchedMovieByMovieId = `-- name: DeleteWatchedMovieByMovieId :one
+DELETE FROM watched_movies
+WHERE user_id = $1 AND movie_id = $2
+RETURNING id, user_id, movie_id, watched_at
+`
+
+type DeleteWatchedMovieByMovieIdParams struct {
+	UserID  int32 `json:"user_id"`
+	MovieID int32 `json:"movie_id"`
+}
+
+func (q *Queries) DeleteWatchedMovieByMovieId(ctx context.Context, arg DeleteWatchedMovieByMovieIdParams) (WatchedMovie, error) {
+	row := q.db.QueryRow(ctx, deleteWatchedMovieByMovieId, arg.UserID, arg.MovieID)
+	var i WatchedMovie
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.MovieID,
+		&i.WatchedAt,
+	)
+	return i, err
+}
+
 const getWatchedMovie = `-- name: GetWatchedMovie :one
 SELECT id, user_id, movie_id, watched_at FROM watched_movies
 WHERE user_id = $1 AND id = $2

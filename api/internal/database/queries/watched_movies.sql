@@ -19,6 +19,11 @@ DELETE FROM watched_movies
 WHERE id = $1 AND user_id = $2
 RETURNING *;
 
+-- name: DeleteWatchedMovieByMovieId :one
+DELETE FROM watched_movies
+WHERE user_id = $1 AND movie_id = $2
+RETURNING *;
+
 -- name: ListWatchedMovies :many
 SELECT * FROM watched_movies
 WHERE user_id = $1;

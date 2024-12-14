@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	e "errors"
 	"net/http"
 
+	tmdb "github.com/cyruzin/golang-tmdb"
 	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
@@ -11,6 +13,7 @@ import (
 
 type WatchedHandler struct {
 	Models *data.Models
+	Tmdb   *tmdb.Client
 }
 
 func (h *WatchedHandler) AddWatchedMovieHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +33,43 @@ func (h *WatchedHandler) AddWatchedMovieHandler(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	_, err = h.Models.WatchedMovies.AddWatchedMovie(user.ID, input.MovieID)
+	movie, err := h.Models.Movies.GetByTmdbID(int(input.MovieID))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	if movie == nil {
+		tmdbMovie, err := h.Tmdb.GetMovieDetails(int(input.MovieID), nil)
+		if err != nil || tmdbMovie == nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+
+		genres := []string{}
+		for _, genre := range tmdbMovie.Genres {
+			genres = append(genres, genre.Name)
+		}
+
+		movie = &data.Movie{
+			TmdbID:      int(input.MovieID),
+			Title:       tmdbMovie.Title,
+			ReleaseDate: tmdbMovie.ReleaseDate,
+			PosterURL:   tmdb.GetImageURL(tmdbMovie.PosterPath, "w500"),
+			Overview:    tmdbMovie.Overview,
+			Genres:      genres,
+			VoteAverage: tmdbMovie.VoteAverage,
+			Runtime:     tmdbMovie.Runtime,
+		}
+
+		movie, err = h.Models.Movies.Insert(movie)
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+	}
+
+	_, err = h.Models.WatchedMovies.AddWatchedMovie(user.ID, movie.ID)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -43,11 +82,7 @@ func (h *WatchedHandler) AddWatchedMovieHandler(w http.ResponseWriter, r *http.R
 }
 
 func (h *WatchedHandler) GetWatchDatesByMovieHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		MovieID int64 `json:"movie_id"`
-	}
-
-	err := utils.ReadJSON(w, r, &input)
+	movieID, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -59,7 +94,13 @@ func (h *WatchedHandler) GetWatchDatesByMovieHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	watchedMovies, err := h.Models.WatchedMovies.GetWatchedMovie(user.ID, input.MovieID)
+	movie, err := h.Models.Movies.GetByTmdbID(int(movieID))
+	if err != nil || movie == nil {
+		errors.NotFoundResponse(w, r)
+		return
+	}
+
+	watchedMovies, err := h.Models.WatchedMovies.GetWatchedMovie(user.ID, movie.ID)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -96,11 +137,7 @@ func (h *WatchedHandler) GetWatchedMoviesHandler(w http.ResponseWriter, r *http.
 }
 
 func (h *WatchedHandler) RemoveWatchedMovieHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		MovieID int64 `json:"movie_id"`
-	}
-
-	err := utils.ReadJSON(w, r, &input)
+	movieID, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -112,8 +149,18 @@ func (h *WatchedHandler) RemoveWatchedMovieHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	err = h.Models.WatchedMovies.DeleteWatchedMovie(user.ID, input.MovieID)
+	movie, err := h.Models.Movies.GetByTmdbID(int(movieID))
+	if err != nil || movie == nil {
+		errors.NotFoundResponse(w, r)
+		return
+	}
+
+	err = h.Models.WatchedMovies.DeleteWatchedMoviesForMovie(user.ID, movie.ID)
 	if err != nil {
+		if e.Is(err, data.ErrNotFound) {
+			errors.NotFoundResponse(w, r)
+			return
+		}
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}

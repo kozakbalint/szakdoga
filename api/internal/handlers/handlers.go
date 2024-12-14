@@ -52,6 +52,7 @@ func NewHandlers(ctx *context.ServerContext) *Handlers {
 			Models: &ctx.Models,
 		},
 		WatchedHandler: &WatchedHandler{
+			Tmdb:   ctx.Tmdb,
 			Models: &ctx.Models,
 		},
 	}
