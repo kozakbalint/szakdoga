@@ -2,14 +2,10 @@ package data
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
-	"github.com/lib/pq"
 )
-
-var ErrDuplicateRecord = errors.New("duplicate record")
 
 type WatchlistMovies struct {
 	Entries []*WatchlistMoviesEntry `json:"entries"`
@@ -37,10 +33,7 @@ func (m WatchlistMoviesModel) Insert(mwe *WatchlistMoviesEntry) (*WatchlistMovie
 
 	mweRes, err := m.Repository.InsertWatchlistMovie(ctx, args)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-			return nil, ErrDuplicateRecord
-		}
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	mwe = &WatchlistMoviesEntry{
@@ -65,7 +58,7 @@ func (m WatchlistMoviesModel) GetWatchlistEntry(userID, id int64) (*WatchlistMov
 
 	mweRes, err := m.Repository.GetWatchlistMovie(ctx, args)
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	mwe = WatchlistMoviesEntry{
@@ -90,7 +83,7 @@ func (m WatchlistMoviesModel) UpdateWatchlistEntry(mwe *WatchlistMoviesEntry) er
 
 	_, err := m.Repository.UpdateWatchlistMovie(ctx, args)
 	if err != nil {
-		return err
+		return WrapError(err)
 	}
 
 	return nil
@@ -102,7 +95,7 @@ func (m WatchlistMoviesModel) DeleteWatchlistEntry(id int64) error {
 
 	_, err := m.Repository.DeleteWatchlistMovie(ctx, id)
 	if err != nil {
-		return err
+		return WrapError(err)
 	}
 
 	return nil
@@ -116,7 +109,7 @@ func (m WatchlistMoviesModel) GetWatchlist(userID int64) (*WatchlistMovies, erro
 
 	rows, err := m.Repository.ListWatchlistMovies(ctx, int32(userID))
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	for _, mweRes := range rows {
@@ -144,7 +137,7 @@ func (m WatchlistMoviesModel) GetWatchlistEntryByUserAndMovie(userID, movieID in
 
 	mweRes, err := m.Repository.GetWatchlistMovieByMovieId(ctx, args)
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	mwe = WatchlistMoviesEntry{

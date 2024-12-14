@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"crypto/sha256"
-	"database/sql"
 	"errors"
 	"time"
 
@@ -101,12 +100,7 @@ func (m UserModel) Insert(user *User) (*User, error) {
 
 	userRes, err := m.Repository.InsertUser(ctx, args)
 	if err != nil {
-		switch {
-		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
-			return nil, ErrDuplicateEmail
-		default:
-			return nil, err
-		}
+		return nil, WrapError(err)
 	}
 
 	user = &User{
@@ -129,12 +123,7 @@ func (m UserModel) Get(id int64) (*User, error) {
 
 	userRes, err := m.Repository.GetUser(ctx, id)
 	if err != nil {
-		switch {
-		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrRecordNotFound
-		default:
-			return nil, err
-		}
+		return nil, WrapError(err)
 	}
 
 	user = User{
@@ -157,12 +146,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 
 	userRes, err := m.Repository.GetUserByEmail(ctx, email)
 	if err != nil {
-		switch {
-		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrRecordNotFound
-		default:
-			return nil, err
-		}
+		return nil, WrapError(err)
 	}
 
 	user = User{
@@ -191,14 +175,7 @@ func (m UserModel) Update(user *User) error {
 
 	_, err := m.Repository.UpdateUser(ctx, args)
 	if err != nil {
-		switch {
-		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
-			return ErrDuplicateEmail
-		case errors.Is(err, sql.ErrNoRows):
-			return ErrEditConflict
-		default:
-			return err
-		}
+		return WrapError(err)
 	}
 
 	return nil
@@ -220,12 +197,7 @@ func (m UserModel) GetForToken(tokenPlaintext string) (*User, error) {
 	userRes, err := m.Repository.GetUserByToken(ctx, args)
 
 	if err != nil {
-		switch {
-		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrRecordNotFound
-		default:
-			return nil, err
-		}
+		return nil, WrapError(err)
 	}
 
 	user = User{

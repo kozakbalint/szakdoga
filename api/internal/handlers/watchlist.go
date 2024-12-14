@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	e "errors"
 	"net/http"
 	"time"
 
@@ -76,10 +77,7 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 
 	movie, err := h.Models.Movies.GetByTmdbID(int(input.TmdbID))
 	if err != nil {
-		switch err {
-		case data.ErrRecordNotFound:
-			break
-		default:
+		if !e.Is(err, data.ErrNotFound) {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
@@ -147,12 +145,11 @@ func (h *WatchlistHandler) RemoveMovieFromWatchlistHandler(w http.ResponseWriter
 
 	_, err = h.Models.WatchlistMovies.GetWatchlistEntry(user.ID, id)
 	if err != nil {
-		switch err {
-		case data.ErrRecordNotFound:
+		if e.Is(err, data.ErrNotFound) {
 			errors.NotFoundResponse(w, r)
-		default:
-			errors.ServerErrorResponse(w, r, err)
+			return
 		}
+		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 

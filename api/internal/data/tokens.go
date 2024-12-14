@@ -48,7 +48,10 @@ func (m TokenModel) Insert(token *Token) error {
 	defer cancel()
 
 	_, err := m.Repository.InsertToken(ctx, args)
-	return err
+	if err != nil {
+		return WrapError(err)
+	}
+	return nil
 }
 
 func (m TokenModel) DeleteAllForUser(userID int64) error {
@@ -56,7 +59,10 @@ func (m TokenModel) DeleteAllForUser(userID int64) error {
 	defer cancel()
 
 	_, err := m.Repository.DeleteAllTokens(ctx, userID)
-	return err
+	if err != nil {
+		return WrapError(err)
+	}
+	return nil
 }
 
 func generateToken(userID int64, ttl time.Duration) (*Token, error) {
@@ -69,7 +75,7 @@ func generateToken(userID int64, ttl time.Duration) (*Token, error) {
 
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	token.PlainText = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)

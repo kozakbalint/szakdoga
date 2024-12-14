@@ -41,7 +41,7 @@ func (h *TokensHandler) CreateAuthenticationTokenHandler(w http.ResponseWriter, 
 	user, err := h.Models.Users.GetByEmail(input.Email)
 	if err != nil {
 		switch {
-		case e.Is(err, data.ErrRecordNotFound):
+		case e.Is(err, data.ErrNotFound):
 			errors.InvalidCredentialsResponse(w, r)
 		default:
 			errors.ServerErrorResponse(w, r, err)

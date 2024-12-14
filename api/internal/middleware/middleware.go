@@ -86,7 +86,7 @@ func Authenticate(models *data.Models, next http.Handler) http.Handler {
 		user, err := models.Users.GetForToken(token)
 		if err != nil {
 			switch {
-			case e.Is(err, data.ErrRecordNotFound):
+			case e.Is(err, data.ErrNotFound):
 				errors.InvalidAuthenticationTokenResponse(w, r)
 			default:
 				errors.ServerErrorResponse(w, r, err)

@@ -29,7 +29,7 @@ func (m *WatchedMoviesModel) AddWatchedMovie(userID, movieID int64) (*WatchedMov
 
 	watchedMovie, err := m.Repository.InsertWatchedMovie(ctx, args)
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	return &WatchedMovie{
@@ -46,7 +46,7 @@ func (m *WatchedMoviesModel) GetWatchedMovies(userID int64) ([]WatchedMovie, err
 
 	watchedMovies, err := m.Repository.ListWatchedMovies(ctx, int32(userID))
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	var watchedMoviesResponse []WatchedMovie
@@ -75,7 +75,7 @@ func (m *WatchedMoviesModel) UpdateWatchedMovie(ID, userID, movieID int64, watch
 
 	watchedMovie, err := m.Repository.UpdateWatchedMovie(ctx, args)
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	return &WatchedMovie{
@@ -95,8 +95,11 @@ func (m *WatchedMoviesModel) DeleteWatchedMovie(ID, userID int64) error {
 	defer cancel()
 
 	_, err := m.Repository.DeleteWatchedMovie(ctx, args)
+	if err != nil {
+		return WrapError(err)
+	}
 
-	return err
+	return nil
 }
 
 func (m *WatchedMoviesModel) GetWatchedMovie(userID, movieID int64) (*[]WatchedMovie, error) {
@@ -109,7 +112,7 @@ func (m *WatchedMoviesModel) GetWatchedMovie(userID, movieID int64) (*[]WatchedM
 
 	watchedMovies, err := m.Repository.GetWatchedMovieByMovieId(ctx, args)
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	var watchedMoviesResponse []WatchedMovie

@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
@@ -45,10 +44,7 @@ func (m MovieModel) Insert(movie *Movie) (*Movie, error) {
 
 	movieRes, err := m.Repository.InsertMovie(ctx, args)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
-			return nil, ErrDuplicateRecord
-		}
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	movie = &Movie{
@@ -77,7 +73,7 @@ func (m MovieModel) Get(id int64) (*Movie, error) {
 
 	movieRes, err := m.Repository.GetMovie(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, WrapError(err)
 	}
 
 	movie = Movie{
@@ -106,12 +102,7 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 
 	movieRes, err := m.Repository.GetMovieByTmdbId(ctx, int32(tmdbID))
 	if err != nil {
-		switch err {
-		case sql.ErrNoRows:
-			return nil, ErrRecordNotFound
-		default:
-			return nil, err
-		}
+		return nil, WrapError(err)
 	}
 
 	movie = Movie{
@@ -150,12 +141,7 @@ func (m MovieModel) Update(movie *Movie) error {
 
 	_, err := m.Repository.UpdateMovie(ctx, args)
 	if err != nil {
-		switch {
-		case err == sql.ErrNoRows:
-			return ErrEditConflict
-		default:
-			return err
-		}
+		return WrapError(err)
 	}
 
 	return nil
@@ -167,7 +153,7 @@ func (m MovieModel) Delete(id int64) error {
 
 	_, err := m.Repository.DeleteMovie(ctx, id)
 	if err != nil {
-		return err
+		return WrapError(err)
 	}
 
 	return nil
