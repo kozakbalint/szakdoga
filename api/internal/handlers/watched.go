@@ -59,13 +59,18 @@ func (h *WatchedHandler) GetWatchDatesByMovieHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	watchedMovie, err := h.Models.WatchedMovies.GetWatchedMovie(user.ID, input.MovieID)
+	watchedMovies, err := h.Models.WatchedMovies.GetWatchedMovie(user.ID, input.MovieID)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": watchedMovie}, nil)
+	watchDates := []string{}
+	for _, watched := range *watchedMovies {
+		watchDates = append(watchDates, watched.WatchedAt.Format("2006-01-02"))
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": watchDates}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
