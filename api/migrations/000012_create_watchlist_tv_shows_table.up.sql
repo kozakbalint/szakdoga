@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS watchlist_tv_shows (
     added_at TIMESTAMP(0)
     WITH
         TIME ZONE NOT NULL DEFAULT NOW (),
-        FOREIGN KEY (user_id) REFERENCES users (id),
-        FOREIGN KEY (tv_show_id) REFERENCES tv_shows (id),
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (tv_show_id) REFERENCES tv_shows (id) ON DELETE CASCADE,
         UNIQUE (user_id, tv_show_id)
 );

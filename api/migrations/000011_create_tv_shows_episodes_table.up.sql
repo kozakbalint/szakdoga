@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS tv_shows_episodes (
         last_fetched_at timestamp(0)
     with
         time zone NOT NULL DEFAULT NOW (),
-        FOREIGN KEY (tv_show_id) REFERENCES tv_shows (id),
-        FOREIGN KEY (season_id) REFERENCES tv_shows_seasons (id)
+        FOREIGN KEY (tv_show_id) REFERENCES tv_shows (id) ON DELETE CASCADE,
+        FOREIGN KEY (season_id) REFERENCES tv_shows_seasons (id) ON DELETE CASCADE
 );

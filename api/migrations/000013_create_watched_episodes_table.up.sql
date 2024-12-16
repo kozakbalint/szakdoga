@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS watched_episodes (
     watched_at TIMESTAMP(0)
     WITH
         TIME ZONE NOT NULL DEFAULT NOW (),
-        FOREIGN KEY (user_id) REFERENCES users (id),
-        FOREIGN KEY (episode_id) REFERENCES tv_shows_episodes (id)
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (episode_id) REFERENCES tv_shows_episodes (id) ON DELETE CASCADE,
 );
