@@ -255,13 +255,13 @@ export type MessageResponse = {
 };
 
 export type GetMovieWatchedResponse = {
-  watched: MovieWatchedResponse[] | null;
+  watched_movies: MovieWatchedResponse[] | null;
 };
 
 export type MovieWatchedResponse = {
   id: number;
   movie: Movie;
-  added_at: string;
+  watched_at: string;
 };
 
 export type GetMovieWatchedDatesResponse = {

@@ -126,6 +126,12 @@ func (h *WatchedHandler) GetWatchDatesByMovieHandler(w http.ResponseWriter, r *h
 	}
 }
 
+type WatchedMovieResponse struct {
+	ID        int64      `json:"id"`
+	Movie     data.Movie `json:"movie"`
+	WatchedAt string     `json:"watched_at"`
+}
+
 func (h *WatchedHandler) GetWatchedMoviesHandler(w http.ResponseWriter, r *http.Request) {
 	user := context.GetUser(r)
 	if user == nil {
@@ -138,8 +144,21 @@ func (h *WatchedHandler) GetWatchedMoviesHandler(w http.ResponseWriter, r *http.
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
+	var watchedMoviesResponse []WatchedMovieResponse
+	for _, watched := range watchedMovies {
+		movie, err := h.Models.Movies.Get(watched.MovieID)
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+		watchedMoviesResponse = append(watchedMoviesResponse, WatchedMovieResponse{
+			ID:        watched.ID,
+			Movie:     *movie,
+			WatchedAt: watched.WatchedAt.Format("2006-01-02"),
+		})
+	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_movies": watchedMovies}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_movies": watchedMoviesResponse}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}

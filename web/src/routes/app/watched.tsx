@@ -1,4 +1,5 @@
 import { ContentLayout } from '@/components/layouts';
+import { MoviesWatched } from '@/features/watched/movies/components/watched';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/app/watched')({
@@ -18,6 +19,7 @@ function WatchedRoute() {
     <ContentLayout title="Watched" head="Watched">
       <div className="flex flex-col gap-2">
         <div className="text-xl">Movies:</div>
+        <MoviesWatched />
         <div className="text-xl">TV Shows:</div>
       </div>
     </ContentLayout>
