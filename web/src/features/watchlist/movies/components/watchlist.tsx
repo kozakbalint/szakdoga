@@ -3,7 +3,7 @@ import { useGetMoviesWatchlist } from '../api/get-movies-watchlist';
 import { Star } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
-export const Watchlist = () => {
+export const MoviesWatchlist = () => {
   const watchlistQuery = useGetMoviesWatchlist({});
   if (watchlistQuery.isLoading) {
     return <div>Loading...</div>;

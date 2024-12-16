@@ -3,7 +3,7 @@ import { useGetTVWatchlist } from '../api/get-tv-watchlist';
 import { Star } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
-export const Watchlist = () => {
+export const TVWatchlist = () => {
   const watchlistQuery = useGetTVWatchlist({});
   if (watchlistQuery.isLoading) {
     return <div>Loading...</div>;
