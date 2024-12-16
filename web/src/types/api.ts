@@ -226,6 +226,30 @@ export type MovieWatchlistResponse = {
   added_at: string;
 };
 
+export type GetTVWatchlistResponse = {
+  watchlist: TVWatchlistResponse[] | null;
+};
+
+export type TVWatchlistResponse = {
+  id: number;
+  tv_show: TV;
+  added_at: string;
+};
+
+export type TV = {
+  id: number;
+  tmdb_id: number;
+  created_at: string;
+  last_fetched_at: string;
+  title: string;
+  release_date: string;
+  poster_url: string;
+  overview: string;
+  genres: string[];
+  vote_average: number;
+  version: number;
+};
+
 export type MessageResponse = {
   message: string;
 };
