@@ -16,11 +16,12 @@ var (
 )
 
 type Models struct {
-	Tokens          TokenModel
-	Users           UserModel
-	Movies          MovieModel
-	WatchlistMovies WatchlistMoviesModel
-	WatchedMovies   WatchedMoviesModel
+	Tokens           TokenModel
+	Users            UserModel
+	Movies           MovieModel
+	WatchlistMovies  WatchlistMoviesModel
+	WatchlistTvShows WatchlistTVShowsModel
+	WatchedMovies    WatchedMoviesModel
 }
 
 func NewModels(repo *repository.Queries) Models {
@@ -35,6 +36,9 @@ func NewModels(repo *repository.Queries) Models {
 			Repository: repo,
 		},
 		WatchlistMovies: WatchlistMoviesModel{
+			Repository: repo,
+		},
+		WatchlistTvShows: WatchlistTVShowsModel{
 			Repository: repo,
 		},
 		WatchedMovies: WatchedMoviesModel{
