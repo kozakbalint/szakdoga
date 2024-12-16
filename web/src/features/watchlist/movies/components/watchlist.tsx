@@ -38,7 +38,7 @@ export const Watchlist = () => {
               </div>
               <div className="text-md flex flex-row">
                 <Star fill="gold" stroke="black" />
-                {movie.movie.vote_average}
+                {Math.fround(movie.movie.vote_average).toFixed(1)}
               </div>
             </CardContent>
           </Card>
