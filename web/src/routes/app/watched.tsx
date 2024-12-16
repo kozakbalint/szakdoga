@@ -1,9 +1,7 @@
 import { ContentLayout } from '@/components/layouts';
-import { MoviesWatchlist } from '@/features/watchlist/movies/components/watchlist';
-import { TVWatchlist } from '@/features/watchlist/tv/components/watchlist';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/app/watchlist')({
+export const Route = createFileRoute('/app/watched')({
   beforeLoad: async ({ context, location }) => {
     if (context.auth.data === null) {
       throw redirect({
@@ -12,17 +10,15 @@ export const Route = createFileRoute('/app/watchlist')({
       });
     }
   },
-  component: WatchlistRoute,
+  component: WatchedRoute,
 });
 
-function WatchlistRoute() {
+function WatchedRoute() {
   return (
-    <ContentLayout title="Watchlist" head="Watchlist">
+    <ContentLayout title="Watched" head="Watched">
       <div className="flex flex-col gap-2">
         <div className="text-xl">Movies:</div>
-        <MoviesWatchlist />
         <div className="text-xl">TV Shows:</div>
-        <TVWatchlist />
       </div>
     </ContentLayout>
   );
