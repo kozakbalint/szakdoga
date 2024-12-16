@@ -42,6 +42,9 @@ func New(ctx *context.ServerContext) http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v1/watchlist/movies", middleware.RequireAuthenticatedUser(h.WatchlistHandler.GetMoviesWatchlistHandler))
 	router.HandlerFunc(http.MethodPost, "/v1/watchlist/movies", middleware.RequireAuthenticatedUser(h.WatchlistHandler.AddMovieToWatchlistHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/watchlist/movies/:id", middleware.RequireAuthenticatedUser(h.WatchlistHandler.RemoveMovieFromWatchlistHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/watchlist/tv", middleware.RequireAuthenticatedUser(h.WatchlistHandler.GetTvShowsWatchlistHandler))
+	router.HandlerFunc(http.MethodPost, "/v1/watchlist/tv", middleware.RequireAuthenticatedUser(h.WatchlistHandler.AddTvShowToWatchlistHandler))
+	router.HandlerFunc(http.MethodDelete, "/v1/watchlist/tv/:id", middleware.RequireAuthenticatedUser(h.WatchlistHandler.RemoveTvShowFromWatchlistHandler))
 
 	router.HandlerFunc(http.MethodGet, "/v1/watched/movies", middleware.RequireAuthenticatedUser(h.WatchedHandler.GetWatchedMoviesHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/watched/movies/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.GetWatchDatesByMovieHandler))
