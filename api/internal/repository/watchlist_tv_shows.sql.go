@@ -48,17 +48,17 @@ func (q *Queries) GetWatchlistTvShows(ctx context.Context, arg GetWatchlistTvSho
 	return i, err
 }
 
-const getWatchlistTvShowsByMovieId = `-- name: GetWatchlistTvShowsByMovieId :one
+const getWatchlistTvShowsByTVId = `-- name: GetWatchlistTvShowsByTVId :one
 SELECT id, user_id, tv_show_id, added_at FROM watchlist_tv_shows WHERE user_id = $1 AND tv_show_id = $2
 `
 
-type GetWatchlistTvShowsByMovieIdParams struct {
+type GetWatchlistTvShowsByTVIdParams struct {
 	UserID   int32 `json:"user_id"`
 	TvShowID int32 `json:"tv_show_id"`
 }
 
-func (q *Queries) GetWatchlistTvShowsByMovieId(ctx context.Context, arg GetWatchlistTvShowsByMovieIdParams) (WatchlistTvShow, error) {
-	row := q.db.QueryRow(ctx, getWatchlistTvShowsByMovieId, arg.UserID, arg.TvShowID)
+func (q *Queries) GetWatchlistTvShowsByTVId(ctx context.Context, arg GetWatchlistTvShowsByTVIdParams) (WatchlistTvShow, error) {
+	row := q.db.QueryRow(ctx, getWatchlistTvShowsByTVId, arg.UserID, arg.TvShowID)
 	var i WatchlistTvShow
 	err := row.Scan(
 		&i.ID,

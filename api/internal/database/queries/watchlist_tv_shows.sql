@@ -20,5 +20,5 @@ RETURNING *;
 -- name: ListWatchlistTvShows :many
 SELECT * FROM watchlist_tv_shows WHERE user_id = $1;
 
--- name: GetWatchlistTvShowsByMovieId :one
+-- name: GetWatchlistTvShowsByTVId :one
 SELECT * FROM watchlist_tv_shows WHERE user_id = $1 AND tv_show_id = $2;
