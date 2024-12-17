@@ -3,24 +3,15 @@ package handlers
 import (
 	"net/http"
 
-	tmdb "github.com/cyruzin/golang-tmdb"
+	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
+	"github.com/kozakbalint/szakdoga/api/internal/tmdbclient"
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
 
 type WatchProviderHandler struct {
-	Tmdb *tmdb.Client
-}
-
-type WatchProviderResponse struct {
-	Streaming []Watchprovider `json:"streaming"`
-	Buy       []Watchprovider `json:"buy"`
-}
-
-type Watchprovider struct {
-	ID      int64  `json:"id"`
-	LogoURL string `json:"logo_url"`
-	Name    string `json:"name"`
+	Models     *data.Models
+	TmdbClient *tmdbclient.Client
 }
 
 func (h *WatchProviderHandler) WatchProvidersMovieHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,29 +21,13 @@ func (h *WatchProviderHandler) WatchProvidersMovieHandler(w http.ResponseWriter,
 		return
 	}
 
-	providers, err := h.Tmdb.GetMovieWatchProviders(int(id), nil)
+	providers, err := h.TmdbClient.GetMovieWatchProviders(int(id))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
-	huProviders := providers.Results["HU"]
-	var response WatchProviderResponse
-	for _, provider := range huProviders.Flatrate {
-		response.Streaming = append(response.Streaming, Watchprovider{
-			ID:      provider.ProviderID,
-			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
-			Name:    provider.ProviderName,
-		})
-	}
-	for _, provider := range huProviders.Buy {
-		response.Buy = append(response.Buy, Watchprovider{
-			ID:      provider.ProviderID,
-			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
-			Name:    provider.ProviderName,
-		})
-	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": response}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": providers}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
@@ -65,29 +40,13 @@ func (h *WatchProviderHandler) WatchProvidersTvHandler(w http.ResponseWriter, r 
 		return
 	}
 
-	providers, err := h.Tmdb.GetTVWatchProviders(int(id), nil)
+	providers, err := h.TmdbClient.GetTvWatchProviders(int(id))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
-	huProviders := providers.Results["HU"]
-	var response WatchProviderResponse
-	for _, provider := range huProviders.Flatrate {
-		response.Streaming = append(response.Streaming, Watchprovider{
-			ID:      provider.ProviderID,
-			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
-			Name:    provider.ProviderName,
-		})
-	}
-	for _, provider := range huProviders.Buy {
-		response.Buy = append(response.Buy, Watchprovider{
-			ID:      provider.ProviderID,
-			LogoURL: tmdb.GetImageURL(provider.LogoPath, "w92"),
-			Name:    provider.ProviderName,
-		})
-	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": response}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": providers}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}

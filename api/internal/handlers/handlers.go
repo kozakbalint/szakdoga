@@ -24,19 +24,24 @@ func NewHandlers(ctx *context.ServerContext) *Handlers {
 			Config: ctx.Config,
 		},
 		CastHandler: &CastHandler{
-			Tmdb: ctx.Tmdb,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 		PeopleHandler: &PeopleHandler{
-			Tmdb: ctx.Tmdb,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 		SearchHandler: &SearchHandler{
-			Tmdb: ctx.Tmdb,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 		MovieHandler: &MovieHandler{
-			Tmdb: ctx.Tmdb,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 		WatchProviderHandler: &WatchProviderHandler{
-			Tmdb: ctx.Tmdb,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 		UsersHandler: &UsersHandler{
 			Models: &ctx.Models,
@@ -45,15 +50,16 @@ func NewHandlers(ctx *context.ServerContext) *Handlers {
 			Models: &ctx.Models,
 		},
 		TvHandler: &TvHandler{
-			Tmdb: ctx.Tmdb,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 		WatchlistHandler: &WatchlistHandler{
-			Tmdb:   ctx.Tmdb,
-			Models: &ctx.Models,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 		WatchedHandler: &WatchedHandler{
-			Tmdb:   ctx.Tmdb,
-			Models: &ctx.Models,
+			Models:     &ctx.Models,
+			TmdbClient: ctx.TmdbClient,
 		},
 	}
 }

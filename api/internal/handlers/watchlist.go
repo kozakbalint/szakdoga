@@ -2,31 +2,19 @@ package handlers
 
 import (
 	e "errors"
+	"fmt"
 	"net/http"
-	"time"
 
-	tmdb "github.com/cyruzin/golang-tmdb"
 	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
+	"github.com/kozakbalint/szakdoga/api/internal/tmdbclient"
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
 
 type WatchlistHandler struct {
-	Tmdb   *tmdb.Client
-	Models *data.Models
-}
-
-type MovieWatchlistResponse struct {
-	ID      int64      `json:"id"`
-	Movie   data.Movie `json:"movie"`
-	AddedAt time.Time  `json:"added_at"`
-}
-
-type TvWatchlistResponse struct {
-	ID      int64       `json:"id"`
-	TvShow  data.TVShow `json:"tv_show"`
-	AddedAt time.Time   `json:"added_at"`
+	Models     *data.Models
+	TmdbClient *tmdbclient.Client
 }
 
 func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,21 +30,7 @@ func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	var watchlistResponse []MovieWatchlistResponse
-	for _, entry := range moviesWatchlist.Entries {
-		movie, err := h.Models.Movies.Get(entry.MovieID)
-		if err != nil || movie == nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-		watchlistResponse = append(watchlistResponse, MovieWatchlistResponse{
-			ID:      entry.ID,
-			Movie:   *movie,
-			AddedAt: entry.AddedAt,
-		})
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": watchlistResponse}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": moviesWatchlist}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
@@ -75,21 +49,7 @@ func (h *WatchlistHandler) GetTvShowsWatchlistHandler(w http.ResponseWriter, r *
 		return
 	}
 
-	var watchlistResponse []TvWatchlistResponse
-	for _, entry := range tvShowsWatchlist.Entries {
-		tvShow, err := h.Models.TVShows.Get(entry.TVID)
-		if err != nil || tvShow == nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-		watchlistResponse = append(watchlistResponse, TvWatchlistResponse{
-			ID:      entry.ID,
-			TvShow:  *tvShow,
-			AddedAt: entry.AddedAt,
-		})
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": watchlistResponse}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": tvShowsWatchlist}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
@@ -115,36 +75,6 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 	movie, err := h.Models.Movies.GetByTmdbID(int(input.TmdbID))
 	if err != nil {
 		if !e.Is(err, data.ErrNotFound) {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
-
-	if movie == nil {
-		tmdbMovie, err := h.Tmdb.GetMovieDetails(int(input.TmdbID), nil)
-		if err != nil || tmdbMovie == nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-
-		genres := []string{}
-		for _, genre := range tmdbMovie.Genres {
-			genres = append(genres, genre.Name)
-		}
-
-		movie = &data.Movie{
-			TmdbID:      int(input.TmdbID),
-			Title:       tmdbMovie.Title,
-			ReleaseDate: tmdbMovie.ReleaseDate,
-			PosterURL:   tmdb.GetImageURL(tmdbMovie.PosterPath, "w500"),
-			Overview:    tmdbMovie.Overview,
-			Genres:      genres,
-			VoteAverage: tmdbMovie.VoteAverage,
-			Runtime:     tmdbMovie.Runtime,
-		}
-
-		movie, err = h.Models.Movies.Insert(movie)
-		if err != nil {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
@@ -187,35 +117,7 @@ func (h *WatchlistHandler) AddTvShowToWatchlistHandler(w http.ResponseWriter, r 
 	tvShow, err := h.Models.TVShows.GetByTmdbID(int(input.TmdbID))
 	if err != nil {
 		if !e.Is(err, data.ErrNotFound) {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
-
-	if tvShow == nil {
-		tmdbTvShow, err := h.Tmdb.GetTVDetails(int(input.TmdbID), nil)
-		if err != nil || tmdbTvShow == nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-
-		genres := []string{}
-		for _, genre := range tmdbTvShow.Genres {
-			genres = append(genres, genre.Name)
-		}
-
-		tvShow = &data.TVShow{
-			TmdbID:      int(input.TmdbID),
-			Title:       tmdbTvShow.Name,
-			ReleaseDate: tmdbTvShow.FirstAirDate,
-			PosterURL:   tmdb.GetImageURL(tmdbTvShow.PosterPath, "w500"),
-			Overview:    tmdbTvShow.Overview,
-			Genres:      genres,
-			VoteAverage: tmdbTvShow.VoteAverage,
-		}
-
-		tvShow, err = h.Models.TVShows.Insert(tvShow)
-		if err != nil {
+			fmt.Println(err)
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
@@ -228,12 +130,14 @@ func (h *WatchlistHandler) AddTvShowToWatchlistHandler(w http.ResponseWriter, r 
 
 	_, err = h.Models.WatchlistTvShows.Insert(tvShowsWatchlistEntry)
 	if err != nil {
+		fmt.Println(err)
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
 	err = utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message": "tv show added to watchlist"}, nil)
 	if err != nil {
+		fmt.Println(err)
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
