@@ -50,7 +50,7 @@ type TvShowsEpisode struct {
 	EpisodeNumber int32     `json:"episode_number"`
 	Title         string    `json:"title"`
 	Overview      string    `json:"overview"`
-	AirDate       time.Time `json:"air_date"`
+	AirDate       string    `json:"air_date"`
 	CreatedAt     time.Time `json:"created_at"`
 	LastFetchedAt time.Time `json:"last_fetched_at"`
 }
@@ -60,7 +60,7 @@ type TvShowsSeason struct {
 	TvShowID      int64     `json:"tv_show_id"`
 	SeasonNumber  int32     `json:"season_number"`
 	EpisodeCount  int32     `json:"episode_count"`
-	AirDate       time.Time `json:"air_date"`
+	AirDate       string    `json:"air_date"`
 	CreatedAt     time.Time `json:"created_at"`
 	LastFetchedAt time.Time `json:"last_fetched_at"`
 }

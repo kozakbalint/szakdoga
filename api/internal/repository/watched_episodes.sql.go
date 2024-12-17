@@ -7,204 +7,42 @@ package repository
 
 import (
 	"context"
-	"time"
 )
 
-const deleteWatchedEpisode = `-- name: DeleteWatchedEpisode :one
-DELETE FROM watched_episodes
-WHERE id = $1 AND user_id = $2
-RETURNING id, user_id, episode_id, watched_at
-`
-
-type DeleteWatchedEpisodeParams struct {
-	ID     int64 `json:"id"`
-	UserID int32 `json:"user_id"`
-}
-
-func (q *Queries) DeleteWatchedEpisode(ctx context.Context, arg DeleteWatchedEpisodeParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, deleteWatchedEpisode, arg.ID, arg.UserID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
-}
-
-const deleteWatchedEpisodeByEpisodeId = `-- name: DeleteWatchedEpisodeByEpisodeId :one
-DELETE FROM watched_episodes
-WHERE user_id = $1 AND episode_id = $2
-RETURNING id, user_id, episode_id, watched_at
-`
-
-type DeleteWatchedEpisodeByEpisodeIdParams struct {
-	UserID    int32 `json:"user_id"`
-	EpisodeID int32 `json:"episode_id"`
-}
-
-func (q *Queries) DeleteWatchedEpisodeByEpisodeId(ctx context.Context, arg DeleteWatchedEpisodeByEpisodeIdParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, deleteWatchedEpisodeByEpisodeId, arg.UserID, arg.EpisodeID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
-}
-
-const deleteWatchedSeason = `-- name: DeleteWatchedSeason :one
-DELETE FROM watched_episodes
-WHERE user_id = $1 AND episode_id IN (
-    SELECT e.id FROM tv_shows_episodes e
-    WHERE e.season_id = $2
-)
-RETURNING id, user_id, episode_id, watched_at
-`
-
-type DeleteWatchedSeasonParams struct {
-	UserID   int32 `json:"user_id"`
-	SeasonID int64 `json:"season_id"`
-}
-
-func (q *Queries) DeleteWatchedSeason(ctx context.Context, arg DeleteWatchedSeasonParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, deleteWatchedSeason, arg.UserID, arg.SeasonID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
-}
-
-const deleteWatchedShow = `-- name: DeleteWatchedShow :one
-DELETE FROM watched_episodes
-WHERE user_id = $1 AND episode_id IN (
-    SELECT e.id FROM tv_shows_episodes e
-    WHERE e.tv_show_id = $2
-)
-RETURNING id, user_id, episode_id, watched_at
-`
-
-type DeleteWatchedShowParams struct {
-	UserID   int32 `json:"user_id"`
-	TvShowID int64 `json:"tv_show_id"`
-}
-
-func (q *Queries) DeleteWatchedShow(ctx context.Context, arg DeleteWatchedShowParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, deleteWatchedShow, arg.UserID, arg.TvShowID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
-}
-
-const getNextEpisode = `-- name: GetNextEpisode :one
-WITH next_episode AS (
-    SELECT e.id, e.tv_show_id, e.season_id, e.episode_number, e.title, e.overview, e.air_date, e.created_at, e.last_fetched_at
+const getWatchedSeasons = `-- name: GetWatchedSeasons :many
+SELECT s.id, s.tv_show_id, s.season_number, s.episode_count, s.air_date, s.created_at, s.last_fetched_at
+FROM tv_shows_seasons s
+JOIN tv_shows t ON s.tv_show_id = t.id
+WHERE NOT EXISTS (
+    SELECT 1
     FROM tv_shows_episodes e
-    JOIN tv_shows_seasons s ON e.season_id = s.id
-    WHERE s.tv_show_id = $1
-      AND e.id NOT IN (
-          SELECT episode_id
-          FROM watched_episodes
-          WHERE user_id = $2
-      )
-    ORDER BY s.season_number, e.episode_number
-    LIMIT 1
+    LEFT JOIN (
+        SELECT DISTINCT episode_id
+        FROM watched_episodes
+        WHERE user_id = $1
+    ) w ON e.id = w.episode_id
+    WHERE e.season_id = s.id AND w.episode_id IS NULL
 )
-SELECT id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at FROM next_episode
+ORDER BY s.season_number
 `
 
-type GetNextEpisodeParams struct {
-	TvShowID int64 `json:"tv_show_id"`
-	UserID   int32 `json:"user_id"`
-}
-
-type GetNextEpisodeRow struct {
-	ID            int64     `json:"id"`
-	TvShowID      int64     `json:"tv_show_id"`
-	SeasonID      int64     `json:"season_id"`
-	EpisodeNumber int32     `json:"episode_number"`
-	Title         string    `json:"title"`
-	Overview      string    `json:"overview"`
-	AirDate       time.Time `json:"air_date"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-}
-
-func (q *Queries) GetNextEpisode(ctx context.Context, arg GetNextEpisodeParams) (GetNextEpisodeRow, error) {
-	row := q.db.QueryRow(ctx, getNextEpisode, arg.TvShowID, arg.UserID)
-	var i GetNextEpisodeRow
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonID,
-		&i.EpisodeNumber,
-		&i.Title,
-		&i.Overview,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
-}
-
-const getWatchedEpisode = `-- name: GetWatchedEpisode :one
-SELECT id, user_id, episode_id, watched_at FROM watched_episodes
-WHERE user_id = $1 AND id = $2
-`
-
-type GetWatchedEpisodeParams struct {
-	UserID int32 `json:"user_id"`
-	ID     int64 `json:"id"`
-}
-
-func (q *Queries) GetWatchedEpisode(ctx context.Context, arg GetWatchedEpisodeParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, getWatchedEpisode, arg.UserID, arg.ID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
-}
-
-const getWatchedEpisodeByEpisodeId = `-- name: GetWatchedEpisodeByEpisodeId :many
-SELECT id, user_id, episode_id, watched_at FROM watched_episodes
-WHERE user_id = $1 AND episode_id = $2
-`
-
-type GetWatchedEpisodeByEpisodeIdParams struct {
-	UserID    int32 `json:"user_id"`
-	EpisodeID int32 `json:"episode_id"`
-}
-
-func (q *Queries) GetWatchedEpisodeByEpisodeId(ctx context.Context, arg GetWatchedEpisodeByEpisodeIdParams) ([]WatchedEpisode, error) {
-	rows, err := q.db.Query(ctx, getWatchedEpisodeByEpisodeId, arg.UserID, arg.EpisodeID)
+func (q *Queries) GetWatchedSeasons(ctx context.Context, userID int32) ([]TvShowsSeason, error) {
+	rows, err := q.db.Query(ctx, getWatchedSeasons, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []WatchedEpisode
+	var items []TvShowsSeason
 	for rows.Next() {
-		var i WatchedEpisode
+		var i TvShowsSeason
 		if err := rows.Scan(
 			&i.ID,
-			&i.UserID,
-			&i.EpisodeID,
-			&i.WatchedAt,
+			&i.TvShowID,
+			&i.SeasonNumber,
+			&i.EpisodeCount,
+			&i.AirDate,
+			&i.CreatedAt,
+			&i.LastFetchedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -216,54 +54,46 @@ func (q *Queries) GetWatchedEpisodeByEpisodeId(ctx context.Context, arg GetWatch
 	return items, nil
 }
 
-const getWatchedSeason = `-- name: GetWatchedSeason :one
-SELECT id, user_id, episode_id, watched_at FROM watched_episodes
-WHERE user_id = $1 AND episode_id IN (
-    SELECT e.id FROM tv_shows_episodes e
-    WHERE e.season_id = $2
-)
+const getWatchedShows = `-- name: GetWatchedShows :many
+SELECT DISTINCT t.id, t.tmdb_id, t.created_at, t.last_fetched_at, t.title, t.release_date, t.poster_url, t.overview, t.genres, t.vote_average, t.version
+FROM watched_episodes w
+JOIN tv_shows_episodes e ON w.episode_id = e.id
+JOIN tv_shows t ON e.tv_show_id = t.id
+WHERE w.user_id = $1
+GROUP BY t.id
+ORDER BY t.title
 `
 
-type GetWatchedSeasonParams struct {
-	UserID   int32 `json:"user_id"`
-	SeasonID int64 `json:"season_id"`
-}
-
-func (q *Queries) GetWatchedSeason(ctx context.Context, arg GetWatchedSeasonParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, getWatchedSeason, arg.UserID, arg.SeasonID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
-}
-
-const getWatchedShow = `-- name: GetWatchedShow :one
-SELECT id, user_id, episode_id, watched_at FROM watched_episodes
-WHERE user_id = $1 AND episode_id IN (
-    SELECT e.id FROM tv_shows_episodes e
-    WHERE e.tv_show_id = $2
-)
-`
-
-type GetWatchedShowParams struct {
-	UserID   int32 `json:"user_id"`
-	TvShowID int64 `json:"tv_show_id"`
-}
-
-func (q *Queries) GetWatchedShow(ctx context.Context, arg GetWatchedShowParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, getWatchedShow, arg.UserID, arg.TvShowID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
+func (q *Queries) GetWatchedShows(ctx context.Context, userID int32) ([]TvShow, error) {
+	rows, err := q.db.Query(ctx, getWatchedShows, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []TvShow
+	for rows.Next() {
+		var i TvShow
+		if err := rows.Scan(
+			&i.ID,
+			&i.TmdbID,
+			&i.CreatedAt,
+			&i.LastFetchedAt,
+			&i.Title,
+			&i.ReleaseDate,
+			&i.PosterUrl,
+			&i.Overview,
+			&i.Genres,
+			&i.VoteAverage,
+			&i.Version,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const insertWatchedEpisode = `-- name: InsertWatchedEpisode :one
@@ -291,9 +121,12 @@ func (q *Queries) InsertWatchedEpisode(ctx context.Context, arg InsertWatchedEpi
 }
 
 const insertWatchedSeason = `-- name: InsertWatchedSeason :one
-INSERT INTO watched_episodes (user_id, episode_id)
-SELECT $1, e.id FROM tv_shows_episodes e
-WHERE e.season_id = $2
+INSERT INTO watched_episodes
+(user_id, episode_id)
+SELECT $1, id
+FROM tv_shows_episodes
+WHERE season_id = $2
+ON CONFLICT DO NOTHING
 RETURNING id, user_id, episode_id, watched_at
 `
 
@@ -315,9 +148,12 @@ func (q *Queries) InsertWatchedSeason(ctx context.Context, arg InsertWatchedSeas
 }
 
 const insertWatchedShow = `-- name: InsertWatchedShow :one
-INSERT INTO watched_episodes (user_id, episode_id)
-SELECT $1, e.id FROM tv_shows_episodes e
-WHERE e.tv_show_id = $2
+INSERT INTO watched_episodes
+(user_id, episode_id)
+SELECT $1, id
+FROM tv_shows_episodes
+WHERE tv_show_id = $2
+ON CONFLICT DO NOTHING
 RETURNING id, user_id, episode_id, watched_at
 `
 
@@ -328,143 +164,6 @@ type InsertWatchedShowParams struct {
 
 func (q *Queries) InsertWatchedShow(ctx context.Context, arg InsertWatchedShowParams) (WatchedEpisode, error) {
 	row := q.db.QueryRow(ctx, insertWatchedShow, arg.UserID, arg.TvShowID)
-	var i WatchedEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.EpisodeID,
-		&i.WatchedAt,
-	)
-	return i, err
-}
-
-const listWatchedEpisodes = `-- name: ListWatchedEpisodes :many
-SELECT id, user_id, episode_id, watched_at FROM watched_episodes
-WHERE user_id = $1
-`
-
-func (q *Queries) ListWatchedEpisodes(ctx context.Context, userID int32) ([]WatchedEpisode, error) {
-	rows, err := q.db.Query(ctx, listWatchedEpisodes, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []WatchedEpisode
-	for rows.Next() {
-		var i WatchedEpisode
-		if err := rows.Scan(
-			&i.ID,
-			&i.UserID,
-			&i.EpisodeID,
-			&i.WatchedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const listWatchedSeasons = `-- name: ListWatchedSeasons :many
-SELECT id, user_id, episode_id, watched_at FROM watched_episodes
-WHERE user_id = $1 AND episode_id IN (
-    SELECT e.id FROM tv_shows_episodes e
-    WHERE e.season_id = $2
-)
-`
-
-type ListWatchedSeasonsParams struct {
-	UserID   int32 `json:"user_id"`
-	SeasonID int64 `json:"season_id"`
-}
-
-func (q *Queries) ListWatchedSeasons(ctx context.Context, arg ListWatchedSeasonsParams) ([]WatchedEpisode, error) {
-	rows, err := q.db.Query(ctx, listWatchedSeasons, arg.UserID, arg.SeasonID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []WatchedEpisode
-	for rows.Next() {
-		var i WatchedEpisode
-		if err := rows.Scan(
-			&i.ID,
-			&i.UserID,
-			&i.EpisodeID,
-			&i.WatchedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const listWatchedShows = `-- name: ListWatchedShows :many
-SELECT id, user_id, episode_id, watched_at FROM watched_episodes
-WHERE user_id = $1 AND episode_id IN (
-    SELECT e.id FROM tv_shows_episodes e
-    WHERE e.tv_show_id = $2
-)
-`
-
-type ListWatchedShowsParams struct {
-	UserID   int32 `json:"user_id"`
-	TvShowID int64 `json:"tv_show_id"`
-}
-
-func (q *Queries) ListWatchedShows(ctx context.Context, arg ListWatchedShowsParams) ([]WatchedEpisode, error) {
-	rows, err := q.db.Query(ctx, listWatchedShows, arg.UserID, arg.TvShowID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []WatchedEpisode
-	for rows.Next() {
-		var i WatchedEpisode
-		if err := rows.Scan(
-			&i.ID,
-			&i.UserID,
-			&i.EpisodeID,
-			&i.WatchedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const updateWatchedEpisode = `-- name: UpdateWatchedEpisode :one
-UPDATE watched_episodes
-SET user_id = $1, episode_id = $2, watched_at = $3
-WHERE id = $4
-RETURNING id, user_id, episode_id, watched_at
-`
-
-type UpdateWatchedEpisodeParams struct {
-	UserID    int32     `json:"user_id"`
-	EpisodeID int32     `json:"episode_id"`
-	WatchedAt time.Time `json:"watched_at"`
-	ID        int64     `json:"id"`
-}
-
-func (q *Queries) UpdateWatchedEpisode(ctx context.Context, arg UpdateWatchedEpisodeParams) (WatchedEpisode, error) {
-	row := q.db.QueryRow(ctx, updateWatchedEpisode,
-		arg.UserID,
-		arg.EpisodeID,
-		arg.WatchedAt,
-		arg.ID,
-	)
 	var i WatchedEpisode
 	err := row.Scan(
 		&i.ID,
