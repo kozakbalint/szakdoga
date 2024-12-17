@@ -14,6 +14,7 @@ import (
 	"github.com/kozakbalint/szakdoga/api/internal/database"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
 	"github.com/kozakbalint/szakdoga/api/internal/router"
+	"github.com/kozakbalint/szakdoga/api/internal/tmdbclient"
 )
 
 type Server struct {
@@ -33,7 +34,7 @@ func NewServer() *http.Server {
 		fmt.Println("Error connecting to database: ", err)
 	}
 
-	tmdbClient, err := tmdb.Init(c.TMDB.APIKey)
+	tmdbInit, err := tmdb.Init(c.TMDB.APIKey)
 	if err != nil {
 		fmt.Println("Error connecting to tmdb: ", err)
 	}
@@ -46,7 +47,7 @@ func NewServer() *http.Server {
 		DB:         db,
 		Repository: db.GetQueries(),
 		Config:     &c,
-		Tmdb:       tmdbClient,
+		TmdbClient: tmdbclient.NewClient(tmdbInit, db.GetQueries()),
 		Models:     data.NewModels(db.GetQueries()),
 	}
 

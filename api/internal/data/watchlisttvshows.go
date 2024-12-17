@@ -101,28 +101,47 @@ func (m WatchlistTVShowsModel) DeleteWatchlistEntry(id int64) error {
 	return nil
 }
 
-func (m WatchlistTVShowsModel) GetWatchlist(userID int64) (*WatchlistTvShows, error) {
-	var tvw WatchlistTvShows
+type TvWatchlistResponse struct {
+	ID      int64     `json:"id"`
+	TvShow  TVShow    `json:"tv_show"`
+	AddedAt time.Time `json:"added_at"`
+}
 
+func (m WatchlistTVShowsModel) GetWatchlist(userID int64) (*[]TvWatchlistResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := m.Repository.ListWatchlistTvShows(ctx, int32(userID))
+	tvweRes, err := m.Repository.ListWatchlistTvShows(ctx, int32(userID))
 	if err != nil {
 		return nil, WrapError(err)
 	}
 
-	for _, tvweRes := range rows {
-		tvwe := WatchlistTVShowsEntry{
-			ID:      tvweRes.ID,
-			UserID:  int64(tvweRes.UserID),
-			TVID:    int64(tvweRes.TvShowID),
-			AddedAt: tvweRes.AddedAt,
+	var tvwe []TvWatchlistResponse
+	for _, tvweRow := range tvweRes {
+		tvShow, err := m.Repository.GetTvShowById(ctx, int64(tvweRow.TvShowID))
+		if err != nil {
+			return nil, WrapError(err)
 		}
-		tvw.Entries = append(tvw.Entries, &tvwe)
+		tvwe = append(tvwe, TvWatchlistResponse{
+			ID: int64(tvweRow.ID),
+			TvShow: TVShow{
+				ID:          int64(tvShow.ID),
+				TmdbID:      int(tvShow.TmdbID),
+				CreatedAt:   tvShow.CreatedAt,
+				LastFetched: tvShow.LastFetchedAt,
+				Title:       tvShow.Title,
+				ReleaseDate: tvShow.ReleaseDate,
+				PosterURL:   tvShow.PosterUrl,
+				Overview:    tvShow.Overview,
+				Genres:      tvShow.Genres,
+				VoteAverage: float32(tvShow.VoteAverage),
+				Version:     int(tvShow.Version),
+			},
+			AddedAt: tvweRow.AddedAt,
+		})
 	}
 
-	return &tvw, nil
+	return &tvwe, nil
 }
 
 func (m WatchlistTVShowsModel) GetWatchlistEntryByUserAndMovie(userID, tvID int64) (*WatchlistTVShowsEntry, error) {

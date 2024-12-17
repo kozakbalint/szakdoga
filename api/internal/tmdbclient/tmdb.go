@@ -2,6 +2,7 @@ package tmdbclient
 
 import (
 	tmdb "github.com/cyruzin/golang-tmdb"
+	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
 )
 
@@ -149,6 +150,29 @@ func (m *Client) GetMovie(tmdbID int) (*MovieResponse, error) {
 		PosterURL:   posterURL,
 		Popularity:  movie.Popularity,
 		VoteAverage: movie.VoteAverage,
+	}, nil
+}
+
+func (m *Client) GetMovieData(tmdbID int) (*data.Movie, error) {
+	movie, err := m.Client.GetMovieDetails(tmdbID, nil)
+	if err != nil {
+		return &data.Movie{}, err
+	}
+
+	var genres []string
+	for _, genre := range movie.Genres {
+		genres = append(genres, genre.Name)
+	}
+
+	return &data.Movie{
+		TmdbID:      int(movie.ID),
+		Title:       movie.Title,
+		ReleaseDate: movie.ReleaseDate,
+		PosterURL:   tmdb.GetImageURL(movie.PosterPath, "w500"),
+		Overview:    movie.Overview,
+		Genres:      genres,
+		VoteAverage: movie.VoteAverage,
+		Runtime:     movie.Runtime,
 	}, nil
 }
 
@@ -343,6 +367,62 @@ func (m *Client) GetTv(tmdbID int) (*TvResponse, error) {
 		Popularity:       tv.Popularity,
 		VoteAverage:      tv.VoteAverage,
 	}, nil
+}
+
+func (m *Client) GetTvData(tmdbID int) (*data.TVShow, error) {
+	tvDetails, err := m.Client.GetTVDetails(tmdbID, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var genres []string
+	for _, genre := range tvDetails.Genres {
+		genres = append(genres, genre.Name)
+	}
+
+	tvShow := &data.TVShow{
+		TmdbID:      int(tvDetails.ID),
+		Title:       tvDetails.Name,
+		ReleaseDate: tvDetails.FirstAirDate,
+		PosterURL:   tmdb.GetImageURL(tvDetails.PosterPath, "w500"),
+		Overview:    tvDetails.Overview,
+		Genres:      genres,
+		VoteAverage: tvDetails.VoteAverage,
+	}
+
+	var tvShowSeasons []data.TVShowSeason
+	for _, season := range tvDetails.Seasons {
+		tvShowSeasons = append(tvShowSeasons, data.TVShowSeason{
+			SeasonNumber: int(season.SeasonNumber),
+			EpisodeCount: int(season.EpisodeCount),
+			AirDate:      season.AirDate,
+		})
+	}
+	tvShow.Seasons = tvShowSeasons
+
+	var tvShowEpisodes []data.TVShowEpisode
+	for i, season := range tvDetails.Seasons {
+		tvShowEpisodes = []data.TVShowEpisode{}
+		if season.SeasonNumber == 0 {
+			continue
+		}
+		episodes, err := m.GetTVSeasonDetails(int(tvDetails.ID), int(season.SeasonNumber))
+		if err != nil {
+			return nil, err
+		}
+		for _, episode := range episodes.Season.Episodes {
+			tvShowEpisodes = append(tvShowEpisodes, data.TVShowEpisode{
+				EpisodeNumber: episode.EpisodeNumber,
+				Title:         episode.Name,
+				Overview:      episode.Overview,
+				AirDate:       episode.AirDate,
+			})
+		}
+
+		tvShow.Seasons[i].Episodes = tvShowEpisodes
+	}
+
+	return tvShow, nil
 }
 
 type TvSeasonsResponse struct {
