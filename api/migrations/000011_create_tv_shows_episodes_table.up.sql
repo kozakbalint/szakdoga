@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS tv_shows_episodes (
     episode_number integer NOT NULL,
     title text NOT NULL,
     overview text NOT NULL,
-    air_date date NOT NULL,
+    air_date text NOT NULL,
     created_at timestamp(0)
     with
         time zone NOT NULL DEFAULT NOW (),
