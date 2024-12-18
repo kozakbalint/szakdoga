@@ -23,6 +23,7 @@ type Models struct {
 	WatchlistMovies  WatchlistMoviesModel
 	WatchlistTvShows WatchlistTVShowsModel
 	WatchedMovies    WatchedMoviesModel
+	WatchedTV        WatchedTVModel
 }
 
 func NewModels(repo *repository.Queries) Models {
@@ -46,6 +47,9 @@ func NewModels(repo *repository.Queries) Models {
 			Repository: repo,
 		},
 		WatchedMovies: WatchedMoviesModel{
+			Repository: repo,
+		},
+		WatchedTV: WatchedTVModel{
 			Repository: repo,
 		},
 	}

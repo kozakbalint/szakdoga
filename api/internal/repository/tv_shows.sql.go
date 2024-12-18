@@ -7,11 +7,11 @@ package repository
 
 import (
 	"context"
-	"time"
 )
 
 const deleteTvShow = `-- name: DeleteTvShow :one
-DELETE FROM tv_shows WHERE id = $1
+DELETE FROM tv_shows
+WHERE id = $1
 RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version
 `
 
@@ -34,54 +34,37 @@ func (q *Queries) DeleteTvShow(ctx context.Context, id int64) (TvShow, error) {
 	return i, err
 }
 
-const deleteTvShowEpisode = `-- name: DeleteTvShowEpisode :one
-DELETE FROM tv_shows_episodes WHERE id = $1
-RETURNING id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at
+const deleteTvShowByTmdbId = `-- name: DeleteTvShowByTmdbId :one
+DELETE FROM tv_shows
+WHERE tmdb_id = $1
+RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version
 `
 
-func (q *Queries) DeleteTvShowEpisode(ctx context.Context, id int64) (TvShowsEpisode, error) {
-	row := q.db.QueryRow(ctx, deleteTvShowEpisode, id)
-	var i TvShowsEpisode
+func (q *Queries) DeleteTvShowByTmdbId(ctx context.Context, tmdbID int32) (TvShow, error) {
+	row := q.db.QueryRow(ctx, deleteTvShowByTmdbId, tmdbID)
+	var i TvShow
 	err := row.Scan(
 		&i.ID,
-		&i.TvShowID,
-		&i.SeasonID,
-		&i.EpisodeNumber,
+		&i.TmdbID,
+		&i.CreatedAt,
+		&i.LastFetchedAt,
 		&i.Title,
+		&i.ReleaseDate,
+		&i.PosterUrl,
 		&i.Overview,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
+		&i.Genres,
+		&i.VoteAverage,
+		&i.Version,
 	)
 	return i, err
 }
 
-const deleteTvShowSeason = `-- name: DeleteTvShowSeason :one
-DELETE FROM tv_shows_seasons WHERE id = $1
-RETURNING id, tv_show_id, season_number, episode_count, air_date, created_at, last_fetched_at
-`
-
-func (q *Queries) DeleteTvShowSeason(ctx context.Context, id int64) (TvShowsSeason, error) {
-	row := q.db.QueryRow(ctx, deleteTvShowSeason, id)
-	var i TvShowsSeason
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonNumber,
-		&i.EpisodeCount,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
-}
-
-const getTvShowById = `-- name: GetTvShowById :one
+const getTvShow = `-- name: GetTvShow :one
 SELECT id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version FROM tv_shows WHERE id = $1
 `
 
-func (q *Queries) GetTvShowById(ctx context.Context, id int64) (TvShow, error) {
-	row := q.db.QueryRow(ctx, getTvShowById, id)
+func (q *Queries) GetTvShow(ctx context.Context, id int64) (TvShow, error) {
+	row := q.db.QueryRow(ctx, getTvShow, id)
 	var i TvShow
 	err := row.Scan(
 		&i.ID,
@@ -122,214 +105,32 @@ func (q *Queries) GetTvShowByTmdbId(ctx context.Context, tmdbID int32) (TvShow, 
 	return i, err
 }
 
-const getTvShowEpisode = `-- name: GetTvShowEpisode :one
-SELECT id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at FROM tv_shows_episodes WHERE tv_show_id = $1 AND season_id = $2 AND episode_number = $3
-`
-
-type GetTvShowEpisodeParams struct {
-	TvShowID      int64 `json:"tv_show_id"`
-	SeasonID      int64 `json:"season_id"`
-	EpisodeNumber int32 `json:"episode_number"`
-}
-
-func (q *Queries) GetTvShowEpisode(ctx context.Context, arg GetTvShowEpisodeParams) (TvShowsEpisode, error) {
-	row := q.db.QueryRow(ctx, getTvShowEpisode, arg.TvShowID, arg.SeasonID, arg.EpisodeNumber)
-	var i TvShowsEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonID,
-		&i.EpisodeNumber,
-		&i.Title,
-		&i.Overview,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
-}
-
-const getTvShowEpisodes = `-- name: GetTvShowEpisodes :many
-SELECT id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at FROM tv_shows_episodes WHERE tv_show_id = $1
-`
-
-func (q *Queries) GetTvShowEpisodes(ctx context.Context, tvShowID int64) ([]TvShowsEpisode, error) {
-	rows, err := q.db.Query(ctx, getTvShowEpisodes, tvShowID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []TvShowsEpisode
-	for rows.Next() {
-		var i TvShowsEpisode
-		if err := rows.Scan(
-			&i.ID,
-			&i.TvShowID,
-			&i.SeasonID,
-			&i.EpisodeNumber,
-			&i.Title,
-			&i.Overview,
-			&i.AirDate,
-			&i.CreatedAt,
-			&i.LastFetchedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getTvShowSeason = `-- name: GetTvShowSeason :one
-SELECT id, tv_show_id, season_number, episode_count, air_date, created_at, last_fetched_at FROM tv_shows_seasons WHERE tv_show_id = $1 AND season_number = $2
-`
-
-type GetTvShowSeasonParams struct {
-	TvShowID     int64 `json:"tv_show_id"`
-	SeasonNumber int32 `json:"season_number"`
-}
-
-func (q *Queries) GetTvShowSeason(ctx context.Context, arg GetTvShowSeasonParams) (TvShowsSeason, error) {
-	row := q.db.QueryRow(ctx, getTvShowSeason, arg.TvShowID, arg.SeasonNumber)
-	var i TvShowsSeason
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonNumber,
-		&i.EpisodeCount,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
-}
-
-const getTvShowSeasonEpisode = `-- name: GetTvShowSeasonEpisode :one
-SELECT id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at FROM tv_shows_episodes WHERE season_id = $1 AND episode_number = $2
-`
-
-type GetTvShowSeasonEpisodeParams struct {
-	SeasonID      int64 `json:"season_id"`
-	EpisodeNumber int32 `json:"episode_number"`
-}
-
-func (q *Queries) GetTvShowSeasonEpisode(ctx context.Context, arg GetTvShowSeasonEpisodeParams) (TvShowsEpisode, error) {
-	row := q.db.QueryRow(ctx, getTvShowSeasonEpisode, arg.SeasonID, arg.EpisodeNumber)
-	var i TvShowsEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonID,
-		&i.EpisodeNumber,
-		&i.Title,
-		&i.Overview,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
-}
-
-const getTvShowSeasonEpisodes = `-- name: GetTvShowSeasonEpisodes :many
-SELECT id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at FROM tv_shows_episodes WHERE season_id = $1
-`
-
-func (q *Queries) GetTvShowSeasonEpisodes(ctx context.Context, seasonID int64) ([]TvShowsEpisode, error) {
-	rows, err := q.db.Query(ctx, getTvShowSeasonEpisodes, seasonID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []TvShowsEpisode
-	for rows.Next() {
-		var i TvShowsEpisode
-		if err := rows.Scan(
-			&i.ID,
-			&i.TvShowID,
-			&i.SeasonID,
-			&i.EpisodeNumber,
-			&i.Title,
-			&i.Overview,
-			&i.AirDate,
-			&i.CreatedAt,
-			&i.LastFetchedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getTvShowSeasons = `-- name: GetTvShowSeasons :many
-SELECT id, tv_show_id, season_number, episode_count, air_date, created_at, last_fetched_at FROM tv_shows_seasons WHERE tv_show_id = $1
-`
-
-func (q *Queries) GetTvShowSeasons(ctx context.Context, tvShowID int64) ([]TvShowsSeason, error) {
-	rows, err := q.db.Query(ctx, getTvShowSeasons, tvShowID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []TvShowsSeason
-	for rows.Next() {
-		var i TvShowsSeason
-		if err := rows.Scan(
-			&i.ID,
-			&i.TvShowID,
-			&i.SeasonNumber,
-			&i.EpisodeCount,
-			&i.AirDate,
-			&i.CreatedAt,
-			&i.LastFetchedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const insertTvShow = `-- name: InsertTvShow :one
 INSERT INTO tv_shows
-(tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version
+(tmdb_id, title, release_date, poster_url, overview, genres, vote_average)
+VALUES($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version
 `
 
 type InsertTvShowParams struct {
-	TmdbID        int32     `json:"tmdb_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-	Title         string    `json:"title"`
-	ReleaseDate   string    `json:"release_date"`
-	PosterUrl     string    `json:"poster_url"`
-	Overview      string    `json:"overview"`
-	Genres        []string  `json:"genres"`
-	VoteAverage   float64   `json:"vote_average"`
-	Version       int32     `json:"version"`
+	TmdbID      int32    `json:"tmdb_id"`
+	Title       string   `json:"title"`
+	ReleaseDate string   `json:"release_date"`
+	PosterUrl   string   `json:"poster_url"`
+	Overview    string   `json:"overview"`
+	Genres      []string `json:"genres"`
+	VoteAverage float64  `json:"vote_average"`
 }
 
 func (q *Queries) InsertTvShow(ctx context.Context, arg InsertTvShowParams) (TvShow, error) {
 	row := q.db.QueryRow(ctx, insertTvShow,
 		arg.TmdbID,
-		arg.CreatedAt,
-		arg.LastFetchedAt,
 		arg.Title,
 		arg.ReleaseDate,
 		arg.PosterUrl,
 		arg.Overview,
 		arg.Genres,
 		arg.VoteAverage,
-		arg.Version,
 	)
 	var i TvShow
 	err := row.Scan(
@@ -348,112 +149,104 @@ func (q *Queries) InsertTvShow(ctx context.Context, arg InsertTvShowParams) (TvS
 	return i, err
 }
 
-const insertTvShowEpisode = `-- name: InsertTvShowEpisode :one
-INSERT INTO tv_shows_episodes
-(tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at
+const listTvShows = `-- name: ListTvShows :many
+SELECT id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version FROM tv_shows ORDER BY id LIMIT $1
 `
 
-type InsertTvShowEpisodeParams struct {
-	TvShowID      int64     `json:"tv_show_id"`
-	SeasonID      int64     `json:"season_id"`
-	EpisodeNumber int32     `json:"episode_number"`
-	Title         string    `json:"title"`
-	Overview      string    `json:"overview"`
-	AirDate       string    `json:"air_date"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
+func (q *Queries) ListTvShows(ctx context.Context, limit int32) ([]TvShow, error) {
+	rows, err := q.db.Query(ctx, listTvShows, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []TvShow
+	for rows.Next() {
+		var i TvShow
+		if err := rows.Scan(
+			&i.ID,
+			&i.TmdbID,
+			&i.CreatedAt,
+			&i.LastFetchedAt,
+			&i.Title,
+			&i.ReleaseDate,
+			&i.PosterUrl,
+			&i.Overview,
+			&i.Genres,
+			&i.VoteAverage,
+			&i.Version,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
-func (q *Queries) InsertTvShowEpisode(ctx context.Context, arg InsertTvShowEpisodeParams) (TvShowsEpisode, error) {
-	row := q.db.QueryRow(ctx, insertTvShowEpisode,
-		arg.TvShowID,
-		arg.SeasonID,
-		arg.EpisodeNumber,
-		arg.Title,
-		arg.Overview,
-		arg.AirDate,
-		arg.CreatedAt,
-		arg.LastFetchedAt,
-	)
-	var i TvShowsEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonID,
-		&i.EpisodeNumber,
-		&i.Title,
-		&i.Overview,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
-}
-
-const insertTvShowSeason = `-- name: InsertTvShowSeason :one
-INSERT INTO tv_shows_seasons
-(tv_show_id, season_number, episode_count, air_date, created_at, last_fetched_at)
-VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, tv_show_id, season_number, episode_count, air_date, created_at, last_fetched_at
+const listWatchedTvShows = `-- name: ListWatchedTvShows :many
+SELECT t.id, t.tmdb_id, t.created_at, t.last_fetched_at, t.title, t.release_date, t.poster_url, t.overview, t.genres, t.vote_average, t.version
+FROM tv_shows t
+JOIN watched_episodes w ON t.id = w.episode_id
+WHERE w.user_id = $1
+GROUP BY t.id
+ORDER BY t.id
 `
 
-type InsertTvShowSeasonParams struct {
-	TvShowID      int64     `json:"tv_show_id"`
-	SeasonNumber  int32     `json:"season_number"`
-	EpisodeCount  int32     `json:"episode_count"`
-	AirDate       string    `json:"air_date"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-}
-
-func (q *Queries) InsertTvShowSeason(ctx context.Context, arg InsertTvShowSeasonParams) (TvShowsSeason, error) {
-	row := q.db.QueryRow(ctx, insertTvShowSeason,
-		arg.TvShowID,
-		arg.SeasonNumber,
-		arg.EpisodeCount,
-		arg.AirDate,
-		arg.CreatedAt,
-		arg.LastFetchedAt,
-	)
-	var i TvShowsSeason
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonNumber,
-		&i.EpisodeCount,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
+func (q *Queries) ListWatchedTvShows(ctx context.Context, userID int32) ([]TvShow, error) {
+	rows, err := q.db.Query(ctx, listWatchedTvShows, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []TvShow
+	for rows.Next() {
+		var i TvShow
+		if err := rows.Scan(
+			&i.ID,
+			&i.TmdbID,
+			&i.CreatedAt,
+			&i.LastFetchedAt,
+			&i.Title,
+			&i.ReleaseDate,
+			&i.PosterUrl,
+			&i.Overview,
+			&i.Genres,
+			&i.VoteAverage,
+			&i.Version,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const updateTvShow = `-- name: UpdateTvShow :one
 UPDATE tv_shows
-SET tmdb_id = $2, created_at = $3, last_fetched_at = $4, title = $5, release_date = $6, poster_url = $7, overview = $8, genres = $9, vote_average = $10, version = $11
-WHERE id = $1 RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version
+SET title = $2, release_date = $3, poster_url = $4, overview = $5, genres = $6, vote_average = $7, version = version + 1
+WHERE id = $1 AND version = $8
+RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, version
 `
 
 type UpdateTvShowParams struct {
-	ID            int64     `json:"id"`
-	TmdbID        int32     `json:"tmdb_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-	Title         string    `json:"title"`
-	ReleaseDate   string    `json:"release_date"`
-	PosterUrl     string    `json:"poster_url"`
-	Overview      string    `json:"overview"`
-	Genres        []string  `json:"genres"`
-	VoteAverage   float64   `json:"vote_average"`
-	Version       int32     `json:"version"`
+	ID          int64    `json:"id"`
+	Title       string   `json:"title"`
+	ReleaseDate string   `json:"release_date"`
+	PosterUrl   string   `json:"poster_url"`
+	Overview    string   `json:"overview"`
+	Genres      []string `json:"genres"`
+	VoteAverage float64  `json:"vote_average"`
+	Version     int32    `json:"version"`
 }
 
 func (q *Queries) UpdateTvShow(ctx context.Context, arg UpdateTvShowParams) (TvShow, error) {
 	row := q.db.QueryRow(ctx, updateTvShow,
 		arg.ID,
-		arg.TmdbID,
-		arg.CreatedAt,
-		arg.LastFetchedAt,
 		arg.Title,
 		arg.ReleaseDate,
 		arg.PosterUrl,
@@ -475,90 +268,6 @@ func (q *Queries) UpdateTvShow(ctx context.Context, arg UpdateTvShowParams) (TvS
 		&i.Genres,
 		&i.VoteAverage,
 		&i.Version,
-	)
-	return i, err
-}
-
-const updateTvShowEpisode = `-- name: UpdateTvShowEpisode :one
-UPDATE tv_shows_episodes
-SET tv_show_id = $2, season_id = $3, episode_number = $4, title = $5, overview = $6, air_date = $7, created_at = $8, last_fetched_at = $9
-WHERE id = $1 RETURNING id, tv_show_id, season_id, episode_number, title, overview, air_date, created_at, last_fetched_at
-`
-
-type UpdateTvShowEpisodeParams struct {
-	ID            int64     `json:"id"`
-	TvShowID      int64     `json:"tv_show_id"`
-	SeasonID      int64     `json:"season_id"`
-	EpisodeNumber int32     `json:"episode_number"`
-	Title         string    `json:"title"`
-	Overview      string    `json:"overview"`
-	AirDate       string    `json:"air_date"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-}
-
-func (q *Queries) UpdateTvShowEpisode(ctx context.Context, arg UpdateTvShowEpisodeParams) (TvShowsEpisode, error) {
-	row := q.db.QueryRow(ctx, updateTvShowEpisode,
-		arg.ID,
-		arg.TvShowID,
-		arg.SeasonID,
-		arg.EpisodeNumber,
-		arg.Title,
-		arg.Overview,
-		arg.AirDate,
-		arg.CreatedAt,
-		arg.LastFetchedAt,
-	)
-	var i TvShowsEpisode
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonID,
-		&i.EpisodeNumber,
-		&i.Title,
-		&i.Overview,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
-	)
-	return i, err
-}
-
-const updateTvShowSeason = `-- name: UpdateTvShowSeason :one
-UPDATE tv_shows_seasons
-SET tv_show_id = $2, season_number = $3, episode_count = $4, air_date = $5, created_at = $6, last_fetched_at = $7
-WHERE id = $1 RETURNING id, tv_show_id, season_number, episode_count, air_date, created_at, last_fetched_at
-`
-
-type UpdateTvShowSeasonParams struct {
-	ID            int64     `json:"id"`
-	TvShowID      int64     `json:"tv_show_id"`
-	SeasonNumber  int32     `json:"season_number"`
-	EpisodeCount  int32     `json:"episode_count"`
-	AirDate       string    `json:"air_date"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-}
-
-func (q *Queries) UpdateTvShowSeason(ctx context.Context, arg UpdateTvShowSeasonParams) (TvShowsSeason, error) {
-	row := q.db.QueryRow(ctx, updateTvShowSeason,
-		arg.ID,
-		arg.TvShowID,
-		arg.SeasonNumber,
-		arg.EpisodeCount,
-		arg.AirDate,
-		arg.CreatedAt,
-		arg.LastFetchedAt,
-	)
-	var i TvShowsSeason
-	err := row.Scan(
-		&i.ID,
-		&i.TvShowID,
-		&i.SeasonNumber,
-		&i.EpisodeCount,
-		&i.AirDate,
-		&i.CreatedAt,
-		&i.LastFetchedAt,
 	)
 	return i, err
 }

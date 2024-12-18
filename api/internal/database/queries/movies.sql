@@ -10,6 +10,9 @@ SELECT * FROM movies WHERE id = $1;
 -- name: GetMovieByTmdbId :one
 SELECT * FROM movies WHERE tmdb_id = $1;
 
+-- name: ListMovies :many
+SELECT * FROM movies ORDER BY id LIMIT $1;
+
 -- name: UpdateMovie :one
 UPDATE movies
 SET title = $2, release_date = $3, poster_url = $4, overview = $5, genres = $6, vote_average = $7, runtime = $8, version = version + 1
@@ -19,4 +22,9 @@ RETURNING *;
 -- name: DeleteMovie :one
 DELETE FROM movies
 WHERE id = $1
+RETURNING *;
+
+-- name: DeleteMovieByTmdbId :one
+DELETE FROM movies
+WHERE tmdb_id = $1
 RETURNING *;

@@ -5,11 +5,11 @@ import (
 	"log/slog"
 	"net/http"
 
-	tmdb "github.com/cyruzin/golang-tmdb"
 	"github.com/kozakbalint/szakdoga/api/internal/config"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/database"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
+	"github.com/kozakbalint/szakdoga/api/internal/tmdbclient"
 )
 
 type ServerContext struct {
@@ -17,7 +17,7 @@ type ServerContext struct {
 	Repository *repository.Queries
 	Config     *config.Config
 	Logger     slog.Logger
-	Tmdb       *tmdb.Client
+	TmdbClient *tmdbclient.Client
 	Models     data.Models
 }
 

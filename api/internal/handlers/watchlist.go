@@ -130,14 +130,15 @@ func (h *WatchlistHandler) AddTvShowToWatchlistHandler(w http.ResponseWriter, r 
 
 	tvShow, err := h.Models.TVShows.GetByTmdbID(int(input.TmdbID))
 	if err != nil {
-		if e.Is(err, data.ErrNotFound) {
-			tvShow = nil
+		fmt.Println(err)
+		if !e.Is(err, data.ErrNotFound) {
+			errors.ServerErrorResponse(w, r, err)
+			return
 		}
-		errors.ServerErrorResponse(w, r, err)
-		return
+		tvShow = nil
 	}
 
-	if tvShow.ID == 0 {
+	if tvShow == nil {
 		fmt.Println(input.TmdbID)
 		tvShow, err = h.TmdbClient.GetTvData(int(input.TmdbID))
 		if err != nil {
@@ -145,26 +146,10 @@ func (h *WatchlistHandler) AddTvShowToWatchlistHandler(w http.ResponseWriter, r 
 			return
 		}
 
-		tvShow, err = h.Models.TVShows.Insert(tvShow)
+		tvShow, err = h.Models.TVShows.Insert(tvShow, &tvShow.Seasons)
 		if err != nil {
 			errors.ServerErrorResponse(w, r, err)
 			return
-		}
-
-		for i, season := range tvShow.Seasons {
-			seasonInserted, err := h.Models.TVShows.InsertSeason(tvShow.ID, &season)
-			if err != nil {
-				errors.ServerErrorResponse(w, r, err)
-				return
-			}
-
-			for _, episode := range tvShow.Seasons[i].Episodes {
-				_, err = h.Models.TVShows.InsertEpisode(seasonInserted.ID, &episode)
-				if err != nil {
-					errors.ServerErrorResponse(w, r, err)
-					return
-				}
-			}
 		}
 	}
 

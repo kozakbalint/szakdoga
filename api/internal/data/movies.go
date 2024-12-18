@@ -105,6 +105,10 @@ func (m MovieModel) GetByTmdbID(tmdbID int) (*Movie, error) {
 		return nil, WrapError(err)
 	}
 
+	if movieRes.Version == 0 {
+		return nil, nil
+	}
+
 	movie = Movie{
 		ID:          movieRes.ID,
 		TmdbID:      int(movieRes.TmdbID),

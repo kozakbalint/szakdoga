@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
@@ -23,85 +24,83 @@ type TVShow struct {
 }
 
 type TVShowSeason struct {
+	ID           int64           `json:"id"`
 	SeasonNumber int             `json:"season_number"`
 	EpisodeCount int             `json:"episode_count"`
 	Episodes     []TVShowEpisode `json:"episodes"`
-	AirDate      time.Time       `json:"air_date"`
+	AirDate      string          `json:"air_date"`
 }
 
 type TVShowEpisode struct {
-	EpisodeNumber int       `json:"episode_number"`
-	Title         string    `json:"title"`
-	Overview      string    `json:"overview"`
-	AirDate       time.Time `json:"air_date"`
+	ID            int    `json:"id"`
+	EpisodeNumber int    `json:"episode_number"`
+	Title         string `json:"title"`
+	Overview      string `json:"overview"`
+	AirDate       string `json:"air_date"`
 }
 
 type TVShowModel struct {
 	Repository *repository.Queries
 }
 
-func (m TVShowModel) Insert(tvshow *TVShow) (*TVShow, error) {
-	args := repository.InsertTvShowParams{
-		TmdbID:      int32(tvshow.TmdbID),
-		Title:       tvshow.Title,
-		ReleaseDate: tvshow.ReleaseDate,
-		PosterUrl:   tvshow.PosterURL,
-		Overview:    tvshow.Overview,
-		Genres:      tvshow.Genres,
-		VoteAverage: float64(tvshow.VoteAverage),
-	}
-
+func (m TVShowModel) Insert(tvShow *TVShow, tvshowSeasons *[]TVShowSeason) (*TVShow, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	tvshowRes, err := m.Repository.InsertTvShow(ctx, args)
+	argShow := repository.InsertTvShowParams{
+		TmdbID:      int32(tvShow.TmdbID),
+		Title:       tvShow.Title,
+		ReleaseDate: tvShow.ReleaseDate,
+		PosterUrl:   tvShow.PosterURL,
+		Overview:    tvShow.Overview,
+		Genres:      tvShow.Genres,
+		VoteAverage: float64(tvShow.VoteAverage),
+	}
+
+	insertedTvShow, err := m.Repository.InsertTvShow(ctx, argShow)
 	if err != nil {
 		return nil, WrapError(err)
 	}
 
-	tvshow = &TVShow{
-		ID:          tvshowRes.ID,
-		TmdbID:      int(tvshowRes.TmdbID),
-		CreatedAt:   tvshowRes.CreatedAt,
-		LastFetched: tvshowRes.LastFetchedAt,
-		Title:       tvshowRes.Title,
-		ReleaseDate: tvshowRes.ReleaseDate,
-		PosterURL:   tvshowRes.PosterUrl,
-		Overview:    tvshowRes.Overview,
-		Genres:      tvshowRes.Genres,
-		VoteAverage: tvshow.VoteAverage,
-		Version:     int(tvshowRes.Version),
+	tvShow.ID = insertedTvShow.ID
+	tvShow.CreatedAt = insertedTvShow.CreatedAt
+	tvShow.LastFetched = insertedTvShow.LastFetchedAt
+	tvShow.Version = int(insertedTvShow.Version)
+
+	for _, season := range *tvshowSeasons {
+		argSeason := repository.InsertTvShowSeasonParams{
+			TvShowID:     tvShow.ID,
+			SeasonNumber: int32(season.SeasonNumber),
+			EpisodeCount: int32(season.EpisodeCount),
+			AirDate:      season.AirDate,
+		}
+
+		insertedSeason, err := m.Repository.InsertTvShowSeason(ctx, argSeason)
+		if err != nil {
+			return nil, WrapError(err)
+		}
+		season.ID = insertedSeason.ID
+
+		for _, episode := range season.Episodes {
+			argEpisode := repository.InsertTvShowEpisodeParams{
+				TvShowID:      tvShow.ID,
+				SeasonID:      season.ID,
+				EpisodeNumber: int32(episode.EpisodeNumber),
+				Title:         episode.Title,
+				Overview:      episode.Overview,
+				AirDate:       episode.AirDate,
+			}
+
+			_, err := m.Repository.InsertTvShowEpisode(ctx, argEpisode)
+			if err != nil {
+				return nil, WrapError(err)
+			}
+		}
+
+		fmt.Println(tvShow)
 	}
 
-	return tvshow, nil
-}
-
-func (m TVShowModel) Get(id int64) (*TVShow, error) {
-	var tvshow TVShow
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	tvshowRes, err := m.Repository.GetTvShowById(ctx, id)
-	if err != nil {
-		return nil, WrapError(err)
-	}
-
-	tvshow = TVShow{
-		ID:          tvshowRes.ID,
-		TmdbID:      int(tvshowRes.TmdbID),
-		CreatedAt:   tvshowRes.CreatedAt,
-		LastFetched: tvshowRes.LastFetchedAt,
-		Title:       tvshowRes.Title,
-		ReleaseDate: tvshowRes.ReleaseDate,
-		PosterURL:   tvshowRes.PosterUrl,
-		Overview:    tvshowRes.Overview,
-		Genres:      tvshowRes.Genres,
-		VoteAverage: float32(tvshowRes.VoteAverage),
-		Version:     int(tvshowRes.Version),
-	}
-
-	return &tvshow, nil
+	return tvShow, nil
 }
 
 func (m TVShowModel) GetByTmdbID(tmdbID int) (*TVShow, error) {
@@ -138,7 +137,7 @@ func (m TVShowModel) GetSeasons(tvshowID int64) ([]TVShowSeason, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	seasonsRes, err := m.Repository.GetTvShowSeasons(ctx, tvshowID)
+	seasonsRes, err := m.Repository.ListTvShowSeasons(ctx, tvshowID)
 	if err != nil {
 		return nil, WrapError(err)
 	}
@@ -156,13 +155,17 @@ func (m TVShowModel) GetSeasons(tvshowID int64) ([]TVShowSeason, error) {
 	return seasons, nil
 }
 
-func (m TVShowModel) GetEpisodesBySeasonID(seasonID int64) ([]TVShowEpisode, error) {
+func (m TVShowModel) GetEpisodesBySeasonID(tvShowID, seasonID int64) ([]TVShowEpisode, error) {
+	args := repository.ListTvShowEpisodesParams{
+		TvShowID: tvShowID,
+		SeasonID: seasonID,
+	}
 	var episodes []TVShowEpisode
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	episodesRes, err := m.Repository.GetTvShowSeasonEpisodes(ctx, seasonID)
+	episodesRes, err := m.Repository.ListTvShowEpisodes(ctx, args)
 	if err != nil {
 		return nil, WrapError(err)
 	}
@@ -179,81 +182,4 @@ func (m TVShowModel) GetEpisodesBySeasonID(seasonID int64) ([]TVShowEpisode, err
 	}
 
 	return episodes, nil
-}
-
-func (m TVShowModel) GetAllEpisodes(tvshowID int64) ([]TVShowEpisode, error) {
-	var episodes []TVShowEpisode
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	episodesRes, err := m.Repository.GetTvShowEpisodes(ctx, tvshowID)
-	if err != nil {
-		return nil, WrapError(err)
-	}
-
-	for _, e := range episodesRes {
-		episode := TVShowEpisode{
-			EpisodeNumber: int(e.EpisodeNumber),
-			Title:         e.Title,
-			Overview:      e.Overview,
-			AirDate:       e.AirDate,
-		}
-
-		episodes = append(episodes, episode)
-	}
-
-	return episodes, nil
-}
-
-func (m TVShowModel) InsertSeason(tvshowID int64, season *TVShowSeason) (*TVShowSeason, error) {
-	args := repository.InsertTvShowSeasonParams{
-		TvShowID:     tvshowID,
-		SeasonNumber: int32(season.SeasonNumber),
-		EpisodeCount: int32(season.EpisodeCount),
-		AirDate:      season.AirDate,
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	seasonRes, err := m.Repository.InsertTvShowSeason(ctx, args)
-	if err != nil {
-		return nil, WrapError(err)
-	}
-
-	season = &TVShowSeason{
-		SeasonNumber: int(seasonRes.SeasonNumber),
-		EpisodeCount: int(seasonRes.EpisodeCount),
-		AirDate:      seasonRes.AirDate,
-	}
-
-	return season, nil
-}
-
-func (m TVShowModel) InsertEpisode(seasonID int64, episode *TVShowEpisode) (*TVShowEpisode, error) {
-	args := repository.InsertTvShowEpisodeParams{
-		SeasonID:      seasonID,
-		EpisodeNumber: int32(episode.EpisodeNumber),
-		Title:         episode.Title,
-		Overview:      episode.Overview,
-		AirDate:       episode.AirDate,
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	episodeRes, err := m.Repository.InsertTvShowEpisode(ctx, args)
-	if err != nil {
-		return nil, WrapError(err)
-	}
-
-	episode = &TVShowEpisode{
-		EpisodeNumber: int(episodeRes.EpisodeNumber),
-		Title:         episodeRes.Title,
-		Overview:      episodeRes.Overview,
-		AirDate:       episodeRes.AirDate,
-	}
-
-	return episode, nil
 }

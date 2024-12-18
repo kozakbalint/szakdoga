@@ -392,6 +392,10 @@ func (m *Client) GetTvData(tmdbID int) (*data.TVShow, error) {
 
 	var tvShowSeasons []data.TVShowSeason
 	for _, season := range tvDetails.Seasons {
+		if season.SeasonNumber == 0 {
+			continue
+		}
+
 		tvShowSeasons = append(tvShowSeasons, data.TVShowSeason{
 			SeasonNumber: int(season.SeasonNumber),
 			EpisodeCount: int(season.EpisodeCount),
@@ -401,11 +405,8 @@ func (m *Client) GetTvData(tmdbID int) (*data.TVShow, error) {
 	tvShow.Seasons = tvShowSeasons
 
 	var tvShowEpisodes []data.TVShowEpisode
-	for i, season := range tvDetails.Seasons {
+	for i, season := range tvShow.Seasons {
 		tvShowEpisodes = []data.TVShowEpisode{}
-		if season.SeasonNumber == 0 {
-			continue
-		}
 		episodes, err := m.GetTVSeasonDetails(int(tvDetails.ID), int(season.SeasonNumber))
 		if err != nil {
 			return nil, err

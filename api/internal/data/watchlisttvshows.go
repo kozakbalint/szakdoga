@@ -118,7 +118,7 @@ func (m WatchlistTVShowsModel) GetWatchlist(userID int64) (*[]TvWatchlistRespons
 
 	var tvwe []TvWatchlistResponse
 	for _, tvweRow := range tvweRes {
-		tvShow, err := m.Repository.GetTvShowById(ctx, int64(tvweRow.TvShowID))
+		tvShow, err := m.Repository.GetTvShow(ctx, int64(tvweRow.TvShowID))
 		if err != nil {
 			return nil, WrapError(err)
 		}
