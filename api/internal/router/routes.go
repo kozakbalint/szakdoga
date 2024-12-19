@@ -52,12 +52,14 @@ func New(ctx *context.ServerContext) http.Handler {
 	router.HandlerFunc(http.MethodDelete, "/v1/watched/movies/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.RemoveWatchedMovieHandler))
 
 	router.HandlerFunc(http.MethodGet, "/v1/watched/tv", middleware.RequireAuthenticatedUser(h.WatchedHandler.GetWatchedTvShowsHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/watched/tv/show/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.GetWatchDatesByTvShowHandler))
 	router.HandlerFunc(http.MethodPost, "/v1/watched/tv", middleware.RequireAuthenticatedUser(h.WatchedHandler.AddWatchedTvShowHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/watched/tv/show/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.RemoveWatchedTvShowHandler))
 	router.HandlerFunc(http.MethodPost, "/v1/watched/tv/episodes", middleware.RequireAuthenticatedUser(h.WatchedHandler.AddWatchedTvShowEpisodesHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/watched/tv/episodes/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.RemoveWatchedTvShowEpisodeHandler))
 	router.HandlerFunc(http.MethodPost, "/v1/watched/tv/seasons", middleware.RequireAuthenticatedUser(h.WatchedHandler.AddWatchedTvShowSeasonsHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/watched/tv/show/:id/seasons/:season", middleware.RequireAuthenticatedUser(h.WatchedHandler.RemoveWatchedTvShowHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/watched/progress/:id", middleware.RequireAuthenticatedUser(h.WatchedHandler.GetWatchedProgressHandler))
 
 	return middleware.RecoverPanic(middleware.EnableCORS(ctx.Config, middleware.Authenticate(&ctx.Models, router)))
 }

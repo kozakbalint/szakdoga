@@ -16,7 +16,8 @@ SELECT * FROM tv_shows ORDER BY id LIMIT $1;
 -- name: ListWatchedTvShows :many
 SELECT t.*
 FROM tv_shows t
-JOIN watched_episodes w ON t.id = w.episode_id
+JOIN tv_shows_episodes e ON t.id = e.tv_show_id
+JOIN watched_episodes w ON e.id = w.episode_id
 WHERE w.user_id = $1
 GROUP BY t.id
 ORDER BY t.id;

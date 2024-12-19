@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	e "errors"
 	"net/http"
 
@@ -188,6 +189,49 @@ func (h *WatchedHandler) GetWatchedTvShowsHandler(w http.ResponseWriter, r *http
 	}
 }
 
+func (h *WatchedHandler) GetWatchDatesByTvShowHandler(w http.ResponseWriter, r *http.Request) {
+	tvID, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+
+	user := context.GetUser(r)
+	if user == nil {
+		errors.AuthenticationRequiredResponse(w, r)
+		return
+	}
+
+	tvShow, err := h.Models.TVShows.GetByTmdbID(int(tvID))
+	if tvShow == nil {
+		err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": []string{}}, nil)
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+		}
+		return
+	}
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	watchedEpisodes, err := h.Models.WatchedTV.GetWatchedEpisodesByTvID(user.ID, tvShow.ID)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	var watchedDates []string
+	for _, watched := range *watchedEpisodes {
+		watchedDates = append(watchedDates, watched.WatchedAt.Format("2006-01-02"))
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": watchedDates}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
 func (h *WatchedHandler) AddWatchedTvShowHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		TvID int64 `json:"tv_id"`
@@ -211,7 +255,30 @@ func (h *WatchedHandler) AddWatchedTvShowHandler(w http.ResponseWriter, r *http.
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
+		tvShow = nil
 	}
+
+	if tvShow == nil {
+		tvShow, err = h.TmdbClient.GetTvData(int(input.TvID))
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+
+		tvShow, err = h.Models.TVShows.Insert(tvShow, &tvShow.Seasons)
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+	}
+
+	jsonTv, err := json.MarshalIndent(tvShow, "", "\t")
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	println(string(jsonTv))
 
 	for _, season := range tvShow.Seasons {
 		for _, episode := range season.Episodes {

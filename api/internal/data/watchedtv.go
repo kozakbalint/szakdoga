@@ -114,3 +114,38 @@ func (m *WatchedTVModel) GetTvWatchProgress(userID, tvID int64) (*WatchProgress,
 		WatchedEpisodes: progress.WatchedCount,
 	}, nil
 }
+
+type WatchedEpisode struct {
+	ID        int64     `json:"id"`
+	UserID    int64     `json:"user_id"`
+	TvID      int64     `json:"tv_id"`
+	EpisodeID int64     `json:"episode_id"`
+	WatchedAt time.Time `json:"watched_at"`
+}
+
+func (m *WatchedTVModel) GetWatchedEpisodesByTvID(userID, tvID int64) (*[]WatchedEpisode, error) {
+	args := repository.GetWatchedEpisodesByShowParams{
+		UserID:   int32(userID),
+		TvShowID: tvID,
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	watchedEpisodes, err := m.Repository.GetWatchedEpisodesByShow(ctx, args)
+	if err != nil {
+		return nil, WrapError(err)
+	}
+
+	var watchedEpisodesResponse []WatchedEpisode
+	for _, episode := range watchedEpisodes {
+		watchedEpisodesResponse = append(watchedEpisodesResponse, WatchedEpisode{
+			ID:        int64(episode.ID),
+			UserID:    int64(episode.UserID),
+			TvID:      tvID,
+			EpisodeID: int64(episode.EpisodeID),
+			WatchedAt: episode.WatchedAt,
+		})
+	}
+
+	return &watchedEpisodesResponse, nil
+}

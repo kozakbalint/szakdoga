@@ -188,7 +188,8 @@ func (q *Queries) ListTvShows(ctx context.Context, limit int32) ([]TvShow, error
 const listWatchedTvShows = `-- name: ListWatchedTvShows :many
 SELECT t.id, t.tmdb_id, t.created_at, t.last_fetched_at, t.title, t.release_date, t.poster_url, t.overview, t.genres, t.vote_average, t.version
 FROM tv_shows t
-JOIN watched_episodes w ON t.id = w.episode_id
+JOIN tv_shows_episodes e ON t.id = e.tv_show_id
+JOIN watched_episodes w ON e.id = w.episode_id
 WHERE w.user_id = $1
 GROUP BY t.id
 ORDER BY t.id

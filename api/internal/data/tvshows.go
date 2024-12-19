@@ -128,6 +128,13 @@ func (m TVShowModel) GetByTmdbID(tmdbID int) (*TVShow, error) {
 		Version:     int(tvshowRes.Version),
 	}
 
+	seasons, err := m.GetSeasons(tvshow.ID)
+	if err != nil {
+		return nil, WrapError(err)
+	}
+
+	tvshow.Seasons = seasons
+
 	return &tvshow, nil
 }
 
@@ -143,9 +150,15 @@ func (m TVShowModel) GetSeasons(tvshowID int64) ([]TVShowSeason, error) {
 	}
 
 	for _, s := range seasonsRes {
+		episodes, err := m.GetEpisodesBySeasonID(tvshowID, s.ID)
+		if err != nil {
+			return nil, WrapError(err)
+		}
+
 		season := TVShowSeason{
 			SeasonNumber: int(s.SeasonNumber),
 			EpisodeCount: int(s.EpisodeCount),
+			Episodes:     episodes,
 			AirDate:      s.AirDate,
 		}
 
@@ -172,6 +185,7 @@ func (m TVShowModel) GetEpisodesBySeasonID(tvShowID, seasonID int64) ([]TVShowEp
 
 	for _, e := range episodesRes {
 		episode := TVShowEpisode{
+			ID:            int(e.ID),
 			EpisodeNumber: int(e.EpisodeNumber),
 			Title:         e.Title,
 			Overview:      e.Overview,

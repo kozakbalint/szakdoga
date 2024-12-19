@@ -267,3 +267,11 @@ export type MovieWatchedResponse = {
 export type GetMovieWatchedDatesResponse = {
   watched_dates: string[] | null;
 };
+
+export type GetTvShowWatchedResponse = {
+  watched_tv_shows: TV[] | null;
+};
+
+export type GetTvShowWatchedDatesResponse = {
+  watched_dates: string[] | null;
+};
