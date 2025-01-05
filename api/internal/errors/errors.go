@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"runtime/debug"
 
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
@@ -25,7 +26,7 @@ func LogError(r *http.Request, err error) {
 		logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	}
 
-	logger.Error(err.Error(), "method", method, "uri", uri)
+	logger.Error(err.Error(), "method", method, "uri", uri, "stack", string(debug.Stack()))
 }
 
 func ErrorResponse(w http.ResponseWriter, r *http.Request, status int, message any) {

@@ -1,18 +1,39 @@
 import { Button } from '@/components/ui/button';
-import { Heart, List, Star } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { useGetTvById } from '../api/get-tv-by-id';
 import { Badge } from '@/components/ui/badge';
 import { TvWatchProvider } from './tv-watch-provider';
 import { Link } from '@tanstack/react-router';
+import { useAddTVToWatchlist } from '@/features/watchlist/tv/api/add-tv-to-watchlist';
+import { useGetTVWatchlist } from '@/features/watchlist/tv/api/get-tv-watchlist';
+import { useRemoveTVFromWatchlist } from '@/features/watchlist/tv/api/remove-movie-from-watchlist';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { TvWatched } from './tv-watched';
+import { useGetTvShowWatchedDates } from '@/features/watched/tv/api/get-tv-show-watched-dates';
 
 export const TvHeader = ({ tvId }: { tvId: string }) => {
   const tvQuery = useGetTvById({ id: tvId });
+  const watchlistQuery = useGetTVWatchlist({});
+  const addTvToWatchlistMutation = useAddTVToWatchlist();
+  const removeTvFromWatchlistMutation = useRemoveTVFromWatchlist();
+  const watchedDatesQuery = useGetTvShowWatchedDates({ id: tvId });
 
-  if (tvQuery.isLoading) {
+  if (
+    tvQuery.isLoading ||
+    watchlistQuery.isLoading ||
+    watchedDatesQuery.isLoading
+  ) {
     return <div>Loading...</div>;
   }
 
   const tv = tvQuery.data?.tv;
+  const watchlist = watchlistQuery.data?.watchlist;
+  const watchdates = watchedDatesQuery.data?.watched_dates || [];
+  const onWatchlist = watchlist?.find((m) => m.tv_show.tmdb_id === tv?.id);
 
   if (!tv) {
     return '';
@@ -56,16 +77,51 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
         </div>
       </div>
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
-        <div>
-          <Button size={'icon'} variant={'outline'}>
-            <Heart />
-          </Button>
-          <Button size={'icon'} variant={'outline'}>
-            <List />
-          </Button>
-          <Button size={'icon'} variant={'outline'}>
-            <Star />
-          </Button>
+        <div className="flex gap-2">
+          <div>
+            {onWatchlist ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      removeTvFromWatchlistMutation.mutate({
+                        id: onWatchlist?.id,
+                      });
+                    }}
+                    disabled={removeTvFromWatchlistMutation.isPending}
+                    className="flex items-center"
+                    size={'icon'}
+                    variant={'outline'}
+                  >
+                    <Heart fill="red" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  Remove from watchlist
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      addTvToWatchlistMutation.mutate({ tmdb_id: tv.id });
+                    }}
+                    disabled={addTvToWatchlistMutation.isPending}
+                    className="flex items-center"
+                    size={'icon'}
+                    variant={'outline'}
+                  >
+                    <Heart fill="none" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Add to watchlist</TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+          <div>
+            <TvWatched tvID={tvId} watchedDates={watchdates} />
+          </div>
         </div>
         <div>
           <TvWatchProvider tvId={tvId} type="streming" />

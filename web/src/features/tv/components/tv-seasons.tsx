@@ -54,31 +54,33 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
           <ChevronRight size={24} />
         </div>
       </Link>
-      <Select
-        onValueChange={(value) => {
-          const seasonNumber = parseInt(value);
-          setSelectedSeason(seasonNumber);
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          Season {selectedSeason}
-        </SelectTrigger>
-        <SelectContent>
-          {Array.from({ length: tv.number_of_seasons }, (_, i) => i + 1).map(
-            (seasonNumber) => (
-              <SelectItem
-                key={seasonNumber}
-                value={seasonNumber.toString()}
-                onMouseEnter={() => {
-                  prefetchNextSeason(tvId, seasonNumber);
-                }}
-              >
-                Season {seasonNumber}
-              </SelectItem>
-            ),
-          )}
-        </SelectContent>
-      </Select>
+      <div>
+        <Select
+          onValueChange={(value) => {
+            const seasonNumber = parseInt(value);
+            setSelectedSeason(seasonNumber);
+          }}
+        >
+          <SelectTrigger className="w-[180px]">
+            Season {selectedSeason}
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: tv.number_of_seasons }, (_, i) => i + 1).map(
+              (seasonNumber) => (
+                <SelectItem
+                  key={seasonNumber}
+                  value={seasonNumber.toString()}
+                  onMouseEnter={() => {
+                    prefetchNextSeason(tvId, seasonNumber);
+                  }}
+                >
+                  Season {seasonNumber}
+                </SelectItem>
+              ),
+            )}
+          </SelectContent>
+        </Select>
+      </div>
       <div className="flex flex-col items-center gap-2 h-96 overflow-scroll">
         {season.season.episodes.map((episode) => (
           <Link

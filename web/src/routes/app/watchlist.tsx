@@ -1,5 +1,6 @@
 import { ContentLayout } from '@/components/layouts';
-import { Watchlist } from '@/features/watchlist/movies/components/watchlist';
+import { MoviesWatchlist } from '@/features/watchlist/movies/components/watchlist';
+import { TVWatchlist } from '@/features/watchlist/tv/components/watchlist';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/app/watchlist')({
@@ -11,17 +12,18 @@ export const Route = createFileRoute('/app/watchlist')({
       });
     }
   },
-  component: ListsRoute,
+  component: WatchlistRoute,
 });
 
-function ListsRoute() {
+function WatchlistRoute() {
   return (
-    <div>
-      <ContentLayout title="Watchlist" head="Watchlist">
-        <div className="flex flex-col">
-          <Watchlist />
-        </div>
-      </ContentLayout>
-    </div>
+    <ContentLayout title="Watchlist" head="Watchlist">
+      <div className="flex flex-col gap-2">
+        <div className="text-xl">Movies:</div>
+        <MoviesWatchlist />
+        <div className="text-xl">TV Shows:</div>
+        <TVWatchlist />
+      </div>
+    </ContentLayout>
   );
 }

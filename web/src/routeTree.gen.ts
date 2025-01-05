@@ -17,6 +17,7 @@ import { Route as AppImport } from './routes/app'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthLoginImport } from './routes/auth/login'
 import { Route as AppWatchlistImport } from './routes/app/watchlist'
+import { Route as AppWatchedImport } from './routes/app/watched'
 import { Route as AppSettingsImport } from './routes/app/settings'
 import { Route as AppProfileImport } from './routes/app/profile'
 import { Route as AppDashboardImport } from './routes/app/dashboard'
@@ -63,6 +64,12 @@ const AuthLoginRoute = AuthLoginImport.update({
 const AppWatchlistRoute = AppWatchlistImport.update({
   id: '/watchlist',
   path: '/watchlist',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppWatchedRoute = AppWatchedImport.update({
+  id: '/watched',
+  path: '/watched',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -178,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsImport
       parentRoute: typeof AppImport
     }
+    '/app/watched': {
+      id: '/app/watched'
+      path: '/watched'
+      fullPath: '/app/watched'
+      preLoaderRoute: typeof AppWatchedImport
+      parentRoute: typeof AppImport
+    }
     '/app/watchlist': {
       id: '/app/watchlist'
       path: '/watchlist'
@@ -271,6 +285,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppProfileRoute: typeof AppProfileRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppWatchedRoute: typeof AppWatchedRoute
   AppWatchlistRoute: typeof AppWatchlistRoute
   AppCategoriesCategoryIdRoute: typeof AppCategoriesCategoryIdRoute
   AppMoviesMovieIdRoute: typeof AppMoviesMovieIdRoute
@@ -287,6 +302,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppProfileRoute: AppProfileRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppWatchedRoute: AppWatchedRoute,
   AppWatchlistRoute: AppWatchlistRoute,
   AppCategoriesCategoryIdRoute: AppCategoriesCategoryIdRoute,
   AppMoviesMovieIdRoute: AppMoviesMovieIdRoute,
@@ -307,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/app/dashboard': typeof AppDashboardRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/watched': typeof AppWatchedRoute
   '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -327,6 +344,7 @@ export interface FileRoutesByTo {
   '/app/dashboard': typeof AppDashboardRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/watched': typeof AppWatchedRoute
   '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -348,6 +366,7 @@ export interface FileRoutesById {
   '/app/dashboard': typeof AppDashboardRoute
   '/app/profile': typeof AppProfileRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/watched': typeof AppWatchedRoute
   '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -370,6 +389,7 @@ export interface FileRouteTypes {
     | '/app/dashboard'
     | '/app/profile'
     | '/app/settings'
+    | '/app/watched'
     | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
@@ -389,6 +409,7 @@ export interface FileRouteTypes {
     | '/app/dashboard'
     | '/app/profile'
     | '/app/settings'
+    | '/app/watched'
     | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
@@ -408,6 +429,7 @@ export interface FileRouteTypes {
     | '/app/dashboard'
     | '/app/profile'
     | '/app/settings'
+    | '/app/watched'
     | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
@@ -462,6 +484,7 @@ export const routeTree = rootRoute
         "/app/dashboard",
         "/app/profile",
         "/app/settings",
+        "/app/watched",
         "/app/watchlist",
         "/app/categories/$categoryId",
         "/app/movies/$movieId",
@@ -484,6 +507,10 @@ export const routeTree = rootRoute
     },
     "/app/settings": {
       "filePath": "app/settings.tsx",
+      "parent": "/app"
+    },
+    "/app/watched": {
+      "filePath": "app/watched.tsx",
       "parent": "/app"
     },
     "/app/watchlist": {

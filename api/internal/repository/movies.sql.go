@@ -35,6 +35,32 @@ func (q *Queries) DeleteMovie(ctx context.Context, id int64) (Movie, error) {
 	return i, err
 }
 
+const deleteMovieByTmdbId = `-- name: DeleteMovieByTmdbId :one
+DELETE FROM movies
+WHERE tmdb_id = $1
+RETURNING id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, runtime, version
+`
+
+func (q *Queries) DeleteMovieByTmdbId(ctx context.Context, tmdbID int32) (Movie, error) {
+	row := q.db.QueryRow(ctx, deleteMovieByTmdbId, tmdbID)
+	var i Movie
+	err := row.Scan(
+		&i.ID,
+		&i.TmdbID,
+		&i.CreatedAt,
+		&i.LastFetchedAt,
+		&i.Title,
+		&i.ReleaseDate,
+		&i.PosterUrl,
+		&i.Overview,
+		&i.Genres,
+		&i.VoteAverage,
+		&i.Runtime,
+		&i.Version,
+	)
+	return i, err
+}
+
 const getMovie = `-- name: GetMovie :one
 SELECT id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, runtime, version FROM movies WHERE id = $1
 `
@@ -128,6 +154,43 @@ func (q *Queries) InsertMovie(ctx context.Context, arg InsertMovieParams) (Movie
 		&i.Version,
 	)
 	return i, err
+}
+
+const listMovies = `-- name: ListMovies :many
+SELECT id, tmdb_id, created_at, last_fetched_at, title, release_date, poster_url, overview, genres, vote_average, runtime, version FROM movies ORDER BY id LIMIT $1
+`
+
+func (q *Queries) ListMovies(ctx context.Context, limit int32) ([]Movie, error) {
+	rows, err := q.db.Query(ctx, listMovies, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Movie
+	for rows.Next() {
+		var i Movie
+		if err := rows.Scan(
+			&i.ID,
+			&i.TmdbID,
+			&i.CreatedAt,
+			&i.LastFetchedAt,
+			&i.Title,
+			&i.ReleaseDate,
+			&i.PosterUrl,
+			&i.Overview,
+			&i.Genres,
+			&i.VoteAverage,
+			&i.Runtime,
+			&i.Version,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const updateMovie = `-- name: UpdateMovie :one

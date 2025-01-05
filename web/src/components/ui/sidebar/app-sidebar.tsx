@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SquareMenu, List } from 'lucide-react';
+import { SquareMenu, Bookmark, Eye } from 'lucide-react';
 
 import { NavMain, NavUser, NavLogo } from '@/components/ui/nav';
 import {
@@ -20,7 +20,12 @@ const navItems = [
   {
     title: 'Watchlist',
     url: '/app/watchlist',
-    icon: List,
+    icon: Bookmark,
+  },
+  {
+    title: 'Watched',
+    url: '/app/watched',
+    icon: Eye,
   },
 ];
 

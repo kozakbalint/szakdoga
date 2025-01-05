@@ -226,20 +226,52 @@ export type MovieWatchlistResponse = {
   added_at: string;
 };
 
+export type GetTVWatchlistResponse = {
+  watchlist: TVWatchlistResponse[] | null;
+};
+
+export type TVWatchlistResponse = {
+  id: number;
+  tv_show: TV;
+  added_at: string;
+};
+
+export type TV = {
+  id: number;
+  tmdb_id: number;
+  created_at: string;
+  last_fetched_at: string;
+  title: string;
+  release_date: string;
+  poster_url: string;
+  overview: string;
+  genres: string[];
+  vote_average: number;
+  version: number;
+};
+
 export type MessageResponse = {
   message: string;
 };
 
 export type GetMovieWatchedResponse = {
-  watched: MovieWatchedResponse[] | null;
+  watched_movies: MovieWatchedResponse[] | null;
 };
 
 export type MovieWatchedResponse = {
   id: number;
   movie: Movie;
-  added_at: string;
+  watched_at: string;
 };
 
 export type GetMovieWatchedDatesResponse = {
+  watched_dates: string[] | null;
+};
+
+export type GetTvShowWatchedResponse = {
+  watched_tv_shows: TV[] | null;
+};
+
+export type GetTvShowWatchedDatesResponse = {
   watched_dates: string[] | null;
 };

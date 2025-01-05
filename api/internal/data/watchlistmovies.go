@@ -101,28 +101,50 @@ func (m WatchlistMoviesModel) DeleteWatchlistEntry(id int64) error {
 	return nil
 }
 
-func (m WatchlistMoviesModel) GetWatchlist(userID int64) (*WatchlistMovies, error) {
-	var mw WatchlistMovies
+type MovieWatchlistResponse struct {
+	ID      int64     `json:"id"`
+	Movie   Movie     `json:"movie"`
+	AddedAt time.Time `json:"added_at"`
+}
 
+func (m WatchlistMoviesModel) GetWatchlist(userID int64) (*[]MovieWatchlistResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := m.Repository.ListWatchlistMovies(ctx, int32(userID))
+	mw, err := m.Repository.ListWatchlistMovies(ctx, int32(userID))
 	if err != nil {
 		return nil, WrapError(err)
 	}
 
-	for _, mweRes := range rows {
-		mwe := WatchlistMoviesEntry{
-			ID:      mweRes.ID,
-			UserID:  int64(mweRes.UserID),
-			MovieID: int64(mweRes.MovieID),
-			AddedAt: mweRes.AddedAt,
+	var mwResponse []MovieWatchlistResponse
+	for _, mov := range mw {
+		movie, err := m.Repository.GetMovie(ctx, int64(mov.MovieID))
+		if err != nil {
+			return nil, WrapError(err)
 		}
-		mw.Entries = append(mw.Entries, &mwe)
+
+		mwResponse = append(mwResponse, MovieWatchlistResponse{
+			ID: int64(mov.ID),
+			Movie: Movie{
+				ID:          movie.ID,
+				TmdbID:      int(movie.TmdbID),
+				CreatedAt:   movie.CreatedAt,
+				LastFetched: movie.LastFetchedAt,
+				Title:       movie.Title,
+				ReleaseDate: movie.ReleaseDate,
+				PosterURL:   movie.PosterUrl,
+				Overview:    movie.Overview,
+				Genres:      movie.Genres,
+				VoteAverage: float32(movie.VoteAverage),
+				Runtime:     int(movie.Runtime),
+				Version:     int(movie.Version),
+			},
+
+			AddedAt: mov.AddedAt,
+		})
 	}
 
-	return &mw, nil
+	return &mwResponse, nil
 }
 
 func (m WatchlistMoviesModel) GetWatchlistEntryByUserAndMovie(userID, movieID int64) (*WatchlistMoviesEntry, error) {
