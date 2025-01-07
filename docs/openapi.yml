@@ -1,0 +1,536 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Screenlog
+  contact:
+    name: Bálint Kozák
+    email: kozak.balint15@gmail.com
+  description: |
+    This is the api documentation for the Screenlog project.
+tags:
+  - name: Health
+    description: Health specific endpoints.
+  - name: User
+    description: User specific endpoints.
+  - name: Search
+    description: Serach enpoints, that are used to search for movies, TV shows, people in the TMDb database.
+servers:
+  - url: "http://localhost:6969/v1"
+    description: Local server
+paths:
+  "/healthcheck":
+    get:
+      tags:
+        - Health
+      summary: Health check endpoint
+      description: |
+        This endpoint is used to check the health of the server.
+      operationId: HealthcheckHandler
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthCheck"
+        "500":
+          description: Internal server error
+
+  "/users/me":
+    get:
+      tags:
+        - User
+      summary: Get the current user
+      description: |
+        This endpoint is used to get the current user.
+      operationId: GetCurrentUserHandler
+      security:
+        - main_auth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/users/register":
+    post:
+      tags:
+        - User
+      summary: Create a new user
+      description: |
+        This endpoint is used to create a new user.
+      operationId: CreateUserHandler
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "422":
+          description: Failed validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorFailedValidation"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/users/login":
+    post:
+      tags:
+        - User
+      summary: Authenticate a user
+      description: |
+        This endpoint is used to authenticate a user.
+      operationId: CreateAuthenticationTokenHandler
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticateUser"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationToken"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInvalidCredentials"
+        "422":
+          description: Failed validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorFailedValidation"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/users/logout":
+    get:
+      tags:
+        - User
+      summary: Logout the current user
+      description: |
+        This endpoint is used to logout the current user.
+      operationId: InvalidateAuthenticationTokenHandler
+      security:
+        - main_auth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "authentication token(s) successfully deleted"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/search/movies":
+    get:
+      tags:
+        - Search
+      summary: Search for movies
+      description: |
+        This endpoint is used to search for movies in the TMDb database.
+      operationId: SearchMoviesHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The search query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchMovies"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestMissingQuery"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/search/tv":
+    get:
+      tags:
+        - Search
+      summary: Search for TV shows
+      description: |
+        This endpoint is used to search for TV shows in the TMDb database.
+      operationId: SearchTvHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The search query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchTV"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestMissingQuery"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/search/people":
+    get:
+      tags:
+        - Search
+      summary: Search for people
+      description: |
+        This endpoint is used to search for people in the TMDb database.
+      operationId: SearchPeopleHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The search query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchPeople"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestMissingQuery"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+components:
+  securitySchemes:
+    main_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "available"
+        systemInfo:
+          type: object
+          properties:
+            environment:
+              type: string
+              example: "development"
+            cors_trusted_origins:
+              type: array
+              items:
+                type: string
+              example: ["http://localhost:3000", "http://localhost:3001"]
+            version:
+              type: string
+              example: "1.0.0"
+
+    User:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              description: User id
+              type: integer
+              format: int64
+              example: 15
+            created_at:
+              description: User creation date
+              type: string
+              format: rfc3339
+              example: "2021-10-10T12:00:00Z"
+            name:
+              description: User supplied name
+              type: string
+              example: John Doe
+            email:
+              description: User supplied email
+              type: string
+              format: email
+              example: john.doe@example.com
+
+    CreateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        password:
+          type: string
+          minLength: 8
+          maxLength: 72
+          example: "password123"
+
+    AuthenticateUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        password:
+          type: string
+          example: "password123"
+
+    AuthenticationToken:
+      type: object
+      properties:
+        authentication_token:
+          type: object
+          properties:
+            token:
+              type: string
+              example: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0"
+            expiry:
+              type: string
+              format: rfc3339
+              example: "2021-10-10T12:00:00Z"
+
+    SearchMovies:
+      type: object
+      properties:
+        movies:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 278
+              title:
+                type: string
+                example: "The Shawshank Redemption"
+              overview:
+                type: string
+                example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
+              poster_url:
+                type: string
+                example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+              release_date:
+                type: string
+                example: "1994-09-23"
+              popularity:
+                type: float
+                format: float32
+                example: 186.654
+
+    SearchTV:
+      type: object
+      properties:
+        tv:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1399
+              title:
+                type: string
+                example: "Game of Thrones"
+              overview:
+                type: string
+                example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
+              poster_url:
+                type: string
+                example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
+              release_date:
+                type: string
+                example: "2011-04-17"
+              popularity:
+                type: float
+                format: float32
+                example: 749.726
+
+    SearchPeople:
+      type: object
+      properties:
+        people:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 115440
+              name:
+                type: string
+                example: "Sydney Sweeney"
+              profile_url:
+                type: string
+                example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
+              popularity:
+                type: float
+                format: float32
+                example: 152.351
+
+    ErrorUnauthorized:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "you must be authenticated to access this resource"
+
+    ErrorBadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "body contains badly-formed JSON"
+
+    ErrorBadRequestMissingQuery:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "missing query parameter"
+
+    ErrorFailedValidation:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "must be a valid email address"
+
+    ErrorInvalidCredentials:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "invalid email or password"
+
+    ErrorInternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "the server encountered a problem and could not process your request"
