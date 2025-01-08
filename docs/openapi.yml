@@ -8,12 +8,24 @@ info:
   description: |
     This is the api documentation for the Screenlog project.
 tags:
-  - name: Health
+  - name: API Health
     description: Health specific endpoints.
   - name: User
     description: User specific endpoints.
   - name: Search
     description: Serach enpoints, that are used to search for movies, TV shows, people in the TMDb database.
+  - name: Movie Details
+    description: Movie details enpoints, that are used to get details about a specific movie from the TMDb database.
+  - name: TV Show Details
+    description: TV show details enpoints, that are used to get details about a specific TV show from the TMDb database.
+  - name: Person Details
+    description: Person details enpoints, that are used to get details about a specific person from the TMDb database.
+  - name: Cast
+    description: Cast enpoints, that are used to get the cast of a specific movie or tv show from the TMDb database.
+  - name: Watch Providers
+    description: Watch providers enpoints, that are used to get the watch providers of a specific movie or tv show from the TMDb database.
+  - name: Watchlist
+    description: Watchlist enpoints, that are used to manage the watchlist of the current user.
 servers:
   - url: "http://localhost:6969/v1"
     description: Local server
@@ -21,7 +33,7 @@ paths:
   "/healthcheck":
     get:
       tags:
-        - Health
+        - API Health
       summary: Health check endpoint
       description: |
         This endpoint is used to check the health of the server.
@@ -315,6 +327,710 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorInternalServerError"
 
+  "/movies/{id}":
+    get:
+      tags:
+        - Movie Details
+      summary: Get movie details
+      description: |
+        This endpoint is used to get details about a specific movie from the TMDb database.
+      operationId: GetMovieDetailsHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieDetails"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/tv/{id}":
+    get:
+      tags:
+        - TV Show Details
+      summary: Get TV show details
+      description: |
+        This endpoint is used to get details about a specific TV show from the TMDb database.
+      operationId: GetTvDetailsHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TvDetails"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/tv/{id}/season/{season_number}":
+    get:
+      tags:
+        - TV Show Details
+      summary: Get TV show season details
+      description: |
+        This endpoint is used to get details about a specific season of a TV show from the TMDb database.
+      operationId: GetTvSeasonDetailsHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TvSeasonDetails"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/tv/{id}/season/{season_number}/episode/{episode_number}":
+    get:
+      tags:
+        - TV Show Details
+      summary: Get TV show episode details
+      description: |
+        This endpoint is used to get details about a specific episode of a TV show from the TMDb database.
+      operationId: GetTvEpisodeDetailsHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        - name: episode_number
+          in: path
+          required: true
+          description: The episode number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TvEpisodeDetails"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/people/{id}":
+    get:
+      tags:
+        - Person Details
+      summary: Get person details
+      description: |
+        This endpoint is used to get details about a specific person from the TMDb database.
+      operationId: GetPersonDetailsHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The person id
+          schema:
+            type: integer
+            format: int64
+            example: 115440
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonDetails"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/cast/movies/{id}":
+    get:
+      tags:
+        - Cast
+      summary: Get movie cast
+      description: |
+        This endpoint is used to get the cast of a specific movie from the TMDb database.
+      operationId: GetCastMoviesHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CastMovies"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/cast/tv/{id}":
+    get:
+      tags:
+        - Cast
+      summary: Get TV show cast
+      description: |
+        This endpoint is used to get the cast of a specific TV show from the TMDb database.
+      operationId: GetCastTvHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CastTv"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watchproviders/movies/{id}":
+    get:
+      tags:
+        - Watch Providers
+      summary: Get movie watch providers
+      description: |
+        This endpoint is used to get the watch providers of a specific movie from the TMDb database.
+      operationId: GetWatchProvidersHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchProviders"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watchproviders/tv/{id}":
+    get:
+      tags:
+        - Watch Providers
+      summary: Get TV show watch providers
+      description: |
+        This endpoint is used to get the watch providers of a specific TV show from the TMDb database.
+      operationId: GetWatchProvidersHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchProviders"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watchlist":
+    get:
+      tags:
+        - Watchlist
+      summary: Get the watchlist
+      description: |
+        This endpoint is used to get the watchlist of the current user.
+      operationId: GetWatchlistHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: The type of the watchlist
+          schema:
+            type: string
+            enum: ["movies", "tv"]
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Watchlist"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watchlist/{id}":
+    get:
+      tags:
+        - Watchlist
+      summary: Get info about a movie or TV show in the watchlist
+      description: |
+        This endpoint is used to get info about a movie or TV show in the watchlist of the current user.
+      operationId: GetWatchlistItemHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie or TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchlistStatus"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watchlist/movies/{id}":
+    post:
+      tags:
+        - Watchlist
+      summary: Add a movie to the watchlist
+      description: |
+        This endpoint is used to add a movie to the watchlist of the current user.
+      operationId: AddMovieToWatchlistHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "movie successfully added to watchlist"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    delete:
+      tags:
+        - Watchlist
+      summary: Remove a movie from the watchlist
+      description: |
+        This endpoint is used to remove a movie from the watchlist of the current user.
+      operationId: RemoveMovieFromWatchlistHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "movie successfully removed from watchlist"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watchlist/tv/{id}":
+    post:
+      tags:
+        - Watchlist
+      summary: Add a TV show to the watchlist
+      description: |
+        This endpoint is used to add a TV show to the watchlist of the current user.
+      operationId: AddTvToWatchlistHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show successfully added to watchlist"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    delete:
+      tags:
+        - Watchlist
+      summary: Remove a TV show from the watchlist
+      description: |
+        This endpoint is used to remove a TV show from the watchlist of the current user.
+      operationId: RemoveTvFromWatchlistHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show successfully removed from watchlist"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
 components:
   securitySchemes:
     main_auth:
@@ -436,6 +1152,10 @@ components:
               release_date:
                 type: string
                 example: "1994-09-23"
+              vote_average:
+                type: float
+                format: float32
+                example: 8.3
               popularity:
                 type: float
                 format: float32
@@ -465,6 +1185,10 @@ components:
               release_date:
                 type: string
                 example: "2011-04-17"
+              vote_average:
+                type: float
+                format: float32
+                example: 8.4
               popularity:
                 type: float
                 format: float32
@@ -493,6 +1217,397 @@ components:
                 format: float32
                 example: 152.351
 
+    Genres:
+      type: object
+      properties:
+        genres:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 28
+              name:
+                type: string
+                example: "Action"
+
+    MovieDetails:
+      type: object
+      properties:
+        movie:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 278
+            title:
+              type: string
+              example: "The Shawshank Redemption"
+            overview:
+              type: string
+              example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
+            release_date:
+              type: string
+              example: "1994-09-23"
+            genres:
+              type: array
+              items:
+                schema:
+                  $ref: "#/components/schemas/Genres"
+            runtime:
+              type: integer
+              example: 142
+            poster_url:
+              type: string
+              example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+            popularity:
+              type: float
+              format: float32
+              example: 186.654
+            vote_average:
+              type: float
+              format: float32
+              example: 8.7
+
+    CastMovies:
+      type: object
+      properties:
+        cast:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 6941
+              name:
+                type: string
+                example: "Cameron Diaz"
+              character:
+                type: string
+                example: "Princess Fiona (voice)"
+              profile_url:
+                type: string
+                example: "https://image.tmdb.org/t/p/w92/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg"
+              order:
+                type: integer
+                example: 2
+              popularity:
+                type: float
+                format: float32
+                example: 57.269
+
+    TvDetails:
+      type: object
+      properties:
+        tv:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 1399
+            name:
+              type: string
+              example: "Game of Thrones"
+            overview:
+              type: string
+              example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
+            first_air_date:
+              type: string
+              example: "2011-04-17"
+            last_air_date:
+              type: string
+              example: "2019-05-19"
+            genres:
+              type: array
+              items:
+                schema:
+                  $ref: "#/components/schemas/Genres"
+            number_of_seasons:
+              type: integer
+              example: 8
+            number_of_episodes:
+              type: integer
+              example: 73
+            seasons:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    example: 3624
+                  name:
+                    type: string
+                    example: "Season 1"
+                  air_date:
+                    type: string
+                    example: "2011-04-17"
+                  episode_count:
+                    type: integer
+                    example: 10
+                  overview:
+                    type: string
+                    example: "Winter Is Coming"
+                  poster_url:
+                    type: string
+                    example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
+                  vote_average:
+                    type: float
+                    format: float32
+                    example: 8.3
+            poster_url:
+              type: string
+              example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
+            status:
+              type: string
+              example: "Ended"
+            popularity:
+              type: float
+              format: float32
+              example: 749.726
+            vote_average:
+              type: float
+              format: float32
+              example: 8.4
+
+    TvSeasonDetails:
+      type: object
+      properties:
+        season:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 3624
+            name:
+              type: string
+              example: "Season 1"
+            air_date:
+              type: string
+              example: "2011-04-17"
+            overview:
+              type: string
+              example: "Winter Is Coming"
+            poster_url:
+              type: string
+              example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
+            episodes:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    example: 63056
+                  name:
+                    type: string
+                    example: "Winter Is Coming"
+                  air_date:
+                    type: string
+                    example: "2011-04-17"
+                  runtime:
+                    type: integer
+                    example: 62
+                  episode_type:
+                    type: string
+                    example: "standard"
+                  overview:
+                    type: string
+                    example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
+                  still_url:
+                    type: string
+                    example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
+                  vote_average:
+                    type: float
+                    format: float32
+                    example: 8.046
+            vote_average:
+              type: float
+              format: float32
+              example: 8.3
+
+    TvEpisodeDetails:
+      type: object
+      properties:
+        episode:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 63056
+            name:
+              type: string
+              example: "Winter Is Coming"
+            air_date:
+              type: string
+              example: "2011-04-17"
+            runtime:
+              type: integer
+              example: 62
+            overview:
+              type: string
+              example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
+            still_url:
+              type: string
+              example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
+            vote_average:
+              type: float
+              format: float32
+              example: 8.046
+
+    CastTv:
+      type: object
+      properties:
+        cast:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1223786
+              name:
+                type: string
+                example: "Emilia Clarke"
+              character:
+                type: string
+                example: "Daenerys Targaryen"
+              profile_url:
+                type: string
+                example: "https://image.tmdb.org/t/p/w92/wb8VfDPGpyqcFltnRcJR1Wj3h4Z.jpg"
+              order:
+                type: integer
+                example: 8
+              popularity:
+                type: float
+                format: float32
+                example: 57.269
+
+    PersonDetails:
+      type: object
+      properties:
+        person:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 115440
+            name:
+              type: string
+              example: "Sydney Sweeney"
+            biography:
+              type: string
+              example: "Sydney Bernice Sweeney (born September 12, 1997) is an American actress. She gained mainstream attention for her role as Emaline Addario in the Netflix series Everything Sucks! (2018)."
+            birthday:
+              type: string
+              example: "1997-09-12"
+            profile_url:
+              type: string
+              example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
+            popularity:
+              type: float
+              format: float32
+              example: 152.351
+
+    WatchProviders:
+      type: object
+      properties:
+        watch_providers:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              example: 278
+            providers:
+              type: object
+              properties:
+                flatrate:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      provider_id:
+                        type: integer
+                        format: int64
+                        example: 8
+                      provider_name:
+                        type: string
+                        example: "Netflix"
+                      logo_url:
+                        type: string
+                        example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+                      display_priority:
+                        type: integer
+                        example: 1
+                rent:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      provider_id:
+                        type: integer
+                        format: int64
+                        example: 3
+                      provider_name:
+                        type: string
+                        example: "Google Play Movies"
+                      logo_url:
+                        type: string
+                        example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+                      display_priority:
+                        type: integer
+                        example: 1
+                buy:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      provider_id:
+                        type: integer
+                        format: int64
+                        example: 2
+                      provider_name:
+                        type: string
+                        example: "Apple iTunes"
+                      logo_url:
+                        type: string
+                        example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+                      display_priority:
+                        type: integer
+                        example: 1
+
+    Watchlist:
+      type: object
+      properties:
+        movies:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchMovies"
+        tv:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchTV"
+
+    WatchlistStatus:
+      type: object
+      properties:
+        status:
+          type: enum
+          enum: ["added", "not_added"]
+
     ErrorUnauthorized:
       type: object
       properties:
@@ -513,6 +1628,13 @@ components:
         message:
           type: string
           example: "missing query parameter"
+
+    ErrorBadRequestPath:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "missing path parameter"
 
     ErrorFailedValidation:
       type: object
