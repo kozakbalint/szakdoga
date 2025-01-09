@@ -26,6 +26,8 @@ tags:
     description: Watch providers enpoints, that are used to get the watch providers of a specific movie or tv show from the TMDb database.
   - name: Watchlist
     description: Watchlist enpoints, that are used to manage the watchlist of the current user.
+  - name: Watched
+    description: Watched enpoints, that are used to manage the watched list of the current user.
 servers:
   - url: "http://localhost:6969/v1"
     description: Local server
@@ -794,21 +796,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorInternalServerError"
 
-  "/watchlist/{id}":
+  "/watchlist/movies/{id}":
     get:
       tags:
         - Watchlist
-      summary: Get info about a movie or TV show in the watchlist
+      summary: Check if a movie is in the watchlist
       description: |
-        This endpoint is used to get info about a movie or TV show in the watchlist of the current user.
-      operationId: GetWatchlistItemHandler
+        This endpoint is used to check if a movie is in the watchlist of the current user.
+      operationId: CheckMovieInWatchlistHandler
       security:
         - main_auth: []
       parameters:
         - name: id
           in: path
           required: true
-          description: The movie or TV show id
+          description: The movie id
           schema:
             type: integer
             format: int64
@@ -819,7 +821,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchlistStatus"
+                type: object
+                properties:
+                  in_watchlist:
+                    type: boolean
+                    example: true
         "400":
           description: Bad request
           content:
@@ -838,8 +844,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorInternalServerError"
-
-  "/watchlist/movies/{id}":
     post:
       tags:
         - Watchlist
@@ -936,6 +940,53 @@ paths:
                 $ref: "#/components/schemas/ErrorInternalServerError"
 
   "/watchlist/tv/{id}":
+    get:
+      tags:
+        - Watchlist
+      summary: Check if a TV show is in the watchlist
+      description: |
+        This endpoint is used to check if a TV show is in the watchlist of the current user.
+      operationId: CheckTvInWatchlistHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  in_watchlist:
+                    type: boolean
+                    example: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
     post:
       tags:
         - Watchlist
@@ -1012,6 +1063,676 @@ paths:
                   message:
                     type: string
                     example: "tv show successfully removed from watchlist"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watched":
+    get:
+      tags:
+        - Watched
+      summary: Get the watched list
+      description: |
+        This endpoint is used to get the watched list of the current user.
+      operationId: GetWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: The type of the watched list
+          schema:
+            type: string
+            enum: ["movies", "tv"]
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Watched"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watched/movies/{id}":
+    get:
+      tags:
+        - Watched
+      summary: Check if a movie is in the watched list
+      description: |
+        This endpoint is used to check if a movie is in the watched list of the current user.
+      operationId: CheckMovieInWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  in_watched:
+                    type: boolean
+                    example: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    post:
+      tags:
+        - Watched
+      summary: Add a movie to the watched list
+      description: |
+        This endpoint is used to add a movie to the watched list of the current user.
+      operationId: AddMovieToWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "movie successfully added to watched list"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    delete:
+      tags:
+        - Watched
+      summary: Remove a movie from the watched list
+      description: |
+        This endpoint is used to remove a movie from the watched list of the current user.
+      operationId: RemoveMovieFromWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The movie id
+          schema:
+            type: integer
+            format: int64
+            example: 278
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "movie successfully removed from watched list"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watched/tv/{id}":
+    get:
+      tags:
+        - Watched
+      summary: Check if a TV show is in the watched list
+      description: |
+        This endpoint is used to check if a TV show is in the watched list of the current user.
+      operationId: CheckTvInWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchedTv"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    post:
+      tags:
+        - Watched
+      summary: Add a TV show to the watched list
+      description: |
+        This endpoint is used to add a TV show to the watched list of the current user.
+      operationId: AddTvToWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show successfully added to watched list"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    delete:
+      tags:
+        - Watched
+      summary: Remove a TV show from the watched list
+      description: |
+        This endpoint is used to remove a TV show from the watched list of the current user.
+      operationId: RemoveTvFromWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show successfully removed from watched list"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+
+  "/watched/tv/{id}/season/{season_number}":
+    get:
+      tags:
+        - Watched
+      summary: Check if a TV show season episodes are in the watched list
+      description: |
+        This endpoint is used to check if a TV show season episodes are in the watched list of the current user.
+      operationId: CheckTvSeasonInWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchedTvSeason"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    post:
+      tags:
+        - Watched
+      summary: Add a TV show season to the watched list
+      description: |
+        This endpoint is used to add a TV show season to the watched list of the current user.
+      operationId: AddTvSeasonToWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show season successfully added to watched list"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    delete:
+      tags:
+        - Watched
+      summary: Remove a TV show season from the watched list
+      description: |
+        This endpoint is used to remove a TV show season from the watched list of the current user.
+      operationId: RemoveTvSeasonFromWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show season successfully removed from watched list"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+
+  "/watched/tv/{id}/season/{season_number}/episode/{episode_number}":
+    get:
+      tags:
+        - Watched
+      summary: Check if a TV show episode is in the watched list
+      description: |
+        This endpoint is used to check if a TV show episode is in the watched list of the current user.
+      operationId: CheckTvEpisodeInWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        - name: episode_number
+          in: path
+          required: true
+          description: The episode number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  in_watched:
+                    type: boolean
+                    example: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    post:
+      tags:
+        - Watched
+      summary: Add a TV show episode to the watched list
+      description: |
+        This endpoint is used to add a TV show episode to the watched list of the current user.
+      operationId: AddTvEpisodeToWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        - name: episode_number
+          in: path
+          required: true
+          description: The episode number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show episode successfully added to watched list"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequestPath"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorUnauthorized"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServerError"
+    delete:
+      tags:
+        - Watched
+      summary: Remove a TV show episode from the watched list
+      description: |
+        This endpoint is used to remove a TV show episode from the watched list of the current user.
+      operationId: RemoveTvEpisodeFromWatchedHandler
+      security:
+        - main_auth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The TV show id
+          schema:
+            type: integer
+            format: int64
+            example: 1399
+        - name: season_number
+          in: path
+          required: true
+          description: The season number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        - name: episode_number
+          in: path
+          required: true
+          description: The episode number
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "tv show episode successfully removed from watched list"
         "400":
           description: Bad request
           content:
@@ -1601,12 +2322,55 @@ components:
           items:
             $ref: "#/components/schemas/SearchTV"
 
-    WatchlistStatus:
+    Watched:
       type: object
       properties:
+        movies:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchMovies"
+        tv:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchTV"
+
+    WatchedTv:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+            example: 1399
+          status:
+            type: enum
+            enum: ["watched", "in_progress", "not_watched"]
+          seasons:
+            type: array
+            items:
+              $ref: "#/components/schemas/WatchedTvSeason"
+
+    WatchedTvSeason:
+      type: object
+      properties:
+        season_number:
+          type: integer
+          example: 1
         status:
           type: enum
-          enum: ["added", "not_added"]
+          enum: ["watched", "in_progress", "not_watched"]
+        episodes:
+          type: array
+          items:
+            type: object
+            properties:
+              episode_number:
+                type: integer
+                example: 1
+              in_watched:
+                type: boolean
+                example: true
 
     ErrorUnauthorized:
       type: object
