@@ -66,7 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserResponse"
         "401":
           description: Unauthorized
           content:
@@ -182,11 +182,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "authentication token(s) successfully deleted"
+                $ref: "#/components/schemas/Logout"
         "401":
           description: Unauthorized
           content:
@@ -223,7 +219,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SearchMovies"
+                $ref: "#/components/schemas/SearchMoviesResponse"
         "400":
           description: Bad request
           content:
@@ -266,7 +262,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SearchTV"
+                $ref: "#/components/schemas/SearchTVResponse"
         "400":
           description: Bad request
           content:
@@ -309,7 +305,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SearchPeople"
+                $ref: "#/components/schemas/SearchPeopleResponse"
         "400":
           description: Bad request
           content:
@@ -354,7 +350,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MovieDetails"
+                $ref: "#/components/schemas/MovieDetailsResponse"
         "400":
           description: Bad request
           content:
@@ -399,7 +395,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TvDetails"
+                $ref: "#/components/schemas/TvDetailsResponse"
         "400":
           description: Bad request
           content:
@@ -452,7 +448,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TvSeasonDetails"
+                $ref: "#/components/schemas/TvSeasonDetailsResponse"
         "400":
           description: Bad request
           content:
@@ -513,7 +509,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TvEpisodeDetails"
+                $ref: "#/components/schemas/TvEpisodeDetailsResponse"
         "400":
           description: Bad request
           content:
@@ -558,7 +554,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PersonDetails"
+                $ref: "#/components/schemas/PersonDetailsResponse"
         "400":
           description: Bad request
           content:
@@ -603,7 +599,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CastMovies"
+                $ref: "#/components/schemas/CastMoviesResponse"
         "400":
           description: Bad request
           content:
@@ -648,7 +644,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CastTv"
+                $ref: "#/components/schemas/CastTvResponse"
         "400":
           description: Bad request
           content:
@@ -675,7 +671,7 @@ paths:
       summary: Get movie watch providers
       description: |
         This endpoint is used to get the watch providers of a specific movie from the TMDb database.
-      operationId: GetWatchProvidersHandler
+      operationId: GetMovieWatchProvidersHandler
       security:
         - main_auth: []
       parameters:
@@ -693,7 +689,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchProviders"
+                $ref: "#/components/schemas/WatchProvidersResponse"
         "400":
           description: Bad request
           content:
@@ -720,7 +716,7 @@ paths:
       summary: Get TV show watch providers
       description: |
         This endpoint is used to get the watch providers of a specific TV show from the TMDb database.
-      operationId: GetWatchProvidersHandler
+      operationId: GetTvWatchProvidersHandler
       security:
         - main_auth: []
       parameters:
@@ -738,7 +734,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchProviders"
+                $ref: "#/components/schemas/WatchProvidersResponse"
         "400":
           description: Bad request
           content:
@@ -821,11 +817,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  in_watchlist:
-                    type: boolean
-                    example: true
+                $ref: "#/components/schemas/InWatchlist"
         "400":
           description: Bad request
           content:
@@ -868,11 +860,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "movie successfully added to watchlist"
+                $ref: "#/components/schemas/MovieWatchlistAddedSuccess"
         "400":
           description: Bad request
           content:
@@ -915,11 +903,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "movie successfully removed from watchlist"
+                $ref: "#/components/schemas/MovieWatchlistRemovedSuccess"
         "400":
           description: Bad request
           content:
@@ -964,11 +948,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  in_watchlist:
-                    type: boolean
-                    example: true
+                $ref: "#/components/schemas/InWatchlist"
         "400":
           description: Bad request
           content:
@@ -1011,11 +991,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show successfully added to watchlist"
+                $ref: "#/components/schemas/TvWatchlistAddedSuccess"
         "400":
           description: Bad request
           content:
@@ -1058,11 +1034,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show successfully removed from watchlist"
+                $ref: "#/components/schemas/TvWatchlistRemovedSuccess"
         "400":
           description: Bad request
           content:
@@ -1145,11 +1117,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  in_watched:
-                    type: boolean
-                    example: true
+                $ref: "#/components/schemas/InWatched"
         "400":
           description: Bad request
           content:
@@ -1192,11 +1160,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "movie successfully added to watched list"
+                $ref: "#/components/schemas/WatchedMovieAddedSuccess"
         "400":
           description: Bad request
           content:
@@ -1239,11 +1203,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "movie successfully removed from watched list"
+                $ref: "#/components/schemas/WatchedMovieRemovedSuccess"
         "400":
           description: Bad request
           content:
@@ -1330,12 +1290,7 @@ paths:
           description: Created
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show successfully added to watched list"
+              $ref: "#/components/schemas/WatchedTvAddedSuccess"
         "400":
           description: Bad request
           content:
@@ -1378,11 +1333,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show successfully removed from watched list"
+                $ref: "#/components/schemas/WatchedTvRemovedSuccess"
         "400":
           description: Bad request
           content:
@@ -1482,11 +1433,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show season successfully added to watched list"
+                $ref: "#/components/schemas/WatchedTvSeasonAddedSuccess"
         "400":
           description: Bad request
           content:
@@ -1537,11 +1484,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show season successfully removed from watched list"
+                $ref: "#/components/schemas/WatchedTvSeasonRemovedSuccess"
         "400":
           description: Bad request
           content:
@@ -1602,11 +1545,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  in_watched:
-                    type: boolean
-                    example: true
+                $ref: "#/components/schemas/InWatched"
         "400":
           description: Bad request
           content:
@@ -1665,11 +1604,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show episode successfully added to watched list"
+                $ref: "#/components/schemas/WatchedTvEpisodeAddedSuccess"
         "400":
           description: Bad request
           content:
@@ -1728,11 +1663,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "tv show episode successfully removed from watched list"
+                $ref: "#/components/schemas/WatchedTvEpisodeRemovedSuccess"
         "400":
           description: Bad request
           content:
@@ -1763,49 +1694,55 @@ components:
     HealthCheck:
       type: object
       properties:
-        status:
-          type: string
-          example: "available"
-        systemInfo:
+        healthcheck:
           type: object
           properties:
-            environment:
+            status:
               type: string
-              example: "development"
-            cors_trusted_origins:
-              type: array
-              items:
-                type: string
-              example: ["http://localhost:3000", "http://localhost:3001"]
-            version:
-              type: string
-              example: "1.0.0"
+              example: "available"
+            systemInfo:
+              type: object
+              properties:
+                environment:
+                  type: string
+                  example: "development"
+                cors_trusted_origins:
+                  type: array
+                  items:
+                    type: string
+                  example: ["http://localhost:3000", "http://localhost:3001"]
+                version:
+                  type: string
+                  example: "1.0.0"
 
-    User:
+    UserResponse:
       type: object
       properties:
         user:
           type: object
-          properties:
-            id:
-              description: User id
-              type: integer
-              format: int64
-              example: 15
-            created_at:
-              description: User creation date
-              type: string
-              format: rfc3339
-              example: "2021-10-10T12:00:00Z"
-            name:
-              description: User supplied name
-              type: string
-              example: John Doe
-            email:
-              description: User supplied email
-              type: string
-              format: email
-              example: john.doe@example.com
+          $ref: "#/components/schemas/User"
+
+    User:
+      type: object
+      properties:
+        id:
+          description: User id
+          type: integer
+          format: int64
+          example: 15
+        created_at:
+          description: User creation date
+          type: string
+          format: rfc3339
+          example: "2021-10-10T12:00:00Z"
+        name:
+          description: User supplied name
+          type: string
+          example: John Doe
+        email:
+          description: User supplied email
+          type: string
+          example: john.doe@example.com
 
     CreateUser:
       type: object
@@ -1829,7 +1766,6 @@ components:
       properties:
         email:
           type: string
-          format: email
           example: john.doe@example.com
         password:
           type: string
@@ -1849,466 +1785,523 @@ components:
               format: rfc3339
               example: "2021-10-10T12:00:00Z"
 
-    SearchMovies:
+    Logout:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "authentication token(s) successfully deleted"
+
+    SearchMoviesResponse:
       type: object
       properties:
         movies:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-                example: 278
-              title:
-                type: string
-                example: "The Shawshank Redemption"
-              overview:
-                type: string
-                example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
-              poster_url:
-                type: string
-                example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
-              release_date:
-                type: string
-                example: "1994-09-23"
-              vote_average:
-                type: float
-                format: float32
-                example: 8.3
-              popularity:
-                type: float
-                format: float32
-                example: 186.654
+            $ref: "#/components/schemas/SearchMovie"
 
-    SearchTV:
+    SearchMovie:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 278
+        title:
+          type: string
+          example: "The Shawshank Redemption"
+        overview:
+          type: string
+          example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
+        poster_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+        release_date:
+          type: string
+          example: "1994-09-23"
+        vote_average:
+          type: number
+          format: float
+          example: 8.3
+        popularity:
+          type: number
+          format: float
+          example: 186.654
+
+    SearchTVResponse:
       type: object
       properties:
         tv:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-                example: 1399
-              title:
-                type: string
-                example: "Game of Thrones"
-              overview:
-                type: string
-                example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
-              poster_url:
-                type: string
-                example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
-              release_date:
-                type: string
-                example: "2011-04-17"
-              vote_average:
-                type: float
-                format: float32
-                example: 8.4
-              popularity:
-                type: float
-                format: float32
-                example: 749.726
+            $ref: "#/components/schemas/SearchTv"
 
-    SearchPeople:
+    SearchTv:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1399
+        title:
+          type: string
+          example: "Game of Thrones"
+        overview:
+          type: string
+          example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
+        poster_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
+        release_date:
+          type: string
+          example: "2011-04-17"
+        vote_average:
+          type: number
+          format: float
+          example: 8.4
+        popularity:
+          type: number
+          format: float
+          example: 749.726
+
+    SearchPeopleResponse:
       type: object
       properties:
         people:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-                example: 115440
-              name:
-                type: string
-                example: "Sydney Sweeney"
-              profile_url:
-                type: string
-                example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
-              popularity:
-                type: float
-                format: float32
-                example: 152.351
+            $ref: "#/components/schemas/SearchPeople"
 
-    Genres:
+    SearchPeople:
       type: object
       properties:
-        genres:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-                example: 28
-              name:
-                type: string
-                example: "Action"
+        id:
+          type: integer
+          format: int64
+          example: 115440
+        name:
+          type: string
+          example: "Sydney Sweeney"
+        profile_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
+        popularity:
+          type: number
+          format: float
+          example: 152.351
 
-    MovieDetails:
+    MovieDetailsResponse:
       type: object
       properties:
         movie:
           type: object
-          properties:
-            id:
-              type: integer
-              format: int64
-              example: 278
-            title:
-              type: string
-              example: "The Shawshank Redemption"
-            overview:
-              type: string
-              example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
-            release_date:
-              type: string
-              example: "1994-09-23"
-            genres:
-              type: array
-              items:
-                schema:
-                  $ref: "#/components/schemas/Genres"
-            runtime:
-              type: integer
-              example: 142
-            poster_url:
-              type: string
-              example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
-            popularity:
-              type: float
-              format: float32
-              example: 186.654
-            vote_average:
-              type: float
-              format: float32
-              example: 8.7
+          $ref: "#/components/schemas/MovieDetails"
+
+    MovieDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 278
+        title:
+          type: string
+          example: "The Shawshank Redemption"
+        overview:
+          type: string
+          example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
+        release_date:
+          type: string
+          example: "1994-09-23"
+        genres:
+          type: array
+          items:
+            type: string
+            example: Action
+        runtime:
+          type: integer
+          example: 142
+        poster_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+        popularity:
+          type: number
+          format: float
+          example: 186.654
+        vote_average:
+          type: number
+          format: float
+          example: 8.7
+
+    CastMoviesResponse:
+      type: object
+      properties:
+        cast:
+          type: array
+          items:
+            $ref: "#/components/schemas/CastMovies"
 
     CastMovies:
       type: object
       properties:
-        cast:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-                example: 6941
-              name:
-                type: string
-                example: "Cameron Diaz"
-              character:
-                type: string
-                example: "Princess Fiona (voice)"
-              profile_url:
-                type: string
-                example: "https://image.tmdb.org/t/p/w92/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg"
-              order:
-                type: integer
-                example: 2
-              popularity:
-                type: float
-                format: float32
-                example: 57.269
+        id:
+          type: integer
+          format: int64
+          example: 6941
+        name:
+          type: string
+          example: "Cameron Diaz"
+        character:
+          type: string
+          example: "Princess Fiona (voice)"
+        profile_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg"
+        order:
+          type: integer
+          example: 2
+        popularity:
+          type: number
+          format: float
+          example: 57.269
 
-    TvDetails:
+    TvDetailsResponse:
       type: object
       properties:
         tv:
           type: object
-          properties:
-            id:
-              type: integer
-              format: int64
-              example: 1399
-            name:
-              type: string
-              example: "Game of Thrones"
-            overview:
-              type: string
-              example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
-            first_air_date:
-              type: string
-              example: "2011-04-17"
-            last_air_date:
-              type: string
-              example: "2019-05-19"
-            genres:
-              type: array
-              items:
-                schema:
-                  $ref: "#/components/schemas/Genres"
-            number_of_seasons:
-              type: integer
-              example: 8
-            number_of_episodes:
-              type: integer
-              example: 73
-            seasons:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    format: int64
-                    example: 3624
-                  name:
-                    type: string
-                    example: "Season 1"
-                  air_date:
-                    type: string
-                    example: "2011-04-17"
-                  episode_count:
-                    type: integer
-                    example: 10
-                  overview:
-                    type: string
-                    example: "Winter Is Coming"
-                  poster_url:
-                    type: string
-                    example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
-                  vote_average:
-                    type: float
-                    format: float32
-                    example: 8.3
-            poster_url:
-              type: string
-              example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
-            status:
-              type: string
-              example: "Ended"
-            popularity:
-              type: float
-              format: float32
-              example: 749.726
-            vote_average:
-              type: float
-              format: float32
-              example: 8.4
+          $ref: "#/components/schemas/TvDetails"
 
-    TvSeasonDetails:
+    TvDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1399
+        name:
+          type: string
+          example: "Game of Thrones"
+        overview:
+          type: string
+          example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
+        first_air_date:
+          type: string
+          example: "2011-04-17"
+        last_air_date:
+          type: string
+          example: "2019-05-19"
+        genres:
+          type: array
+          items:
+            type: string
+            example: Action
+        number_of_seasons:
+          type: integer
+          example: 8
+        number_of_episodes:
+          type: integer
+          example: 73
+        seasons:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/TvSeason"
+        poster_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
+        status:
+          type: string
+          example: "Ended"
+        popularity:
+          type: number
+          format: float
+          example: 749.726
+        vote_average:
+          type: number
+          format: float
+          example: 8.4
+
+    TvSeason:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 3624
+        name:
+          type: string
+          example: "Season 1"
+        air_date:
+          type: string
+          example: "2011-04-17"
+        episode_count:
+          type: integer
+          example: 10
+        overview:
+          type: string
+          example: "Winter Is Coming"
+        poster_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
+        vote_average:
+          type: number
+          format: float
+          example: 8.3
+
+    TvSeasonDetailsResponse:
       type: object
       properties:
         season:
           type: object
-          properties:
-            id:
-              type: integer
-              format: int64
-              example: 3624
-            name:
-              type: string
-              example: "Season 1"
-            air_date:
-              type: string
-              example: "2011-04-17"
-            overview:
-              type: string
-              example: "Winter Is Coming"
-            poster_url:
-              type: string
-              example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
-            episodes:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    format: int64
-                    example: 63056
-                  name:
-                    type: string
-                    example: "Winter Is Coming"
-                  air_date:
-                    type: string
-                    example: "2011-04-17"
-                  runtime:
-                    type: integer
-                    example: 62
-                  episode_type:
-                    type: string
-                    example: "standard"
-                  overview:
-                    type: string
-                    example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
-                  still_url:
-                    type: string
-                    example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
-                  vote_average:
-                    type: float
-                    format: float32
-                    example: 8.046
-            vote_average:
-              type: float
-              format: float32
-              example: 8.3
+          $ref: "#/components/schemas/TvSeasonDetails"
 
-    TvEpisodeDetails:
+    TvSeasonDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 3624
+        name:
+          type: string
+          example: "Season 1"
+        air_date:
+          type: string
+          example: "2011-04-17"
+        overview:
+          type: string
+          example: "Winter Is Coming"
+        poster_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
+        episodes:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/TvEpisode"
+        vote_average:
+          type: number
+          format: float
+          example: 8.3
+
+    TvEpisode:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 63056
+        name:
+          type: string
+          example: "Winter Is Coming"
+        air_date:
+          type: string
+          example: "2011-04-17"
+        runtime:
+          type: integer
+          example: 62
+        episode_type:
+          type: string
+          example: "standard"
+        overview:
+          type: string
+          example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
+        still_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
+        vote_average:
+          type: number
+          format: float
+          example: 8.046
+
+    TvEpisodeDetailsResponse:
       type: object
       properties:
         episode:
           type: object
-          properties:
-            id:
-              type: integer
-              format: int64
-              example: 63056
-            name:
-              type: string
-              example: "Winter Is Coming"
-            air_date:
-              type: string
-              example: "2011-04-17"
-            runtime:
-              type: integer
-              example: 62
-            overview:
-              type: string
-              example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
-            still_url:
-              type: string
-              example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
-            vote_average:
-              type: float
-              format: float32
-              example: 8.046
+          $ref: "#/components/schemas/TvEpisodeDetails"
 
-    CastTv:
+    TvEpisodeDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 63056
+        name:
+          type: string
+          example: "Winter Is Coming"
+        air_date:
+          type: string
+          example: "2011-04-17"
+        runtime:
+          type: integer
+          example: 62
+        overview:
+          type: string
+          example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
+        still_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
+        vote_average:
+          type: number
+          format: float
+          example: 8.046
+
+    CastTvResponse:
       type: object
       properties:
         cast:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-                example: 1223786
-              name:
-                type: string
-                example: "Emilia Clarke"
-              character:
-                type: string
-                example: "Daenerys Targaryen"
-              profile_url:
-                type: string
-                example: "https://image.tmdb.org/t/p/w92/wb8VfDPGpyqcFltnRcJR1Wj3h4Z.jpg"
-              order:
-                type: integer
-                example: 8
-              popularity:
-                type: float
-                format: float32
-                example: 57.269
+            $ref: "#/components/schemas/CastTv"
 
-    PersonDetails:
+    CastTv:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1223786
+        name:
+          type: string
+          example: "Emilia Clarke"
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Role"
+        profile_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/wb8VfDPGpyqcFltnRcJR1Wj3h4Z.jpg"
+        order:
+          type: integer
+          example: 8
+        popularity:
+          type: number
+          format: float
+          example: 57.269
+
+    Role:
+      type: object
+      properties:
+        character:
+          type: string
+          example: "Daenerys Targaryen"
+        episode_count:
+          type: integer
+          example: 73
+
+    PersonDetailsResponse:
       type: object
       properties:
         person:
           type: object
-          properties:
-            id:
-              type: integer
-              format: int64
-              example: 115440
-            name:
-              type: string
-              example: "Sydney Sweeney"
-            biography:
-              type: string
-              example: "Sydney Bernice Sweeney (born September 12, 1997) is an American actress. She gained mainstream attention for her role as Emaline Addario in the Netflix series Everything Sucks! (2018)."
-            birthday:
-              type: string
-              example: "1997-09-12"
-            profile_url:
-              type: string
-              example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
-            popularity:
-              type: float
-              format: float32
-              example: 152.351
+          $ref: "#/components/schemas/PersonDetails"
 
-    WatchProviders:
+    PersonDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 115440
+        name:
+          type: string
+          example: "Sydney Sweeney"
+        biography:
+          type: string
+          example: "Sydney Bernice Sweeney (born September 12, 1997) is an American actress. She gained mainstream attention for her role as Emaline Addario in the Netflix series Everything Sucks! (2018)."
+        birthday:
+          type: string
+          example: "1997-09-12"
+        profile_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
+        popularity:
+          type: number
+          format: float
+          example: 152.351
+
+    WatchProvidersResponse:
       type: object
       properties:
         watch_providers:
           type: object
+          $ref: "#/components/schemas/WatchProviders"
+
+    WatchProviders:
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 278
+        providers:
+          type: object
           properties:
-            id:
-              type: integer
-              format: int64
-              example: 278
-            providers:
-              type: object
-              properties:
-                flatrate:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      provider_id:
-                        type: integer
-                        format: int64
-                        example: 8
-                      provider_name:
-                        type: string
-                        example: "Netflix"
-                      logo_url:
-                        type: string
-                        example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
-                      display_priority:
-                        type: integer
-                        example: 1
-                rent:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      provider_id:
-                        type: integer
-                        format: int64
-                        example: 3
-                      provider_name:
-                        type: string
-                        example: "Google Play Movies"
-                      logo_url:
-                        type: string
-                        example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
-                      display_priority:
-                        type: integer
-                        example: 1
-                buy:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      provider_id:
-                        type: integer
-                        format: int64
-                        example: 2
-                      provider_name:
-                        type: string
-                        example: "Apple iTunes"
-                      logo_url:
-                        type: string
-                        example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
-                      display_priority:
-                        type: integer
-                        example: 1
+            flatrate:
+              type: array
+              items:
+                $ref: "#/components/schemas/Flatrate"
+            rent:
+              type: array
+              items:
+                $ref: "#/components/schemas/Rent"
+            buy:
+              type: array
+              items:
+                $ref: "#/components/schemas/Buy"
+
+    Flatrate:
+      type: object
+      properties:
+        provider_id:
+          type: integer
+          format: int64
+          example: 8
+        provider_name:
+          type: string
+          example: "Netflix"
+        logo_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+        display_priority:
+          type: integer
+          example: 1
+
+    Buy:
+      type: object
+      properties:
+        provider_id:
+          type: integer
+          format: int64
+          example: 2
+        provider_name:
+          type: string
+          example: "Apple iTunes"
+        logo_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+        display_priority:
+          type: integer
+          example: 1
+
+    Rent:
+      type: object
+      properties:
+        provider_id:
+          type: integer
+          format: int64
+          example: 3
+        provider_name:
+          type: string
+          example: "Google Play Movies"
+        logo_url:
+          type: string
+          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+        display_priority:
+          type: integer
+          example: 1
 
     Watchlist:
       type: object
@@ -2316,11 +2309,46 @@ components:
         movies:
           type: array
           items:
-            $ref: "#/components/schemas/SearchMovies"
+            $ref: "#/components/schemas/SearchMoviesResponse"
         tv:
           type: array
           items:
-            $ref: "#/components/schemas/SearchTV"
+            $ref: "#/components/schemas/SearchTVResponse"
+
+    InWatchlist:
+      type: object
+      properties:
+        in_watchlist:
+          type: boolean
+          example: true
+
+    MovieWatchlistAddedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "movie successfully added to watchlist"
+
+    MovieWatchlistRemovedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "movie successfully removed from watchlist"
+
+    TvWatchlistAddedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show successfully added to watchlist"
+
+    TvWatchlistRemovedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show successfully removed from watchlist"
 
     Watched:
       type: object
@@ -2328,11 +2356,74 @@ components:
         movies:
           type: array
           items:
-            $ref: "#/components/schemas/SearchMovies"
+            $ref: "#/components/schemas/SearchMoviesResponse"
         tv:
           type: array
           items:
-            $ref: "#/components/schemas/SearchTV"
+            $ref: "#/components/schemas/SearchTVResponse"
+
+    InWatched:
+      type: object
+      properties:
+        in_watched:
+          type: boolean
+          example: true
+
+    WatchedMovieAddedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "movie successfully added to watched list"
+
+    WatchedMovieRemovedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "movie successfully removed from watched list"
+
+    WatchedTvAddedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show successfully added to watched list"
+
+    WatchedTvRemovedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show successfully removed from watched list"
+
+    WatchedTvSeasonAddedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show season successfully added to watched list"
+
+    WatchedTvSeasonRemovedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show season successfully removed from watched list"
+
+    WatchedTvEpisodeAddedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show episode successfully added to watched list"
+
+    WatchedTvEpisodeRemovedSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "tv show episode successfully removed from watched list"
 
     WatchedTv:
       type: array
@@ -2344,7 +2435,7 @@ components:
             format: int64
             example: 1399
           status:
-            type: enum
+            type: string
             enum: ["watched", "in_progress", "not_watched"]
           seasons:
             type: array
@@ -2358,7 +2449,7 @@ components:
           type: integer
           example: 1
         status:
-          type: enum
+          type: string
           enum: ["watched", "in_progress", "not_watched"]
         episodes:
           type: array

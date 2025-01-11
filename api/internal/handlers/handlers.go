@@ -14,8 +14,6 @@ type Handlers struct {
 	UsersHandler         *UsersHandler
 	TokensHandler        *TokensHandler
 	TvHandler            *TvHandler
-	WatchlistHandler     *WatchlistHandler
-	WatchedHandler       *WatchedHandler
 }
 
 func NewHandlers(ctx *context.ServerContext) *Handlers {
@@ -50,14 +48,6 @@ func NewHandlers(ctx *context.ServerContext) *Handlers {
 			Models: &ctx.Models,
 		},
 		TvHandler: &TvHandler{
-			Models:     &ctx.Models,
-			TmdbClient: ctx.TmdbClient,
-		},
-		WatchlistHandler: &WatchlistHandler{
-			Models:     &ctx.Models,
-			TmdbClient: ctx.TmdbClient,
-		},
-		WatchedHandler: &WatchedHandler{
 			Models:     &ctx.Models,
 			TmdbClient: ctx.TmdbClient,
 		},

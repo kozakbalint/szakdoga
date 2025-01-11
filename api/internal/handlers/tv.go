@@ -33,25 +33,6 @@ func (h *TvHandler) GetTvByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *TvHandler) GetTvSeasonsHandler(w http.ResponseWriter, r *http.Request) {
-	tvID, err := utils.ReadIDParam(r)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	tvSeasons, err := h.TmdbClient.GetTvSeasons(int(tvID))
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"seasons": tvSeasons}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
 func (h *TvHandler) GetTvEpisodesHandler(w http.ResponseWriter, r *http.Request) {
 	tvID, err := utils.ReadIDParam(r)
 	if err != nil {
@@ -64,7 +45,7 @@ func (h *TvHandler) GetTvEpisodesHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	seasonDetails, err := h.TmdbClient.GetTVSeasonDetails(int(tvID), seasonNumber)
+	seasonDetails, err := h.TmdbClient.GetTvSeason(int(tvID), seasonNumber)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -93,7 +74,7 @@ func (h *TvHandler) GetTvEpisodeHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	episode, err := h.TmdbClient.GetTVEpisodeDetails(int(tvID), seasonNumber, episodeNumber)
+	episode, err := h.TmdbClient.GetTvEpisode(int(tvID), seasonNumber, episodeNumber)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
