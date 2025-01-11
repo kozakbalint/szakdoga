@@ -7,63 +7,46 @@ package repository
 
 import (
 	"context"
-	"time"
 )
 
 const deleteWatchlistMovie = `-- name: DeleteWatchlistMovie :one
-DELETE FROM watchlist_movies WHERE id = $1
-RETURNING id, user_id, movie_id, added_at
+DELETE FROM watchlist_movies WHERE tmdb_id = $1 AND user_id = $2
+RETURNING id, tmdb_id, user_id, added_at
 `
 
-func (q *Queries) DeleteWatchlistMovie(ctx context.Context, id int64) (WatchlistMovie, error) {
-	row := q.db.QueryRow(ctx, deleteWatchlistMovie, id)
+type DeleteWatchlistMovieParams struct {
+	TmdbID int32 `json:"tmdb_id"`
+	UserID int32 `json:"user_id"`
+}
+
+func (q *Queries) DeleteWatchlistMovie(ctx context.Context, arg DeleteWatchlistMovieParams) (WatchlistMovie, error) {
+	row := q.db.QueryRow(ctx, deleteWatchlistMovie, arg.TmdbID, arg.UserID)
 	var i WatchlistMovie
 	err := row.Scan(
 		&i.ID,
+		&i.TmdbID,
 		&i.UserID,
-		&i.MovieID,
 		&i.AddedAt,
 	)
 	return i, err
 }
 
 const getWatchlistMovie = `-- name: GetWatchlistMovie :one
-SELECT id, user_id, movie_id, added_at FROM watchlist_movies WHERE user_id = $1 AND id = $2
+SELECT id, tmdb_id, user_id, added_at FROM watchlist_movies WHERE tmdb_id = $1 AND user_id = $2
 `
 
 type GetWatchlistMovieParams struct {
+	TmdbID int32 `json:"tmdb_id"`
 	UserID int32 `json:"user_id"`
-	ID     int64 `json:"id"`
 }
 
 func (q *Queries) GetWatchlistMovie(ctx context.Context, arg GetWatchlistMovieParams) (WatchlistMovie, error) {
-	row := q.db.QueryRow(ctx, getWatchlistMovie, arg.UserID, arg.ID)
+	row := q.db.QueryRow(ctx, getWatchlistMovie, arg.TmdbID, arg.UserID)
 	var i WatchlistMovie
 	err := row.Scan(
 		&i.ID,
+		&i.TmdbID,
 		&i.UserID,
-		&i.MovieID,
-		&i.AddedAt,
-	)
-	return i, err
-}
-
-const getWatchlistMovieByMovieId = `-- name: GetWatchlistMovieByMovieId :one
-SELECT id, user_id, movie_id, added_at FROM watchlist_movies WHERE user_id = $1 AND movie_id = $2
-`
-
-type GetWatchlistMovieByMovieIdParams struct {
-	UserID  int32 `json:"user_id"`
-	MovieID int32 `json:"movie_id"`
-}
-
-func (q *Queries) GetWatchlistMovieByMovieId(ctx context.Context, arg GetWatchlistMovieByMovieIdParams) (WatchlistMovie, error) {
-	row := q.db.QueryRow(ctx, getWatchlistMovieByMovieId, arg.UserID, arg.MovieID)
-	var i WatchlistMovie
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.MovieID,
 		&i.AddedAt,
 	)
 	return i, err
@@ -71,30 +54,30 @@ func (q *Queries) GetWatchlistMovieByMovieId(ctx context.Context, arg GetWatchli
 
 const insertWatchlistMovie = `-- name: InsertWatchlistMovie :one
 INSERT INTO watchlist_movies
-(user_id, movie_id)
+(tmdb_id, user_id)
 VALUES($1, $2)
-RETURNING id, user_id, movie_id, added_at
+RETURNING id, tmdb_id, user_id, added_at
 `
 
 type InsertWatchlistMovieParams struct {
-	UserID  int32 `json:"user_id"`
-	MovieID int32 `json:"movie_id"`
+	TmdbID int32 `json:"tmdb_id"`
+	UserID int32 `json:"user_id"`
 }
 
 func (q *Queries) InsertWatchlistMovie(ctx context.Context, arg InsertWatchlistMovieParams) (WatchlistMovie, error) {
-	row := q.db.QueryRow(ctx, insertWatchlistMovie, arg.UserID, arg.MovieID)
+	row := q.db.QueryRow(ctx, insertWatchlistMovie, arg.TmdbID, arg.UserID)
 	var i WatchlistMovie
 	err := row.Scan(
 		&i.ID,
+		&i.TmdbID,
 		&i.UserID,
-		&i.MovieID,
 		&i.AddedAt,
 	)
 	return i, err
 }
 
 const listWatchlistMovies = `-- name: ListWatchlistMovies :many
-SELECT id, user_id, movie_id, added_at FROM watchlist_movies WHERE user_id = $1
+SELECT id, tmdb_id, user_id, added_at FROM watchlist_movies WHERE user_id = $1
 `
 
 func (q *Queries) ListWatchlistMovies(ctx context.Context, userID int32) ([]WatchlistMovie, error) {
@@ -108,8 +91,8 @@ func (q *Queries) ListWatchlistMovies(ctx context.Context, userID int32) ([]Watc
 		var i WatchlistMovie
 		if err := rows.Scan(
 			&i.ID,
+			&i.TmdbID,
 			&i.UserID,
-			&i.MovieID,
 			&i.AddedAt,
 		); err != nil {
 			return nil, err
@@ -120,35 +103,4 @@ func (q *Queries) ListWatchlistMovies(ctx context.Context, userID int32) ([]Watc
 		return nil, err
 	}
 	return items, nil
-}
-
-const updateWatchlistMovie = `-- name: UpdateWatchlistMovie :one
-UPDATE watchlist_movies
-SET user_id = $1, movie_id = $2, added_at = $3
-WHERE id = $4
-RETURNING id, user_id, movie_id, added_at
-`
-
-type UpdateWatchlistMovieParams struct {
-	UserID  int32     `json:"user_id"`
-	MovieID int32     `json:"movie_id"`
-	AddedAt time.Time `json:"added_at"`
-	ID      int64     `json:"id"`
-}
-
-func (q *Queries) UpdateWatchlistMovie(ctx context.Context, arg UpdateWatchlistMovieParams) (WatchlistMovie, error) {
-	row := q.db.QueryRow(ctx, updateWatchlistMovie,
-		arg.UserID,
-		arg.MovieID,
-		arg.AddedAt,
-		arg.ID,
-	)
-	var i WatchlistMovie
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.MovieID,
-		&i.AddedAt,
-	)
-	return i, err
 }

@@ -23,14 +23,8 @@ const (
 
 // Defines values for GetWatchedHandlerParamsType.
 const (
-	GetWatchedHandlerParamsTypeMovies GetWatchedHandlerParamsType = "movies"
-	GetWatchedHandlerParamsTypeTv     GetWatchedHandlerParamsType = "tv"
-)
-
-// Defines values for GetWatchlistHandlerParamsType.
-const (
-	GetWatchlistHandlerParamsTypeMovies GetWatchlistHandlerParamsType = "movies"
-	GetWatchlistHandlerParamsTypeTv     GetWatchlistHandlerParamsType = "tv"
+	Movies GetWatchedHandlerParamsType = "movies"
+	Tv     GetWatchedHandlerParamsType = "tv"
 )
 
 // AuthenticateUser defines model for AuthenticateUser.
@@ -412,6 +406,11 @@ type WatchedTv = []struct {
 // WatchedTvStatus defines model for WatchedTv.Status.
 type WatchedTvStatus string
 
+// WatchedTvAddedSuccess defines model for WatchedTvAddedSuccess.
+type WatchedTvAddedSuccess struct {
+	Message *string `json:"message,omitempty"`
+}
+
 // WatchedTvEpisodeAddedSuccess defines model for WatchedTvEpisodeAddedSuccess.
 type WatchedTvEpisodeAddedSuccess struct {
 	Message *string `json:"message,omitempty"`
@@ -452,8 +451,8 @@ type WatchedTvSeasonRemovedSuccess struct {
 
 // Watchlist defines model for Watchlist.
 type Watchlist struct {
-	Movies *[]SearchMoviesResponse `json:"movies,omitempty"`
-	Tv     *[]SearchTVResponse     `json:"tv,omitempty"`
+	Movies *[]SearchMovie `json:"movies,omitempty"`
+	Tv     *[]SearchTv    `json:"tv,omitempty"`
 }
 
 // SearchMoviesHandlerParams defines parameters for SearchMoviesHandler.
@@ -482,15 +481,6 @@ type GetWatchedHandlerParams struct {
 
 // GetWatchedHandlerParamsType defines parameters for GetWatchedHandler.
 type GetWatchedHandlerParamsType string
-
-// GetWatchlistHandlerParams defines parameters for GetWatchlistHandler.
-type GetWatchlistHandlerParams struct {
-	// Type The type of the watchlist
-	Type *GetWatchlistHandlerParamsType `form:"type,omitempty" json:"type,omitempty"`
-}
-
-// GetWatchlistHandlerParamsType defines parameters for GetWatchlistHandler.
-type GetWatchlistHandlerParamsType string
 
 // CreateAuthenticationTokenHandlerJSONRequestBody defines body for CreateAuthenticationTokenHandler for application/json ContentType.
 type CreateAuthenticationTokenHandlerJSONRequestBody = AuthenticateUser

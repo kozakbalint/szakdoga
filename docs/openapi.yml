@@ -764,14 +764,6 @@ paths:
       operationId: GetWatchlistHandler
       security:
         - main_auth: []
-      parameters:
-        - name: type
-          in: query
-          required: false
-          description: The type of the watchlist
-          schema:
-            type: string
-            enum: ["movies", "tv"]
       responses:
         "200":
           description: Success
@@ -1290,7 +1282,8 @@ paths:
           description: Created
           content:
             application/json:
-              $ref: "#/components/schemas/WatchedTvAddedSuccess"
+              schema:
+                $ref: "#/components/schemas/WatchedTvAddedSuccess"
         "400":
           description: Bad request
           content:
@@ -2309,11 +2302,11 @@ components:
         movies:
           type: array
           items:
-            $ref: "#/components/schemas/SearchMoviesResponse"
+            $ref: "#/components/schemas/SearchMovie"
         tv:
           type: array
           items:
-            $ref: "#/components/schemas/SearchTVResponse"
+            $ref: "#/components/schemas/SearchTv"
 
     InWatchlist:
       type: object

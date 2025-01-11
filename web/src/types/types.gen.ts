@@ -1034,8 +1034,8 @@ export type components = {
             display_priority?: number;
         };
         Watchlist: {
-            movies?: components["schemas"]["SearchMoviesResponse"][];
-            tv?: components["schemas"]["SearchTVResponse"][];
+            movies?: components["schemas"]["SearchMovie"][];
+            tv?: components["schemas"]["SearchTv"][];
         };
         InWatchlist: {
             /** @example true */
@@ -2038,10 +2038,7 @@ export interface operations {
     };
     GetWatchlistHandler: {
         parameters: {
-            query?: {
-                /** @description The type of the watchlist */
-                type?: PathsWatchlistGetParametersQueryType;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -2381,7 +2378,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description The type of the watched list */
-                type?: PathsWatchlistGetParametersQueryType;
+                type?: PathsWatchedGetParametersQueryType;
             };
             header?: never;
             path?: never;
@@ -2636,7 +2633,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["WatchedTvAddedSuccess"];
                 };
             };
             /** @description Bad request */
@@ -3035,7 +3032,7 @@ export interface operations {
         };
     };
 }
-export enum PathsWatchlistGetParametersQueryType {
+export enum PathsWatchedGetParametersQueryType {
     movies = "movies",
     tv = "tv"
 }
