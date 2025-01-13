@@ -343,7 +343,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "200":
           description: Success
@@ -388,7 +389,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "200":
           description: Success
@@ -433,7 +435,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -441,7 +444,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "200":
           description: Success
@@ -486,7 +490,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -494,7 +499,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
         - name: episode_number
           in: path
           required: true
@@ -502,7 +508,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "200":
           description: Success
@@ -547,7 +554,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 115440
+            examples:
+              - 115440
       responses:
         "200":
           description: Success
@@ -592,7 +600,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "200":
           description: Success
@@ -637,7 +646,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "200":
           description: Success
@@ -682,7 +692,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "200":
           description: Success
@@ -727,7 +738,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "200":
           description: Success
@@ -802,7 +814,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "200":
           description: Success
@@ -845,7 +858,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "201":
           description: Created
@@ -888,7 +902,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "200":
           description: Success
@@ -933,7 +948,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "200":
           description: Success
@@ -976,7 +992,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "201":
           description: Created
@@ -1019,7 +1036,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "200":
           description: Success
@@ -1094,7 +1112,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "200":
           description: Success
@@ -1137,7 +1156,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "201":
           description: Created
@@ -1180,7 +1200,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 278
+            examples:
+              - 278
       responses:
         "200":
           description: Success
@@ -1225,7 +1246,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "200":
           description: Success
@@ -1268,7 +1290,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "201":
           description: Created
@@ -1311,7 +1334,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
       responses:
         "200":
           description: Success
@@ -1352,7 +1376,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -1360,7 +1385,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "200":
           description: Success
@@ -1403,7 +1429,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -1411,7 +1438,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "201":
           description: Created
@@ -1454,7 +1482,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -1462,7 +1491,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "200":
           description: Success
@@ -1507,7 +1537,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -1515,7 +1546,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
         - name: episode_number
           in: path
           required: true
@@ -1523,7 +1555,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "200":
           description: Success
@@ -1566,7 +1599,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -1574,7 +1608,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
         - name: episode_number
           in: path
           required: true
@@ -1582,7 +1617,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "201":
           description: Created
@@ -1625,7 +1661,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
         - name: season_number
           in: path
           required: true
@@ -1633,7 +1670,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
         - name: episode_number
           in: path
           required: true
@@ -1641,7 +1679,8 @@ paths:
           schema:
             type: integer
             format: int64
-            example: 1
+            examples:
+              - 1
       responses:
         "200":
           description: Success
@@ -1689,7 +1728,8 @@ components:
           properties:
             status:
               type: string
-              example: "available"
+              examples:
+                - "available"
             systemInfo:
               type: object
               required:
@@ -1699,15 +1739,18 @@ components:
               properties:
                 environment:
                   type: string
-                  example: "development"
+                  examples:
+                    - "development"
                 cors_trusted_origins:
                   type: array
                   items:
                     type: string
-                  example: ["http://localhost:3000", "http://localhost:3001"]
+                  examples:
+                    - ["http://localhost:3000", "http://localhost:3001"]
                 version:
                   type: string
-                  example: "1.0.0"
+                  examples:
+                    - "1.0.0"
 
     UserResponse:
       type: object
@@ -1730,20 +1773,24 @@ components:
           description: User id
           type: integer
           format: int64
-          example: 15
+          examples:
+            - 15
         created_at:
           description: User creation date
           type: string
           format: rfc3339
-          example: "2021-10-10T12:00:00Z"
+          examples:
+            - "2021-10-10T12:00:00Z"
         name:
           description: User supplied name
           type: string
-          example: John Doe
+          examples:
+            - John Doe
         email:
           description: User supplied email
           type: string
-          example: john.doe@example.com
+          examples:
+            - john.doe@example.com
 
     CreateUser:
       type: object
@@ -1756,15 +1803,18 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          example: John Doe
+          examples:
+            - John Doe
         email:
           type: string
-          example: john.doe@example.com
+          examples:
+            - john.doe@example.com
         password:
           type: string
           minLength: 8
           maxLength: 72
-          example: "password123"
+          examples:
+            - "password123"
 
     AuthenticateUser:
       type: object
@@ -1774,10 +1824,12 @@ components:
       properties:
         email:
           type: string
-          example: john.doe@example.com
+          examples:
+            - john.doe@example.com
         password:
           type: string
-          example: "password123"
+          examples:
+            - "password123"
 
     AuthenticationToken:
       type: object
@@ -1792,11 +1844,13 @@ components:
           properties:
             token:
               type: string
-              example: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0"
+              examples:
+                - "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0"
             expiry:
               type: string
               format: rfc3339
-              example: "2021-10-10T12:00:00Z"
+              examples:
+                - "2021-10-10T12:00:00Z"
 
     Logout:
       type: object
@@ -1805,7 +1859,8 @@ components:
       properties:
         message:
           type: string
-          example: "authentication token(s) successfully deleted"
+          examples:
+            - "authentication token(s) successfully deleted"
 
     SearchMoviesResponse:
       type: object
@@ -1831,27 +1886,34 @@ components:
         id:
           type: integer
           format: int64
-          example: 278
+          examples:
+            - 278
         title:
           type: string
-          example: "The Shawshank Redemption"
+          examples:
+            - "The Shawshank Redemption"
         overview:
           type: string
-          example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
+          examples:
+            - "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
         poster_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
         release_date:
           type: string
-          example: "1994-09-23"
+          examples:
+            - "1994-09-23"
         vote_average:
           type: number
           format: float
-          example: 8.3
+          examples:
+            - 8.3
         popularity:
           type: number
           format: float
-          example: 186.654
+          examples:
+            - 186.654
 
     SearchTVResponse:
       type: object
@@ -1877,27 +1939,34 @@ components:
         id:
           type: integer
           format: int64
-          example: 1399
+          examples:
+            - 1399
         title:
           type: string
-          example: "Game of Thrones"
+          examples:
+            - "Game of Thrones"
         overview:
           type: string
-          example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
+          examples:
+            - "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
         poster_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
         release_date:
           type: string
-          example: "2011-04-17"
+          examples:
+            - "2011-04-17"
         vote_average:
           type: number
           format: float
-          example: 8.4
+          examples:
+            - 8.4
         popularity:
           type: number
           format: float
-          example: 749.726
+          examples:
+            - 749.726
 
     SearchPeopleResponse:
       type: object
@@ -1920,17 +1989,21 @@ components:
         id:
           type: integer
           format: int64
-          example: 115440
+          examples:
+            - 115440
         name:
           type: string
-          example: "Sydney Sweeney"
+          examples:
+            - "Sydney Sweeney"
         profile_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
         popularity:
           type: number
           format: float
-          example: 152.351
+          examples:
+            - 152.351
 
     MovieDetailsResponse:
       type: object
@@ -1957,35 +2030,44 @@ components:
         id:
           type: integer
           format: int64
-          example: 278
+          examples:
+            - 278
         title:
           type: string
-          example: "The Shawshank Redemption"
+          examples:
+            - "The Shawshank Redemption"
         overview:
           type: string
-          example: "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
+          examples:
+            - "Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope."
         release_date:
           type: string
-          example: "1994-09-23"
+          examples:
+            - "1994-09-23"
         genres:
           type: array
           items:
             type: string
-            example: Action
+            examples:
+              - Action
         runtime:
           type: integer
-          example: 142
+          examples:
+            - 142
         poster_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
         popularity:
           type: number
           format: float
-          example: 186.654
+          examples:
+            - 186.654
         vote_average:
           type: number
           format: float
-          example: 8.7
+          examples:
+            - 8.7
 
     CastMoviesResponse:
       type: object
@@ -2010,23 +2092,29 @@ components:
         id:
           type: integer
           format: int64
-          example: 6941
+          examples:
+            - 6941
         name:
           type: string
-          example: "Cameron Diaz"
+          examples:
+            - "Cameron Diaz"
         character:
           type: string
-          example: "Princess Fiona (voice)"
+          examples:
+            - "Princess Fiona (voice)"
         profile_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg"
         order:
           type: integer
-          example: 2
+          examples:
+            - 2
         popularity:
           type: number
           format: float
-          example: 57.269
+          examples:
+            - 57.269
 
     TvDetailsResponse:
       type: object
@@ -2057,30 +2145,38 @@ components:
         id:
           type: integer
           format: int64
-          example: 1399
+          examples:
+            - 1399
         name:
           type: string
-          example: "Game of Thrones"
+          examples:
+            - "Game of Thrones"
         overview:
           type: string
-          example: "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
+          examples:
+            - "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond."
         first_air_date:
           type: string
-          example: "2011-04-17"
+          examples:
+            - "2011-04-17"
         last_air_date:
           type: string
-          example: "2019-05-19"
+          examples:
+            - "2019-05-19"
         genres:
           type: array
           items:
             type: string
-            example: Action
+            examples:
+              - Action
         number_of_seasons:
           type: integer
-          example: 8
+          examples:
+            - 8
         number_of_episodes:
           type: integer
-          example: 73
+          examples:
+            - 73
         seasons:
           type: array
           items:
@@ -2088,18 +2184,22 @@ components:
             $ref: "#/components/schemas/TvSeason"
         poster_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
         status:
           type: string
-          example: "Ended"
+          examples:
+            - "Ended"
         popularity:
           type: number
           format: float
-          example: 749.726
+          examples:
+            - 749.726
         vote_average:
           type: number
           format: float
-          example: 8.4
+          examples:
+            - 8.4
 
     TvSeason:
       type: object
@@ -2115,26 +2215,33 @@ components:
         id:
           type: integer
           format: int64
-          example: 3624
+          examples:
+            - 3624
         name:
           type: string
-          example: "Season 1"
+          examples:
+            - "Season 1"
         air_date:
           type: string
-          example: "2011-04-17"
+          examples:
+            - "2011-04-17"
         episode_count:
           type: integer
-          example: 10
+          examples:
+            - 10
         overview:
           type: string
-          example: "Winter Is Coming"
+          examples:
+            - "Winter Is Coming"
         poster_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
         vote_average:
           type: number
           format: float
-          example: 8.3
+          examples:
+            - 8.3
 
     TvSeasonDetailsResponse:
       type: object
@@ -2159,19 +2266,24 @@ components:
         id:
           type: integer
           format: int64
-          example: 3624
+          examples:
+            - 3624
         name:
           type: string
-          example: "Season 1"
+          examples:
+            - "Season 1"
         air_date:
           type: string
-          example: "2011-04-17"
+          examples:
+            - "2011-04-17"
         overview:
           type: string
-          example: "Winter Is Coming"
+          examples:
+            - "Winter Is Coming"
         poster_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg"
         episodes:
           type: array
           items:
@@ -2180,7 +2292,8 @@ components:
         vote_average:
           type: number
           format: float
-          example: 8.3
+          examples:
+            - 8.3
 
     TvEpisode:
       type: object
@@ -2197,29 +2310,37 @@ components:
         id:
           type: integer
           format: int64
-          example: 63056
+          examples:
+            - 63056
         name:
           type: string
-          example: "Winter Is Coming"
+          examples:
+            - "Winter Is Coming"
         air_date:
           type: string
-          example: "2011-04-17"
+          examples:
+            - "2011-04-17"
         runtime:
           type: integer
-          example: 62
+          examples:
+            - 62
         episode_type:
           type: string
-          example: "standard"
+          examples:
+            - "standard"
         overview:
           type: string
-          example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
+          examples:
+            - "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
         still_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
         vote_average:
           type: number
           format: float
-          example: 8.046
+          examples:
+            - 8.046
 
     TvEpisodeDetailsResponse:
       type: object
@@ -2245,26 +2366,33 @@ components:
         id:
           type: integer
           format: int64
-          example: 63056
+          examples:
+            - 63056
         name:
           type: string
-          example: "Winter Is Coming"
+          examples:
+            - "Winter Is Coming"
         air_date:
           type: string
-          example: "2011-04-17"
+          examples:
+            - "2011-04-17"
         runtime:
           type: integer
-          example: 62
+          examples:
+            - 62
         overview:
           type: string
-          example: "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
+          examples:
+            - "Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army."
         still_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg"
         vote_average:
           type: number
           format: float
-          example: 8.046
+          examples:
+            - 8.046
 
     CastTvResponse:
       type: object
@@ -2289,24 +2417,29 @@ components:
         id:
           type: integer
           format: int64
-          example: 1223786
+          examples:
+            - 1223786
         name:
           type: string
-          example: "Emilia Clarke"
+          examples:
+            - "Emilia Clarke"
         roles:
           type: array
           items:
             $ref: "#/components/schemas/Role"
         profile_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/wb8VfDPGpyqcFltnRcJR1Wj3h4Z.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/wb8VfDPGpyqcFltnRcJR1Wj3h4Z.jpg"
         order:
           type: integer
-          example: 8
+          examples:
+            - 8
         popularity:
           type: number
           format: float
-          example: 57.269
+          examples:
+            - 57.269
 
     Role:
       type: object
@@ -2316,10 +2449,12 @@ components:
       properties:
         character:
           type: string
-          example: "Daenerys Targaryen"
+          examples:
+            - "Daenerys Targaryen"
         episode_count:
           type: integer
-          example: 73
+          examples:
+            - 73
 
     PersonDetailsResponse:
       type: object
@@ -2343,23 +2478,29 @@ components:
         id:
           type: integer
           format: int64
-          example: 115440
+          examples:
+            - 115440
         name:
           type: string
-          example: "Sydney Sweeney"
+          examples:
+            - "Sydney Sweeney"
         biography:
           type: string
-          example: "Sydney Bernice Sweeney (born September 12, 1997) is an American actress. She gained mainstream attention for her role as Emaline Addario in the Netflix series Everything Sucks! (2018)."
+          examples:
+            - "Sydney Bernice Sweeney (born September 12, 1997) is an American actress. She gained mainstream attention for her role as Emaline Addario in the Netflix series Everything Sucks! (2018)."
         birthday:
           type: string
-          example: "1997-09-12"
+          examples:
+            - "1997-09-12"
         profile_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg"
         popularity:
           type: number
           format: float
-          example: 152.351
+          examples:
+            - 152.351
 
     WatchProvidersResponse:
       type: object
@@ -2379,7 +2520,8 @@ components:
         id:
           type: integer
           format: int64
-          example: 278
+          examples:
+            - 278
         providers:
           type: object
           required:
@@ -2411,16 +2553,20 @@ components:
         id:
           type: integer
           format: int64
-          example: 8
+          examples:
+            - 8
         name:
           type: string
-          example: "Netflix"
+          examples:
+            - "Netflix"
         logo_url:
           type: string
-          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+          examples:
+            - "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
         display_priority:
           type: integer
-          example: 1
+          examples:
+            - 1
 
     Watchlist:
       type: object
@@ -2444,7 +2590,8 @@ components:
       properties:
         in_watchlist:
           type: boolean
-          example: true
+          examples:
+            - true
 
     Watched:
       type: object
@@ -2468,7 +2615,8 @@ components:
       properties:
         in_watched:
           type: boolean
-          example: true
+          examples:
+            - true
 
     WatchedTv:
       type: array
@@ -2482,7 +2630,8 @@ components:
           id:
             type: integer
             format: int64
-            example: 1399
+            examples:
+              - 1399
           status:
             type: string
             enum: ["watched", "in_progress", "not_watched"]
@@ -2500,7 +2649,8 @@ components:
       properties:
         season_number:
           type: integer
-          example: 1
+          examples:
+            - 1
         status:
           type: string
           enum: ["watched", "in_progress", "not_watched"]
@@ -2514,10 +2664,12 @@ components:
             properties:
               episode_number:
                 type: integer
-                example: 1
+                examples:
+                  - 1
               in_watched:
                 type: boolean
-                example: true
+                examples:
+                  - true
 
     Message:
       type: object
