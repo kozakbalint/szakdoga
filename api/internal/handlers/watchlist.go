@@ -65,8 +65,8 @@ func (h *WatchlistHandler) GetWatchlistHandler(w http.ResponseWriter, r *http.Re
 	}
 
 	resp := &types.Watchlist{
-		Movies: &movies,
-		Tv:     &tvShows,
+		Movies: movies,
+		Tv:     tvShows,
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": resp}, nil)

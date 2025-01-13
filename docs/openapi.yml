@@ -72,13 +72,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/users/register":
     post:
@@ -106,19 +106,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequest"
+                $ref: "#/components/schemas/Message"
         "422":
           description: Failed validation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorFailedValidation"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/users/login":
     post:
@@ -146,25 +146,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequest"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInvalidCredentials"
+                $ref: "#/components/schemas/Message"
         "422":
           description: Failed validation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorFailedValidation"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/users/logout":
     get:
@@ -188,13 +188,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/search/movies":
     get:
@@ -225,19 +225,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestMissingQuery"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/search/tv":
     get:
@@ -268,19 +268,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestMissingQuery"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/search/people":
     get:
@@ -311,19 +311,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestMissingQuery"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/movies/{id}":
     get:
@@ -356,19 +356,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/tv/{id}":
     get:
@@ -401,19 +401,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/tv/{id}/season/{season_number}":
     get:
@@ -454,19 +454,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/tv/{id}/season/{season_number}/episode/{episode_number}":
     get:
@@ -515,19 +515,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/people/{id}":
     get:
@@ -560,19 +560,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/cast/movies/{id}":
     get:
@@ -605,19 +605,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/cast/tv/{id}":
     get:
@@ -650,19 +650,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watchproviders/movies/{id}":
     get:
@@ -695,19 +695,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watchproviders/tv/{id}":
     get:
@@ -740,19 +740,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watchlist":
     get:
@@ -776,13 +776,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watchlist/movies/{id}":
     get:
@@ -815,19 +815,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     post:
       tags:
         - Watchlist
@@ -852,25 +852,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MovieWatchlistAddedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     delete:
       tags:
         - Watchlist
@@ -895,25 +895,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MovieWatchlistRemovedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watchlist/tv/{id}":
     get:
@@ -946,19 +946,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     post:
       tags:
         - Watchlist
@@ -983,25 +983,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TvWatchlistAddedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     delete:
       tags:
         - Watchlist
@@ -1026,25 +1026,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TvWatchlistRemovedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watched":
     get:
@@ -1056,14 +1056,6 @@ paths:
       operationId: GetWatchedHandler
       security:
         - main_auth: []
-      parameters:
-        - name: type
-          in: query
-          required: false
-          description: The type of the watched list
-          schema:
-            type: string
-            enum: ["movies", "tv"]
       responses:
         "200":
           description: Success
@@ -1076,13 +1068,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watched/movies/{id}":
     get:
@@ -1115,19 +1107,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     post:
       tags:
         - Watched
@@ -1152,25 +1144,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedMovieAddedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     delete:
       tags:
         - Watched
@@ -1195,25 +1187,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedMovieRemovedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watched/tv/{id}":
     get:
@@ -1246,19 +1238,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     post:
       tags:
         - Watched
@@ -1283,25 +1275,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedTvAddedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     delete:
       tags:
         - Watched
@@ -1326,19 +1318,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedTvRemovedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
 
@@ -1381,19 +1373,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     post:
       tags:
         - Watched
@@ -1426,25 +1418,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedTvSeasonAddedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     delete:
       tags:
         - Watched
@@ -1477,25 +1469,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedTvSeasonRemovedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
   "/watched/tv/{id}/season/{season_number}/episode/{episode_number}":
     get:
@@ -1544,19 +1536,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     post:
       tags:
         - Watched
@@ -1597,25 +1589,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedTvEpisodeAddedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
     delete:
       tags:
         - Watched
@@ -1656,25 +1648,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WatchedTvEpisodeRemovedSuccess"
+                $ref: "#/components/schemas/Message"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorBadRequestPath"
+                $ref: "#/components/schemas/Message"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorUnauthorized"
+                $ref: "#/components/schemas/Message"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorInternalServerError"
+                $ref: "#/components/schemas/Message"
 
 components:
   securitySchemes:
@@ -1686,15 +1678,24 @@ components:
   schemas:
     HealthCheck:
       type: object
+      required:
+        - healthcheck
       properties:
         healthcheck:
           type: object
+          required:
+            - status
+            - systemInfo
           properties:
             status:
               type: string
               example: "available"
             systemInfo:
               type: object
+              required:
+                - environment
+                - cors_trusted_origins
+                - version
               properties:
                 environment:
                   type: string
@@ -1710,6 +1711,8 @@ components:
 
     UserResponse:
       type: object
+      required:
+        - user
       properties:
         user:
           type: object
@@ -1717,6 +1720,11 @@ components:
 
     User:
       type: object
+      required:
+        - id
+        - created_at
+        - name
+        - email
       properties:
         id:
           description: User id
@@ -1739,6 +1747,10 @@ components:
 
     CreateUser:
       type: object
+      required:
+        - name
+        - email
+        - password
       properties:
         name:
           type: string
@@ -1756,6 +1768,9 @@ components:
 
     AuthenticateUser:
       type: object
+      required:
+        - email
+        - password
       properties:
         email:
           type: string
@@ -1766,9 +1781,14 @@ components:
 
     AuthenticationToken:
       type: object
+      required:
+        - authentication_token
       properties:
         authentication_token:
           type: object
+          required:
+            - token
+            - expiry
           properties:
             token:
               type: string
@@ -1780,6 +1800,8 @@ components:
 
     Logout:
       type: object
+      required:
+        - message
       properties:
         message:
           type: string
@@ -1787,6 +1809,8 @@ components:
 
     SearchMoviesResponse:
       type: object
+      required:
+        - movies
       properties:
         movies:
           type: array
@@ -1795,6 +1819,14 @@ components:
 
     SearchMovie:
       type: object
+      required:
+        - id
+        - title
+        - overview
+        - poster_url
+        - release_date
+        - vote_average
+        - popularity
       properties:
         id:
           type: integer
@@ -1823,6 +1855,8 @@ components:
 
     SearchTVResponse:
       type: object
+      required:
+        - tv
       properties:
         tv:
           type: array
@@ -1831,6 +1865,14 @@ components:
 
     SearchTv:
       type: object
+      required:
+        - id
+        - title
+        - overview
+        - poster_url
+        - release_date
+        - vote_average
+        - popularity
       properties:
         id:
           type: integer
@@ -1859,6 +1901,8 @@ components:
 
     SearchPeopleResponse:
       type: object
+      required:
+        - people
       properties:
         people:
           type: array
@@ -1867,6 +1911,11 @@ components:
 
     SearchPeople:
       type: object
+      required:
+        - id
+        - name
+        - profile_url
+        - popularity
       properties:
         id:
           type: integer
@@ -1885,6 +1934,8 @@ components:
 
     MovieDetailsResponse:
       type: object
+      required:
+        - movie
       properties:
         movie:
           type: object
@@ -1892,6 +1943,16 @@ components:
 
     MovieDetails:
       type: object
+      required:
+        - id
+        - title
+        - overview
+        - release_date
+        - genres
+        - runtime
+        - poster_url
+        - popularity
+        - vote_average
       properties:
         id:
           type: integer
@@ -1928,6 +1989,8 @@ components:
 
     CastMoviesResponse:
       type: object
+      required:
+        - cast
       properties:
         cast:
           type: array
@@ -1936,6 +1999,13 @@ components:
 
     CastMovies:
       type: object
+      required:
+        - id
+        - name
+        - character
+        - profile_url
+        - order
+        - popularity
       properties:
         id:
           type: integer
@@ -1960,6 +2030,8 @@ components:
 
     TvDetailsResponse:
       type: object
+      required:
+        - tv
       properties:
         tv:
           type: object
@@ -1967,6 +2039,20 @@ components:
 
     TvDetails:
       type: object
+      required:
+        - id
+        - name
+        - overview
+        - first_air_date
+        - last_air_date
+        - genres
+        - number_of_seasons
+        - number_of_episodes
+        - seasons
+        - poster_url
+        - status
+        - popularity
+        - vote_average
       properties:
         id:
           type: integer
@@ -2017,6 +2103,14 @@ components:
 
     TvSeason:
       type: object
+      required:
+        - id
+        - name
+        - air_date
+        - episode_count
+        - overview
+        - poster_url
+        - vote_average
       properties:
         id:
           type: integer
@@ -2044,6 +2138,8 @@ components:
 
     TvSeasonDetailsResponse:
       type: object
+      required:
+        - season
       properties:
         season:
           type: object
@@ -2051,6 +2147,14 @@ components:
 
     TvSeasonDetails:
       type: object
+      required:
+        - id
+        - name
+        - air_date
+        - overview
+        - poster_url
+        - episodes
+        - vote_average
       properties:
         id:
           type: integer
@@ -2080,6 +2184,15 @@ components:
 
     TvEpisode:
       type: object
+      required:
+        - id
+        - name
+        - air_date
+        - runtime
+        - episode_type
+        - overview
+        - still_url
+        - vote_average
       properties:
         id:
           type: integer
@@ -2110,6 +2223,8 @@ components:
 
     TvEpisodeDetailsResponse:
       type: object
+      required:
+        - episode
       properties:
         episode:
           type: object
@@ -2117,6 +2232,15 @@ components:
 
     TvEpisodeDetails:
       type: object
+      required:
+        - id
+        - name
+        - air_date
+        - runtime
+        - episode_type
+        - overview
+        - still_url
+        - vote_average
       properties:
         id:
           type: integer
@@ -2144,6 +2268,8 @@ components:
 
     CastTvResponse:
       type: object
+      required:
+        - cast
       properties:
         cast:
           type: array
@@ -2152,6 +2278,13 @@ components:
 
     CastTv:
       type: object
+      required:
+        - id
+        - name
+        - roles
+        - profile_url
+        - order
+        - popularity
       properties:
         id:
           type: integer
@@ -2177,6 +2310,9 @@ components:
 
     Role:
       type: object
+      required:
+        - character
+        - episode_count
       properties:
         character:
           type: string
@@ -2187,6 +2323,8 @@ components:
 
     PersonDetailsResponse:
       type: object
+      required:
+        - person
       properties:
         person:
           type: object
@@ -2194,6 +2332,13 @@ components:
 
     PersonDetails:
       type: object
+      required:
+        - id
+        - name
+        - biography
+        - birthday
+        - profile_url
+        - popularity
       properties:
         id:
           type: integer
@@ -2218,12 +2363,18 @@ components:
 
     WatchProvidersResponse:
       type: object
+      required:
+        - watch_providers
       properties:
         watch_providers:
           type: object
           $ref: "#/components/schemas/WatchProviders"
 
     WatchProviders:
+      type: object
+      required:
+        - id
+        - providers
       properties:
         id:
           type: integer
@@ -2231,28 +2382,37 @@ components:
           example: 278
         providers:
           type: object
+          required:
+            - flatrate
+            - rent
+            - buy
           properties:
             flatrate:
               type: array
               items:
-                $ref: "#/components/schemas/Flatrate"
+                $ref: "#/components/schemas/Provider"
             rent:
               type: array
               items:
-                $ref: "#/components/schemas/Rent"
+                $ref: "#/components/schemas/Provider"
             buy:
               type: array
               items:
-                $ref: "#/components/schemas/Buy"
+                $ref: "#/components/schemas/Provider"
 
-    Flatrate:
+    Provider:
       type: object
+      required:
+        - id
+        - name
+        - logo_url
+        - display_priority
       properties:
-        provider_id:
+        id:
           type: integer
           format: int64
           example: 8
-        provider_name:
+        name:
           type: string
           example: "Netflix"
         logo_url:
@@ -2262,42 +2422,11 @@ components:
           type: integer
           example: 1
 
-    Buy:
-      type: object
-      properties:
-        provider_id:
-          type: integer
-          format: int64
-          example: 2
-        provider_name:
-          type: string
-          example: "Apple iTunes"
-        logo_url:
-          type: string
-          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
-        display_priority:
-          type: integer
-          example: 1
-
-    Rent:
-      type: object
-      properties:
-        provider_id:
-          type: integer
-          format: int64
-          example: 3
-        provider_name:
-          type: string
-          example: "Google Play Movies"
-        logo_url:
-          type: string
-          example: "https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
-        display_priority:
-          type: integer
-          example: 1
-
     Watchlist:
       type: object
+      required:
+        - movies
+        - tv
       properties:
         movies:
           type: array
@@ -2310,41 +2439,18 @@ components:
 
     InWatchlist:
       type: object
+      required:
+        - in_watchlist
       properties:
         in_watchlist:
           type: boolean
           example: true
 
-    MovieWatchlistAddedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "movie successfully added to watchlist"
-
-    MovieWatchlistRemovedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "movie successfully removed from watchlist"
-
-    TvWatchlistAddedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show successfully added to watchlist"
-
-    TvWatchlistRemovedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show successfully removed from watchlist"
-
     Watched:
       type: object
+      required:
+        - movies
+        - tv
       properties:
         movies:
           type: array
@@ -2357,71 +2463,21 @@ components:
 
     InWatched:
       type: object
+      required:
+        - in_watched
       properties:
         in_watched:
           type: boolean
           example: true
 
-    WatchedMovieAddedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "movie successfully added to watched list"
-
-    WatchedMovieRemovedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "movie successfully removed from watched list"
-
-    WatchedTvAddedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show successfully added to watched list"
-
-    WatchedTvRemovedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show successfully removed from watched list"
-
-    WatchedTvSeasonAddedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show season successfully added to watched list"
-
-    WatchedTvSeasonRemovedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show season successfully removed from watched list"
-
-    WatchedTvEpisodeAddedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show episode successfully added to watched list"
-
-    WatchedTvEpisodeRemovedSuccess:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "tv show episode successfully removed from watched list"
-
     WatchedTv:
       type: array
       items:
         type: object
+        required:
+          - id
+          - status
+          - seasons
         properties:
           id:
             type: integer
@@ -2437,6 +2493,10 @@ components:
 
     WatchedTvSeason:
       type: object
+      required:
+        - season_number
+        - status
+        - episodes
       properties:
         season_number:
           type: integer
@@ -2448,6 +2508,9 @@ components:
           type: array
           items:
             type: object
+            required:
+              - episode_number
+              - in_watched
             properties:
               episode_number:
                 type: integer
@@ -2456,51 +2519,24 @@ components:
                 type: boolean
                 example: true
 
-    ErrorUnauthorized:
+    Message:
       type: object
+      required:
+        - message
       properties:
         message:
           type: string
-          example: "you must be authenticated to access this resource"
-
-    ErrorBadRequest:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "body contains badly-formed JSON"
-
-    ErrorBadRequestMissingQuery:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "missing query parameter"
-
-    ErrorBadRequestPath:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "missing path parameter"
-
-    ErrorFailedValidation:
-      type: object
-      properties:
-        email:
-          type: string
-          example: "must be a valid email address"
-
-    ErrorInvalidCredentials:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "invalid email or password"
-
-    ErrorInternalServerError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "the server encountered a problem and could not process your request"
+          examples:
+            - "Internal server error"
+            - "Bad request"
+            - "Unauthorized"
+            - "Forbidden"
+            - "Not found"
+            - "Movie added to watchlist"
+            - "Movie removed from watchlist"
+            - "TV show added to watchlist"
+            - "TV show removed from watchlist"
+            - "TV show season added to watchlist"
+            - "TV show season removed from watchlist"
+            - "TV show episode added to watchlist"
+            - "TV show episode removed from watchlist"

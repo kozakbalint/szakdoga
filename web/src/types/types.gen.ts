@@ -594,24 +594,24 @@ export type webhooks = Record<string, never>;
 export type components = {
     schemas: {
         HealthCheck: {
-            healthcheck?: {
+            healthcheck: {
                 /** @example available */
-                status?: string;
-                systemInfo?: {
+                status: string;
+                systemInfo: {
                     /** @example development */
-                    environment?: string;
+                    environment: string;
                     /** @example [
                      *       "http://localhost:3000",
                      *       "http://localhost:3001"
                      *     ] */
-                    cors_trusted_origins?: string[];
+                    cors_trusted_origins: string[];
                     /** @example 1.0.0 */
-                    version?: string;
+                    version: string;
                 };
             };
         };
         UserResponse: {
-            user?: components["schemas"]["User"];
+            user: components["schemas"]["User"];
         };
         User: {
             /**
@@ -619,533 +619,434 @@ export type components = {
              * @description User id
              * @example 15
              */
-            id?: number;
+            id: number;
             /**
              * Format: rfc3339
              * @description User creation date
              * @example 2021-10-10T12:00:00Z
              */
-            created_at?: string;
+            created_at: string;
             /**
              * @description User supplied name
              * @example John Doe
              */
-            name?: string;
+            name: string;
             /**
              * @description User supplied email
              * @example john.doe@example.com
              */
-            email?: string;
+            email: string;
         };
         CreateUser: {
             /** @example John Doe */
-            name?: string;
+            name: string;
             /** @example john.doe@example.com */
-            email?: string;
+            email: string;
             /** @example password123 */
-            password?: string;
+            password: string;
         };
         AuthenticateUser: {
             /** @example john.doe@example.com */
-            email?: string;
+            email: string;
             /** @example password123 */
-            password?: string;
+            password: string;
         };
         AuthenticationToken: {
-            authentication_token?: {
+            authentication_token: {
                 /** @example a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 */
-                token?: string;
+                token: string;
                 /**
                  * Format: rfc3339
                  * @example 2021-10-10T12:00:00Z
                  */
-                expiry?: string;
+                expiry: string;
             };
         };
         Logout: {
             /** @example authentication token(s) successfully deleted */
-            message?: string;
+            message: string;
         };
         SearchMoviesResponse: {
-            movies?: components["schemas"]["SearchMovie"][];
+            movies: components["schemas"]["SearchMovie"][];
         };
         SearchMovie: {
             /**
              * Format: int64
              * @example 278
              */
-            id?: number;
+            id: number;
             /** @example The Shawshank Redemption */
-            title?: string;
+            title: string;
             /** @example Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope. */
-            overview?: string;
+            overview: string;
             /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
-            poster_url?: string;
+            poster_url: string;
             /** @example 1994-09-23 */
-            release_date?: string;
+            release_date: string;
             /**
              * Format: float
              * @example 8.3
              */
-            vote_average?: number;
+            vote_average: number;
             /**
              * Format: float
              * @example 186.654
              */
-            popularity?: number;
+            popularity: number;
         };
         SearchTVResponse: {
-            tv?: components["schemas"]["SearchTv"][];
+            tv: components["schemas"]["SearchTv"][];
         };
         SearchTv: {
             /**
              * Format: int64
              * @example 1399
              */
-            id?: number;
+            id: number;
             /** @example Game of Thrones */
-            title?: string;
+            title: string;
             /** @example Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond. */
-            overview?: string;
+            overview: string;
             /** @example https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg */
-            poster_url?: string;
+            poster_url: string;
             /** @example 2011-04-17 */
-            release_date?: string;
+            release_date: string;
             /**
              * Format: float
              * @example 8.4
              */
-            vote_average?: number;
+            vote_average: number;
             /**
              * Format: float
              * @example 749.726
              */
-            popularity?: number;
+            popularity: number;
         };
         SearchPeopleResponse: {
-            people?: components["schemas"]["SearchPeople"][];
+            people: components["schemas"]["SearchPeople"][];
         };
         SearchPeople: {
             /**
              * Format: int64
              * @example 115440
              */
-            id?: number;
+            id: number;
             /** @example Sydney Sweeney */
-            name?: string;
+            name: string;
             /** @example https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg */
-            profile_url?: string;
+            profile_url: string;
             /**
              * Format: float
              * @example 152.351
              */
-            popularity?: number;
+            popularity: number;
         };
         MovieDetailsResponse: {
-            movie?: components["schemas"]["MovieDetails"];
+            movie: components["schemas"]["MovieDetails"];
         };
         MovieDetails: {
             /**
              * Format: int64
              * @example 278
              */
-            id?: number;
+            id: number;
             /** @example The Shawshank Redemption */
-            title?: string;
+            title: string;
             /** @example Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope. */
-            overview?: string;
+            overview: string;
             /** @example 1994-09-23 */
-            release_date?: string;
-            genres?: string[];
+            release_date: string;
+            genres: string[];
             /** @example 142 */
-            runtime?: number;
+            runtime: number;
             /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
-            poster_url?: string;
+            poster_url: string;
             /**
              * Format: float
              * @example 186.654
              */
-            popularity?: number;
+            popularity: number;
             /**
              * Format: float
              * @example 8.7
              */
-            vote_average?: number;
+            vote_average: number;
         };
         CastMoviesResponse: {
-            cast?: components["schemas"]["CastMovies"][];
+            cast: components["schemas"]["CastMovies"][];
         };
         CastMovies: {
             /**
              * Format: int64
              * @example 6941
              */
-            id?: number;
+            id: number;
             /** @example Cameron Diaz */
-            name?: string;
+            name: string;
             /** @example Princess Fiona (voice) */
-            character?: string;
+            character: string;
             /** @example https://image.tmdb.org/t/p/w92/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg */
-            profile_url?: string;
+            profile_url: string;
             /** @example 2 */
-            order?: number;
+            order: number;
             /**
              * Format: float
              * @example 57.269
              */
-            popularity?: number;
+            popularity: number;
         };
         TvDetailsResponse: {
-            tv?: components["schemas"]["TvDetails"];
+            tv: components["schemas"]["TvDetails"];
         };
         TvDetails: {
             /**
              * Format: int64
              * @example 1399
              */
-            id?: number;
+            id: number;
             /** @example Game of Thrones */
-            name?: string;
+            name: string;
             /** @example Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond. */
-            overview?: string;
+            overview: string;
             /** @example 2011-04-17 */
-            first_air_date?: string;
+            first_air_date: string;
             /** @example 2019-05-19 */
-            last_air_date?: string;
-            genres?: string[];
+            last_air_date: string;
+            genres: string[];
             /** @example 8 */
-            number_of_seasons?: number;
+            number_of_seasons: number;
             /** @example 73 */
-            number_of_episodes?: number;
-            seasons?: components["schemas"]["TvSeason"][];
+            number_of_episodes: number;
+            seasons: components["schemas"]["TvSeason"][];
             /** @example https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg */
-            poster_url?: string;
+            poster_url: string;
             /** @example Ended */
-            status?: string;
+            status: string;
             /**
              * Format: float
              * @example 749.726
              */
-            popularity?: number;
+            popularity: number;
             /**
              * Format: float
              * @example 8.4
              */
-            vote_average?: number;
+            vote_average: number;
         };
         TvSeason: {
             /**
              * Format: int64
              * @example 3624
              */
-            id?: number;
+            id: number;
             /** @example Season 1 */
-            name?: string;
+            name: string;
             /** @example 2011-04-17 */
-            air_date?: string;
+            air_date: string;
             /** @example 10 */
-            episode_count?: number;
+            episode_count: number;
             /** @example Winter Is Coming */
-            overview?: string;
+            overview: string;
             /** @example https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg */
-            poster_url?: string;
+            poster_url: string;
             /**
              * Format: float
              * @example 8.3
              */
-            vote_average?: number;
+            vote_average: number;
         };
         TvSeasonDetailsResponse: {
-            season?: components["schemas"]["TvSeasonDetails"];
+            season: components["schemas"]["TvSeasonDetails"];
         };
         TvSeasonDetails: {
             /**
              * Format: int64
              * @example 3624
              */
-            id?: number;
+            id: number;
             /** @example Season 1 */
-            name?: string;
+            name: string;
             /** @example 2011-04-17 */
-            air_date?: string;
+            air_date: string;
             /** @example Winter Is Coming */
-            overview?: string;
+            overview: string;
             /** @example https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg */
-            poster_url?: string;
-            episodes?: components["schemas"]["TvEpisode"][];
+            poster_url: string;
+            episodes: components["schemas"]["TvEpisode"][];
             /**
              * Format: float
              * @example 8.3
              */
-            vote_average?: number;
+            vote_average: number;
         };
         TvEpisode: {
             /**
              * Format: int64
              * @example 63056
              */
-            id?: number;
+            id: number;
             /** @example Winter Is Coming */
-            name?: string;
+            name: string;
             /** @example 2011-04-17 */
-            air_date?: string;
+            air_date: string;
             /** @example 62 */
-            runtime?: number;
+            runtime: number;
             /** @example standard */
-            episode_type?: string;
+            episode_type: string;
             /** @example Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army. */
-            overview?: string;
+            overview: string;
             /** @example https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg */
-            still_url?: string;
+            still_url: string;
             /**
              * Format: float
              * @example 8.046
              */
-            vote_average?: number;
+            vote_average: number;
         };
         TvEpisodeDetailsResponse: {
-            episode?: components["schemas"]["TvEpisodeDetails"];
+            episode: components["schemas"]["TvEpisodeDetails"];
         };
         TvEpisodeDetails: {
             /**
              * Format: int64
              * @example 63056
              */
-            id?: number;
+            id: number;
             /** @example Winter Is Coming */
-            name?: string;
+            name: string;
             /** @example 2011-04-17 */
-            air_date?: string;
+            air_date: string;
             /** @example 62 */
-            runtime?: number;
+            runtime: number;
             /** @example Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army. */
-            overview?: string;
+            overview: string;
             /** @example https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg */
-            still_url?: string;
+            still_url: string;
             /**
              * Format: float
              * @example 8.046
              */
-            vote_average?: number;
+            vote_average: number;
         };
         CastTvResponse: {
-            cast?: components["schemas"]["CastTv"][];
+            cast: components["schemas"]["CastTv"][];
         };
         CastTv: {
             /**
              * Format: int64
              * @example 1223786
              */
-            id?: number;
+            id: number;
             /** @example Emilia Clarke */
-            name?: string;
-            roles?: components["schemas"]["Role"][];
+            name: string;
+            roles: components["schemas"]["Role"][];
             /** @example https://image.tmdb.org/t/p/w92/wb8VfDPGpyqcFltnRcJR1Wj3h4Z.jpg */
-            profile_url?: string;
+            profile_url: string;
             /** @example 8 */
-            order?: number;
+            order: number;
             /**
              * Format: float
              * @example 57.269
              */
-            popularity?: number;
+            popularity: number;
         };
         Role: {
             /** @example Daenerys Targaryen */
-            character?: string;
+            character: string;
             /** @example 73 */
-            episode_count?: number;
+            episode_count: number;
         };
         PersonDetailsResponse: {
-            person?: components["schemas"]["PersonDetails"];
+            person: components["schemas"]["PersonDetails"];
         };
         PersonDetails: {
             /**
              * Format: int64
              * @example 115440
              */
-            id?: number;
+            id: number;
             /** @example Sydney Sweeney */
-            name?: string;
+            name: string;
             /** @example Sydney Bernice Sweeney (born September 12, 1997) is an American actress. She gained mainstream attention for her role as Emaline Addario in the Netflix series Everything Sucks! (2018). */
-            biography?: string;
+            biography: string;
             /** @example 1997-09-12 */
-            birthday?: string;
+            birthday: string;
             /** @example https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg */
-            profile_url?: string;
+            profile_url: string;
             /**
              * Format: float
              * @example 152.351
              */
-            popularity?: number;
+            popularity: number;
         };
         WatchProvidersResponse: {
-            watch_providers?: components["schemas"]["WatchProviders"];
+            watch_providers: components["schemas"]["WatchProviders"];
         };
         WatchProviders: {
             /**
              * Format: int64
              * @example 278
              */
-            id?: number;
-            providers?: {
-                flatrate?: components["schemas"]["Flatrate"][];
-                rent?: components["schemas"]["Rent"][];
-                buy?: components["schemas"]["Buy"][];
+            id: number;
+            providers: {
+                flatrate: components["schemas"]["Provider"][];
+                rent: components["schemas"]["Provider"][];
+                buy: components["schemas"]["Provider"][];
             };
         };
-        Flatrate: {
+        Provider: {
             /**
              * Format: int64
              * @example 8
              */
-            provider_id?: number;
+            id: number;
             /** @example Netflix */
-            provider_name?: string;
+            name: string;
             /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
-            logo_url?: string;
+            logo_url: string;
             /** @example 1 */
-            display_priority?: number;
-        };
-        Buy: {
-            /**
-             * Format: int64
-             * @example 2
-             */
-            provider_id?: number;
-            /** @example Apple iTunes */
-            provider_name?: string;
-            /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
-            logo_url?: string;
-            /** @example 1 */
-            display_priority?: number;
-        };
-        Rent: {
-            /**
-             * Format: int64
-             * @example 3
-             */
-            provider_id?: number;
-            /** @example Google Play Movies */
-            provider_name?: string;
-            /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
-            logo_url?: string;
-            /** @example 1 */
-            display_priority?: number;
+            display_priority: number;
         };
         Watchlist: {
-            movies?: components["schemas"]["SearchMovie"][];
-            tv?: components["schemas"]["SearchTv"][];
+            movies: components["schemas"]["SearchMovie"][];
+            tv: components["schemas"]["SearchTv"][];
         };
         InWatchlist: {
             /** @example true */
-            in_watchlist?: boolean;
-        };
-        MovieWatchlistAddedSuccess: {
-            /** @example movie successfully added to watchlist */
-            message?: string;
-        };
-        MovieWatchlistRemovedSuccess: {
-            /** @example movie successfully removed from watchlist */
-            message?: string;
-        };
-        TvWatchlistAddedSuccess: {
-            /** @example tv show successfully added to watchlist */
-            message?: string;
-        };
-        TvWatchlistRemovedSuccess: {
-            /** @example tv show successfully removed from watchlist */
-            message?: string;
+            in_watchlist: boolean;
         };
         Watched: {
-            movies?: components["schemas"]["SearchMoviesResponse"][];
-            tv?: components["schemas"]["SearchTVResponse"][];
+            movies: components["schemas"]["SearchMoviesResponse"][];
+            tv: components["schemas"]["SearchTVResponse"][];
         };
         InWatched: {
             /** @example true */
-            in_watched?: boolean;
-        };
-        WatchedMovieAddedSuccess: {
-            /** @example movie successfully added to watched list */
-            message?: string;
-        };
-        WatchedMovieRemovedSuccess: {
-            /** @example movie successfully removed from watched list */
-            message?: string;
-        };
-        WatchedTvAddedSuccess: {
-            /** @example tv show successfully added to watched list */
-            message?: string;
-        };
-        WatchedTvRemovedSuccess: {
-            /** @example tv show successfully removed from watched list */
-            message?: string;
-        };
-        WatchedTvSeasonAddedSuccess: {
-            /** @example tv show season successfully added to watched list */
-            message?: string;
-        };
-        WatchedTvSeasonRemovedSuccess: {
-            /** @example tv show season successfully removed from watched list */
-            message?: string;
-        };
-        WatchedTvEpisodeAddedSuccess: {
-            /** @example tv show episode successfully added to watched list */
-            message?: string;
-        };
-        WatchedTvEpisodeRemovedSuccess: {
-            /** @example tv show episode successfully removed from watched list */
-            message?: string;
+            in_watched: boolean;
         };
         WatchedTv: {
             /**
              * Format: int64
              * @example 1399
              */
-            id?: number;
+            id: number;
             /** @enum {string} */
-            status?: WatchedTvStatus;
-            seasons?: components["schemas"]["WatchedTvSeason"][];
+            status: WatchedTvStatus;
+            seasons: components["schemas"]["WatchedTvSeason"][];
         }[];
         WatchedTvSeason: {
             /** @example 1 */
-            season_number?: number;
+            season_number: number;
             /** @enum {string} */
-            status?: WatchedTvStatus;
-            episodes?: {
+            status: WatchedTvStatus;
+            episodes: {
                 /** @example 1 */
-                episode_number?: number;
+                episode_number: number;
                 /** @example true */
-                in_watched?: boolean;
+                in_watched: boolean;
             }[];
         };
-        ErrorUnauthorized: {
-            /** @example you must be authenticated to access this resource */
-            message?: string;
-        };
-        ErrorBadRequest: {
-            /** @example body contains badly-formed JSON */
-            message?: string;
-        };
-        ErrorBadRequestMissingQuery: {
-            /** @example missing query parameter */
-            message?: string;
-        };
-        ErrorBadRequestPath: {
-            /** @example missing path parameter */
-            message?: string;
-        };
-        ErrorFailedValidation: {
-            /** @example must be a valid email address */
-            email?: string;
-        };
-        ErrorInvalidCredentials: {
-            /** @example invalid email or password */
-            message?: string;
-        };
-        ErrorInternalServerError: {
-            /** @example the server encountered a problem and could not process your request */
-            message?: string;
+        Message: {
+            message: string;
         };
     };
     responses: never;
@@ -1186,34 +1087,14 @@ export type PersonDetailsResponse = components['schemas']['PersonDetailsResponse
 export type PersonDetails = components['schemas']['PersonDetails'];
 export type WatchProvidersResponse = components['schemas']['WatchProvidersResponse'];
 export type WatchProviders = components['schemas']['WatchProviders'];
-export type Flatrate = components['schemas']['Flatrate'];
-export type Buy = components['schemas']['Buy'];
-export type Rent = components['schemas']['Rent'];
+export type Provider = components['schemas']['Provider'];
 export type Watchlist = components['schemas']['Watchlist'];
 export type InWatchlist = components['schemas']['InWatchlist'];
-export type MovieWatchlistAddedSuccess = components['schemas']['MovieWatchlistAddedSuccess'];
-export type MovieWatchlistRemovedSuccess = components['schemas']['MovieWatchlistRemovedSuccess'];
-export type TvWatchlistAddedSuccess = components['schemas']['TvWatchlistAddedSuccess'];
-export type TvWatchlistRemovedSuccess = components['schemas']['TvWatchlistRemovedSuccess'];
 export type Watched = components['schemas']['Watched'];
 export type InWatched = components['schemas']['InWatched'];
-export type WatchedMovieAddedSuccess = components['schemas']['WatchedMovieAddedSuccess'];
-export type WatchedMovieRemovedSuccess = components['schemas']['WatchedMovieRemovedSuccess'];
-export type WatchedTvAddedSuccess = components['schemas']['WatchedTvAddedSuccess'];
-export type WatchedTvRemovedSuccess = components['schemas']['WatchedTvRemovedSuccess'];
-export type WatchedTvSeasonAddedSuccess = components['schemas']['WatchedTvSeasonAddedSuccess'];
-export type WatchedTvSeasonRemovedSuccess = components['schemas']['WatchedTvSeasonRemovedSuccess'];
-export type WatchedTvEpisodeAddedSuccess = components['schemas']['WatchedTvEpisodeAddedSuccess'];
-export type WatchedTvEpisodeRemovedSuccess = components['schemas']['WatchedTvEpisodeRemovedSuccess'];
 export type WatchedTv = components['schemas']['WatchedTv'];
 export type WatchedTvSeason = components['schemas']['WatchedTvSeason'];
-export type ErrorUnauthorized = components['schemas']['ErrorUnauthorized'];
-export type ErrorBadRequest = components['schemas']['ErrorBadRequest'];
-export type ErrorBadRequestMissingQuery = components['schemas']['ErrorBadRequestMissingQuery'];
-export type ErrorBadRequestPath = components['schemas']['ErrorBadRequestPath'];
-export type ErrorFailedValidation = components['schemas']['ErrorFailedValidation'];
-export type ErrorInvalidCredentials = components['schemas']['ErrorInvalidCredentials'];
-export type ErrorInternalServerError = components['schemas']['ErrorInternalServerError'];
+export type Message = components['schemas']['Message'];
 export type $defs = Record<string, never>;
 export interface operations {
     HealthcheckHandler: {
@@ -1267,7 +1148,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1276,7 +1157,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1309,7 +1190,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequest"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Failed validation */
@@ -1318,7 +1199,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorFailedValidation"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1327,7 +1208,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1360,7 +1241,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequest"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1369,7 +1250,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInvalidCredentials"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Failed validation */
@@ -1378,7 +1259,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorFailedValidation"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1387,7 +1268,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1416,7 +1297,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1425,7 +1306,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1457,7 +1338,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestMissingQuery"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1466,7 +1347,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1475,7 +1356,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1507,7 +1388,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestMissingQuery"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1516,7 +1397,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1525,7 +1406,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1557,7 +1438,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestMissingQuery"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1566,7 +1447,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1575,7 +1456,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1607,7 +1488,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1616,7 +1497,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1625,7 +1506,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1657,7 +1538,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1666,7 +1547,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1675,7 +1556,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1709,7 +1590,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1718,7 +1599,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1727,7 +1608,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1763,7 +1644,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1772,7 +1653,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1781,7 +1662,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1813,7 +1694,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1822,7 +1703,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1831,7 +1712,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1863,7 +1744,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1872,7 +1753,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1881,7 +1762,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1913,7 +1794,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1922,7 +1803,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1931,7 +1812,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -1963,7 +1844,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -1972,7 +1853,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -1981,7 +1862,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2013,7 +1894,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2022,7 +1903,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2031,7 +1912,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2060,7 +1941,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2069,7 +1950,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2101,7 +1982,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2110,7 +1991,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2119,7 +2000,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2142,7 +2023,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MovieWatchlistAddedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2151,7 +2032,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2160,7 +2041,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2169,7 +2050,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2192,7 +2073,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MovieWatchlistRemovedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2201,7 +2082,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2210,7 +2091,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2219,7 +2100,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2251,7 +2132,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2260,7 +2141,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2269,7 +2150,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2292,7 +2173,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TvWatchlistAddedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2301,7 +2182,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2310,7 +2191,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2319,7 +2200,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2342,7 +2223,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TvWatchlistRemovedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2351,7 +2232,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2360,7 +2241,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2369,17 +2250,14 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
     };
     GetWatchedHandler: {
         parameters: {
-            query?: {
-                /** @description The type of the watched list */
-                type?: PathsWatchedGetParametersQueryType;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -2401,7 +2279,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2410,7 +2288,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2442,7 +2320,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2451,7 +2329,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2460,7 +2338,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2483,7 +2361,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedMovieAddedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2492,7 +2370,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2501,7 +2379,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2510,7 +2388,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2533,7 +2411,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedMovieRemovedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2542,7 +2420,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2551,7 +2429,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2560,7 +2438,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2592,7 +2470,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2601,7 +2479,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2610,7 +2488,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2633,7 +2511,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTvAddedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2642,7 +2520,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2651,7 +2529,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2660,7 +2538,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2683,7 +2561,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTvRemovedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2692,7 +2570,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2701,7 +2579,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2742,7 +2620,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2751,7 +2629,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2760,7 +2638,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2785,7 +2663,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTvSeasonAddedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2794,7 +2672,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2803,7 +2681,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2812,7 +2690,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2837,7 +2715,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTvSeasonRemovedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2846,7 +2724,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2855,7 +2733,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2864,7 +2742,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2900,7 +2778,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2909,7 +2787,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2918,7 +2796,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2945,7 +2823,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTvEpisodeAddedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -2954,7 +2832,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -2963,7 +2841,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -2972,7 +2850,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
@@ -2999,7 +2877,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTvEpisodeRemovedSuccess"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Bad request */
@@ -3008,7 +2886,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorBadRequestPath"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Unauthorized */
@@ -3017,7 +2895,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorUnauthorized"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
             /** @description Internal server error */
@@ -3026,15 +2904,11 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorInternalServerError"];
+                    "application/json": components["schemas"]["Message"];
                 };
             };
         };
     };
-}
-export enum PathsWatchedGetParametersQueryType {
-    movies = "movies",
-    tv = "tv"
 }
 export enum WatchedTvStatus {
     watched = "watched",

@@ -33,12 +33,12 @@ func (m *Client) GetMovieCast(tmdbID int) (*[]types.CastMovies, error) {
 		}
 
 		response = append(response, types.CastMovies{
-			Id:         &cast.ID,
-			Name:       &cast.Name,
-			Character:  &cast.Character,
-			Order:      &cast.Order,
-			ProfileUrl: &profileURL,
-			Popularity: &cast.Popularity,
+			Id:         cast.ID,
+			Name:       cast.Name,
+			Character:  cast.Character,
+			Order:      cast.Order,
+			ProfileUrl: profileURL,
+			Popularity: cast.Popularity,
 		})
 	}
 
@@ -64,8 +64,8 @@ func (m *Client) GetTvCast(tmdbID int) (*[]types.CastTv, error) {
 			character := role.Character
 			episodeCount := role.EpisodeCount
 			roles = append(roles, types.Role{
-				Character:    &character,
-				EpisodeCount: &episodeCount,
+				Character:    character,
+				EpisodeCount: episodeCount,
 			})
 		}
 
@@ -75,12 +75,12 @@ func (m *Client) GetTvCast(tmdbID int) (*[]types.CastTv, error) {
 		popularity := float32(cast.Popularity)
 
 		response = append(response, types.CastTv{
-			Id:         &id,
-			Name:       &name,
-			Order:      &order,
-			Roles:      &roles,
-			ProfileUrl: &profileURL,
-			Popularity: &popularity,
+			Id:         id,
+			Name:       name,
+			Order:      order,
+			Roles:      roles,
+			ProfileUrl: profileURL,
+			Popularity: popularity,
 		})
 	}
 
@@ -104,15 +104,15 @@ func (m *Client) GetMovie(tmdbID int) (*types.MovieDetails, error) {
 	}
 
 	return &types.MovieDetails{
-		Id:          &movie.ID,
-		Title:       &movie.Title,
-		Overview:    &movie.Overview,
-		ReleaseDate: &movie.ReleaseDate,
-		Genres:      &genres,
-		Runtime:     &movie.Runtime,
-		PosterUrl:   &posterURL,
-		Popularity:  &movie.Popularity,
-		VoteAverage: &movie.VoteAverage,
+		Id:          movie.ID,
+		Title:       movie.Title,
+		Overview:    movie.Overview,
+		ReleaseDate: movie.ReleaseDate,
+		Genres:      genres,
+		Runtime:     movie.Runtime,
+		PosterUrl:   posterURL,
+		Popularity:  movie.Popularity,
+		VoteAverage: movie.VoteAverage,
 	}, nil
 }
 
@@ -128,12 +128,12 @@ func (m *Client) GetPerson(tmdbID int) (*types.PersonDetails, error) {
 	}
 
 	return &types.PersonDetails{
-		Id:         &person.ID,
-		Name:       &person.Name,
-		Biography:  &person.Biography,
-		Birthday:   &person.Birthday,
-		ProfileUrl: &profileURL,
-		Popularity: &person.Popularity,
+		Id:         person.ID,
+		Name:       person.Name,
+		Biography:  person.Biography,
+		Birthday:   person.Birthday,
+		ProfileUrl: profileURL,
+		Popularity: person.Popularity,
 	}, nil
 }
 
@@ -151,13 +151,13 @@ func (m *Client) SearchMovies(query string) (*[]types.SearchMovie, error) {
 			posterURL = tmdb.GetImageURL(movie.PosterPath, "w92")
 		}
 		response = append(response, types.SearchMovie{
-			Id:          &movie.ID,
-			Title:       &movie.Title,
-			Overview:    &movie.Overview,
-			PosterUrl:   &posterURL,
-			ReleaseDate: &movie.ReleaseDate,
-			Popularity:  &movie.Popularity,
-			VoteAverage: &movie.VoteAverage,
+			Id:          movie.ID,
+			Title:       movie.Title,
+			Overview:    movie.Overview,
+			PosterUrl:   posterURL,
+			ReleaseDate: movie.ReleaseDate,
+			Popularity:  movie.Popularity,
+			VoteAverage: movie.VoteAverage,
 		})
 	}
 
@@ -182,13 +182,13 @@ func (m *Client) SearchTv(query string) (*[]types.SearchTv, error) {
 			posterURL = tmdb.GetImageURL(tv.PosterPath, "w92")
 		}
 		response = append(response, types.SearchTv{
-			Id:          &tv.ID,
-			Title:       &tv.Name,
-			Overview:    &tv.Overview,
-			PosterUrl:   &posterURL,
-			ReleaseDate: &tv.FirstAirDate,
-			Popularity:  &tv.Popularity,
-			VoteAverage: &tv.VoteAverage,
+			Id:          tv.ID,
+			Title:       tv.Name,
+			Overview:    tv.Overview,
+			PosterUrl:   posterURL,
+			ReleaseDate: tv.FirstAirDate,
+			Popularity:  tv.Popularity,
+			VoteAverage: tv.VoteAverage,
 		})
 	}
 
@@ -214,10 +214,10 @@ func (m *Client) SearchPeople(query string) (*[]types.SearchPeople, error) {
 		}
 
 		response = append(response, types.SearchPeople{
-			Id:         &person.ID,
-			Name:       &person.Name,
-			ProfileUrl: &profileURL,
-			Popularity: &person.Popularity,
+			Id:         person.ID,
+			Name:       person.Name,
+			ProfileUrl: profileURL,
+			Popularity: person.Popularity,
 		})
 	}
 
@@ -249,29 +249,29 @@ func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
 		posterUrl := tmdb.GetImageURL(season.PosterPath, "w500")
 
 		seasons = append(seasons, types.TvSeason{
-			AirDate:      &season.AirDate,
-			EpisodeCount: &season.EpisodeCount,
-			Id:           &season.ID,
-			Name:         &season.Name,
-			Overview:     &season.Overview,
-			PosterUrl:    &posterUrl,
-			VoteAverage:  &season.VoteAverage,
+			AirDate:      season.AirDate,
+			EpisodeCount: season.EpisodeCount,
+			Id:           season.ID,
+			Name:         season.Name,
+			Overview:     season.Overview,
+			PosterUrl:    posterUrl,
+			VoteAverage:  season.VoteAverage,
 		})
 	}
 
 	return &types.TvDetails{
-		Id:               &tv.ID,
-		Name:             &tv.Name,
-		Overview:         &tv.Overview,
-		FirstAirDate:     &tv.FirstAirDate,
-		PosterUrl:        &posterURL,
-		Genres:           &genres,
-		NumberOfSeasons:  &tv.NumberOfSeasons,
-		NumberOfEpisodes: &tv.NumberOfEpisodes,
-		Popularity:       &tv.Popularity,
-		VoteAverage:      &tv.VoteAverage,
-		Status:           &tv.Status,
-		Seasons:          &seasons,
+		Id:               tv.ID,
+		Name:             tv.Name,
+		Overview:         tv.Overview,
+		FirstAirDate:     tv.FirstAirDate,
+		PosterUrl:        posterURL,
+		Genres:           genres,
+		NumberOfSeasons:  tv.NumberOfSeasons,
+		NumberOfEpisodes: tv.NumberOfEpisodes,
+		Popularity:       tv.Popularity,
+		VoteAverage:      tv.VoteAverage,
+		Status:           tv.Status,
+		Seasons:          seasons,
 	}, nil
 }
 
@@ -290,24 +290,24 @@ func (m *Client) GetTvSeason(tmdbID int, seasonNumber int) (*types.TvSeasonDetai
 			stillURL = tmdb.GetImageURL(episode.StillPath, "w500")
 		}
 		episodes = append(episodes, types.TvEpisode{
-			AirDate:     &episode.AirDate,
-			Id:          &episode.ID,
-			Name:        &episode.Name,
-			Overview:    &episode.Overview,
-			Runtime:     &episode.Runtime,
-			StillUrl:    &stillURL,
-			VoteAverage: &episode.VoteAverage,
+			AirDate:     episode.AirDate,
+			Id:          episode.ID,
+			Name:        episode.Name,
+			Overview:    episode.Overview,
+			Runtime:     episode.Runtime,
+			StillUrl:    stillURL,
+			VoteAverage: episode.VoteAverage,
 		})
 	}
 
 	var tvSeasonsResponse = types.TvSeasonDetails{
-		Id:          &tvDetails.ID,
-		Name:        &tvDetails.Name,
-		Overview:    &tvDetails.Overview,
-		AirDate:     &tvDetails.AirDate,
-		PosterUrl:   &posterURL,
-		VoteAverage: &tvDetails.VoteAverage,
-		Episodes:    &episodes,
+		Id:          tvDetails.ID,
+		Name:        tvDetails.Name,
+		Overview:    tvDetails.Overview,
+		AirDate:     tvDetails.AirDate,
+		PosterUrl:   posterURL,
+		VoteAverage: tvDetails.VoteAverage,
+		Episodes:    episodes,
 	}
 
 	return &tvSeasonsResponse, nil
@@ -325,13 +325,13 @@ func (m *Client) GetTvEpisode(tmdbID, seasonNumber, episodeNumber int) (*types.T
 	}
 
 	return &types.TvEpisodeDetails{
-		Id:          &episode.ID,
-		Name:        &episode.Name,
-		Overview:    &episode.Overview,
-		AirDate:     &episode.AirDate,
-		StillUrl:    &stillURL,
-		VoteAverage: &episode.VoteAverage,
-		Runtime:     &episode.Runtime,
+		Id:          episode.ID,
+		Name:        episode.Name,
+		Overview:    episode.Overview,
+		AirDate:     episode.AirDate,
+		StillUrl:    stillURL,
+		VoteAverage: episode.VoteAverage,
+		Runtime:     episode.Runtime,
 	}, nil
 }
 
@@ -344,39 +344,39 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 	huProviders := providers.Results["HU"]
 	id := int64(tmdbID)
 	var response = types.WatchProviders{
-		Id: &id,
+		Id: id,
 	}
 
 	for _, provider := range huProviders.Flatrate {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		*response.Providers.Flatrate = append(*response.Providers.Flatrate, types.Flatrate{
-			ProviderId:      &provider.ProviderID,
-			ProviderName:    &provider.ProviderName,
-			LogoUrl:         &logoURL,
-			DisplayPriority: &displayPriority,
+		response.Providers.Flatrate = append(response.Providers.Flatrate, types.Provider{
+			Id:              provider.ProviderID,
+			Name:            provider.ProviderName,
+			LogoUrl:         logoURL,
+			DisplayPriority: displayPriority,
 		})
 	}
 
 	for _, provider := range huProviders.Buy {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		*response.Providers.Buy = append(*response.Providers.Buy, types.Buy{
-			ProviderId:      &provider.ProviderID,
-			ProviderName:    &provider.ProviderName,
-			LogoUrl:         &logoURL,
-			DisplayPriority: &displayPriority,
+		response.Providers.Buy = append(response.Providers.Buy, types.Provider{
+			Id:              provider.ProviderID,
+			Name:            provider.ProviderName,
+			LogoUrl:         logoURL,
+			DisplayPriority: displayPriority,
 		})
 	}
 
 	for _, provider := range huProviders.Rent {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		*response.Providers.Rent = append(*response.Providers.Rent, types.Rent{
-			ProviderId:      &provider.ProviderID,
-			ProviderName:    &provider.ProviderName,
-			LogoUrl:         &logoURL,
-			DisplayPriority: &displayPriority,
+		response.Providers.Rent = append(response.Providers.Rent, types.Provider{
+			Id:              provider.ProviderID,
+			Name:            provider.ProviderName,
+			LogoUrl:         logoURL,
+			DisplayPriority: displayPriority,
 		})
 	}
 
@@ -392,39 +392,39 @@ func (m *Client) GetTvWatchProviders(tmdbID int) (*types.WatchProviders, error) 
 	huProviders := providers.Results["HU"]
 	id := int64(tmdbID)
 	var response = types.WatchProviders{
-		Id: &id,
+		Id: id,
 	}
 
 	for _, provider := range huProviders.Flatrate {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		*response.Providers.Flatrate = append(*response.Providers.Flatrate, types.Flatrate{
-			ProviderId:      &provider.ProviderID,
-			ProviderName:    &provider.ProviderName,
-			LogoUrl:         &logoURL,
-			DisplayPriority: &displayPriority,
+		response.Providers.Flatrate = append(response.Providers.Flatrate, types.Provider{
+			Id:              provider.ProviderID,
+			Name:            provider.ProviderName,
+			LogoUrl:         logoURL,
+			DisplayPriority: displayPriority,
 		})
 	}
 
 	for _, provider := range huProviders.Buy {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		*response.Providers.Buy = append(*response.Providers.Buy, types.Buy{
-			ProviderId:      &provider.ProviderID,
-			ProviderName:    &provider.ProviderName,
-			LogoUrl:         &logoURL,
-			DisplayPriority: &displayPriority,
+		response.Providers.Buy = append(response.Providers.Buy, types.Provider{
+			Id:              provider.ProviderID,
+			Name:            provider.ProviderName,
+			LogoUrl:         logoURL,
+			DisplayPriority: displayPriority,
 		})
 	}
 
 	for _, provider := range huProviders.Rent {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		*response.Providers.Rent = append(*response.Providers.Rent, types.Rent{
-			ProviderId:      &provider.ProviderID,
-			ProviderName:    &provider.ProviderName,
-			LogoUrl:         &logoURL,
-			DisplayPriority: &displayPriority,
+		response.Providers.Rent = append(response.Providers.Rent, types.Provider{
+			Id:              provider.ProviderID,
+			Name:            provider.ProviderName,
+			LogoUrl:         logoURL,
+			DisplayPriority: displayPriority,
 		})
 	}
 

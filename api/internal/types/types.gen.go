@@ -21,438 +21,326 @@ const (
 	WatchedTvSeasonStatusWatched    WatchedTvSeasonStatus = "watched"
 )
 
-// Defines values for GetWatchedHandlerParamsType.
-const (
-	Movies GetWatchedHandlerParamsType = "movies"
-	Tv     GetWatchedHandlerParamsType = "tv"
-)
-
 // AuthenticateUser defines model for AuthenticateUser.
 type AuthenticateUser struct {
-	Email    *string `json:"email,omitempty"`
-	Password *string `json:"password,omitempty"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // AuthenticationToken defines model for AuthenticationToken.
 type AuthenticationToken struct {
-	AuthenticationToken *struct {
-		Expiry *string `json:"expiry,omitempty"`
-		Token  *string `json:"token,omitempty"`
-	} `json:"authentication_token,omitempty"`
-}
-
-// Buy defines model for Buy.
-type Buy struct {
-	DisplayPriority *int    `json:"display_priority,omitempty"`
-	LogoUrl         *string `json:"logo_url,omitempty"`
-	ProviderId      *int64  `json:"provider_id,omitempty"`
-	ProviderName    *string `json:"provider_name,omitempty"`
+	AuthenticationToken struct {
+		Expiry string `json:"expiry"`
+		Token  string `json:"token"`
+	} `json:"authentication_token"`
 }
 
 // CastMovies defines model for CastMovies.
 type CastMovies struct {
-	Character  *string  `json:"character,omitempty"`
-	Id         *int64   `json:"id,omitempty"`
-	Name       *string  `json:"name,omitempty"`
-	Order      *int     `json:"order,omitempty"`
-	Popularity *float32 `json:"popularity,omitempty"`
-	ProfileUrl *string  `json:"profile_url,omitempty"`
+	Character  string  `json:"character"`
+	Id         int64   `json:"id"`
+	Name       string  `json:"name"`
+	Order      int     `json:"order"`
+	Popularity float32 `json:"popularity"`
+	ProfileUrl string  `json:"profile_url"`
 }
 
 // CastMoviesResponse defines model for CastMoviesResponse.
 type CastMoviesResponse struct {
-	Cast *[]CastMovies `json:"cast,omitempty"`
+	Cast []CastMovies `json:"cast"`
 }
 
 // CastTv defines model for CastTv.
 type CastTv struct {
-	Id         *int64   `json:"id,omitempty"`
-	Name       *string  `json:"name,omitempty"`
-	Order      *int     `json:"order,omitempty"`
-	Popularity *float32 `json:"popularity,omitempty"`
-	ProfileUrl *string  `json:"profile_url,omitempty"`
-	Roles      *[]Role  `json:"roles,omitempty"`
+	Id         int64   `json:"id"`
+	Name       string  `json:"name"`
+	Order      int     `json:"order"`
+	Popularity float32 `json:"popularity"`
+	ProfileUrl string  `json:"profile_url"`
+	Roles      []Role  `json:"roles"`
 }
 
 // CastTvResponse defines model for CastTvResponse.
 type CastTvResponse struct {
-	Cast *[]CastTv `json:"cast,omitempty"`
+	Cast []CastTv `json:"cast"`
 }
 
 // CreateUser defines model for CreateUser.
 type CreateUser struct {
-	Email    *string `json:"email,omitempty"`
-	Name     *string `json:"name,omitempty"`
-	Password *string `json:"password,omitempty"`
-}
-
-// ErrorBadRequest defines model for ErrorBadRequest.
-type ErrorBadRequest struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// ErrorBadRequestMissingQuery defines model for ErrorBadRequestMissingQuery.
-type ErrorBadRequestMissingQuery struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// ErrorBadRequestPath defines model for ErrorBadRequestPath.
-type ErrorBadRequestPath struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// ErrorFailedValidation defines model for ErrorFailedValidation.
-type ErrorFailedValidation struct {
-	Email *string `json:"email,omitempty"`
-}
-
-// ErrorInternalServerError defines model for ErrorInternalServerError.
-type ErrorInternalServerError struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// ErrorInvalidCredentials defines model for ErrorInvalidCredentials.
-type ErrorInvalidCredentials struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// ErrorUnauthorized defines model for ErrorUnauthorized.
-type ErrorUnauthorized struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// Flatrate defines model for Flatrate.
-type Flatrate struct {
-	DisplayPriority *int    `json:"display_priority,omitempty"`
-	LogoUrl         *string `json:"logo_url,omitempty"`
-	ProviderId      *int64  `json:"provider_id,omitempty"`
-	ProviderName    *string `json:"provider_name,omitempty"`
+	Email    string `json:"email"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
 }
 
 // HealthCheck defines model for HealthCheck.
 type HealthCheck struct {
-	Healthcheck *struct {
-		Status     *string `json:"status,omitempty"`
-		SystemInfo *struct {
-			CorsTrustedOrigins *[]string `json:"cors_trusted_origins,omitempty"`
-			Environment        *string   `json:"environment,omitempty"`
-			Version            *string   `json:"version,omitempty"`
-		} `json:"systemInfo,omitempty"`
-	} `json:"healthcheck,omitempty"`
+	Healthcheck struct {
+		Status     string `json:"status"`
+		SystemInfo struct {
+			CorsTrustedOrigins []string `json:"cors_trusted_origins"`
+			Environment        string   `json:"environment"`
+			Version            string   `json:"version"`
+		} `json:"systemInfo"`
+	} `json:"healthcheck"`
 }
 
 // InWatched defines model for InWatched.
 type InWatched struct {
-	InWatched *bool `json:"in_watched,omitempty"`
+	InWatched bool `json:"in_watched"`
 }
 
 // InWatchlist defines model for InWatchlist.
 type InWatchlist struct {
-	InWatchlist *bool `json:"in_watchlist,omitempty"`
+	InWatchlist bool `json:"in_watchlist"`
 }
 
 // Logout defines model for Logout.
 type Logout struct {
-	Message *string `json:"message,omitempty"`
+	Message string `json:"message"`
+}
+
+// Message defines model for Message.
+type Message struct {
+	Message string `json:"message"`
 }
 
 // MovieDetails defines model for MovieDetails.
 type MovieDetails struct {
-	Genres      *[]string `json:"genres,omitempty"`
-	Id          *int64    `json:"id,omitempty"`
-	Overview    *string   `json:"overview,omitempty"`
-	Popularity  *float32  `json:"popularity,omitempty"`
-	PosterUrl   *string   `json:"poster_url,omitempty"`
-	ReleaseDate *string   `json:"release_date,omitempty"`
-	Runtime     *int      `json:"runtime,omitempty"`
-	Title       *string   `json:"title,omitempty"`
-	VoteAverage *float32  `json:"vote_average,omitempty"`
+	Genres      []string `json:"genres"`
+	Id          int64    `json:"id"`
+	Overview    string   `json:"overview"`
+	Popularity  float32  `json:"popularity"`
+	PosterUrl   string   `json:"poster_url"`
+	ReleaseDate string   `json:"release_date"`
+	Runtime     int      `json:"runtime"`
+	Title       string   `json:"title"`
+	VoteAverage float32  `json:"vote_average"`
 }
 
 // MovieDetailsResponse defines model for MovieDetailsResponse.
 type MovieDetailsResponse struct {
-	Movie *MovieDetails `json:"movie,omitempty"`
-}
-
-// MovieWatchlistAddedSuccess defines model for MovieWatchlistAddedSuccess.
-type MovieWatchlistAddedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// MovieWatchlistRemovedSuccess defines model for MovieWatchlistRemovedSuccess.
-type MovieWatchlistRemovedSuccess struct {
-	Message *string `json:"message,omitempty"`
+	Movie MovieDetails `json:"movie"`
 }
 
 // PersonDetails defines model for PersonDetails.
 type PersonDetails struct {
-	Biography  *string  `json:"biography,omitempty"`
-	Birthday   *string  `json:"birthday,omitempty"`
-	Id         *int64   `json:"id,omitempty"`
-	Name       *string  `json:"name,omitempty"`
-	Popularity *float32 `json:"popularity,omitempty"`
-	ProfileUrl *string  `json:"profile_url,omitempty"`
+	Biography  string  `json:"biography"`
+	Birthday   string  `json:"birthday"`
+	Id         int64   `json:"id"`
+	Name       string  `json:"name"`
+	Popularity float32 `json:"popularity"`
+	ProfileUrl string  `json:"profile_url"`
 }
 
 // PersonDetailsResponse defines model for PersonDetailsResponse.
 type PersonDetailsResponse struct {
-	Person *PersonDetails `json:"person,omitempty"`
+	Person PersonDetails `json:"person"`
 }
 
-// Rent defines model for Rent.
-type Rent struct {
-	DisplayPriority *int    `json:"display_priority,omitempty"`
-	LogoUrl         *string `json:"logo_url,omitempty"`
-	ProviderId      *int64  `json:"provider_id,omitempty"`
-	ProviderName    *string `json:"provider_name,omitempty"`
+// Provider defines model for Provider.
+type Provider struct {
+	DisplayPriority int    `json:"display_priority"`
+	Id              int64  `json:"id"`
+	LogoUrl         string `json:"logo_url"`
+	Name            string `json:"name"`
 }
 
 // Role defines model for Role.
 type Role struct {
-	Character    *string `json:"character,omitempty"`
-	EpisodeCount *int    `json:"episode_count,omitempty"`
+	Character    string `json:"character"`
+	EpisodeCount int    `json:"episode_count"`
 }
 
 // SearchMovie defines model for SearchMovie.
 type SearchMovie struct {
-	Id          *int64   `json:"id,omitempty"`
-	Overview    *string  `json:"overview,omitempty"`
-	Popularity  *float32 `json:"popularity,omitempty"`
-	PosterUrl   *string  `json:"poster_url,omitempty"`
-	ReleaseDate *string  `json:"release_date,omitempty"`
-	Title       *string  `json:"title,omitempty"`
-	VoteAverage *float32 `json:"vote_average,omitempty"`
+	Id          int64   `json:"id"`
+	Overview    string  `json:"overview"`
+	Popularity  float32 `json:"popularity"`
+	PosterUrl   string  `json:"poster_url"`
+	ReleaseDate string  `json:"release_date"`
+	Title       string  `json:"title"`
+	VoteAverage float32 `json:"vote_average"`
 }
 
 // SearchMoviesResponse defines model for SearchMoviesResponse.
 type SearchMoviesResponse struct {
-	Movies *[]SearchMovie `json:"movies,omitempty"`
+	Movies []SearchMovie `json:"movies"`
 }
 
 // SearchPeople defines model for SearchPeople.
 type SearchPeople struct {
-	Id         *int64   `json:"id,omitempty"`
-	Name       *string  `json:"name,omitempty"`
-	Popularity *float32 `json:"popularity,omitempty"`
-	ProfileUrl *string  `json:"profile_url,omitempty"`
+	Id         int64   `json:"id"`
+	Name       string  `json:"name"`
+	Popularity float32 `json:"popularity"`
+	ProfileUrl string  `json:"profile_url"`
 }
 
 // SearchPeopleResponse defines model for SearchPeopleResponse.
 type SearchPeopleResponse struct {
-	People *[]SearchPeople `json:"people,omitempty"`
+	People []SearchPeople `json:"people"`
 }
 
 // SearchTVResponse defines model for SearchTVResponse.
 type SearchTVResponse struct {
-	Tv *[]SearchTv `json:"tv,omitempty"`
+	Tv []SearchTv `json:"tv"`
 }
 
 // SearchTv defines model for SearchTv.
 type SearchTv struct {
-	Id          *int64   `json:"id,omitempty"`
-	Overview    *string  `json:"overview,omitempty"`
-	Popularity  *float32 `json:"popularity,omitempty"`
-	PosterUrl   *string  `json:"poster_url,omitempty"`
-	ReleaseDate *string  `json:"release_date,omitempty"`
-	Title       *string  `json:"title,omitempty"`
-	VoteAverage *float32 `json:"vote_average,omitempty"`
+	Id          int64   `json:"id"`
+	Overview    string  `json:"overview"`
+	Popularity  float32 `json:"popularity"`
+	PosterUrl   string  `json:"poster_url"`
+	ReleaseDate string  `json:"release_date"`
+	Title       string  `json:"title"`
+	VoteAverage float32 `json:"vote_average"`
 }
 
 // TvDetails defines model for TvDetails.
 type TvDetails struct {
-	FirstAirDate     *string     `json:"first_air_date,omitempty"`
-	Genres           *[]string   `json:"genres,omitempty"`
-	Id               *int64      `json:"id,omitempty"`
-	LastAirDate      *string     `json:"last_air_date,omitempty"`
-	Name             *string     `json:"name,omitempty"`
-	NumberOfEpisodes *int        `json:"number_of_episodes,omitempty"`
-	NumberOfSeasons  *int        `json:"number_of_seasons,omitempty"`
-	Overview         *string     `json:"overview,omitempty"`
-	Popularity       *float32    `json:"popularity,omitempty"`
-	PosterUrl        *string     `json:"poster_url,omitempty"`
-	Seasons          *[]TvSeason `json:"seasons,omitempty"`
-	Status           *string     `json:"status,omitempty"`
-	VoteAverage      *float32    `json:"vote_average,omitempty"`
+	FirstAirDate     string     `json:"first_air_date"`
+	Genres           []string   `json:"genres"`
+	Id               int64      `json:"id"`
+	LastAirDate      string     `json:"last_air_date"`
+	Name             string     `json:"name"`
+	NumberOfEpisodes int        `json:"number_of_episodes"`
+	NumberOfSeasons  int        `json:"number_of_seasons"`
+	Overview         string     `json:"overview"`
+	Popularity       float32    `json:"popularity"`
+	PosterUrl        string     `json:"poster_url"`
+	Seasons          []TvSeason `json:"seasons"`
+	Status           string     `json:"status"`
+	VoteAverage      float32    `json:"vote_average"`
 }
 
 // TvDetailsResponse defines model for TvDetailsResponse.
 type TvDetailsResponse struct {
-	Tv *TvDetails `json:"tv,omitempty"`
+	Tv TvDetails `json:"tv"`
 }
 
 // TvEpisode defines model for TvEpisode.
 type TvEpisode struct {
-	AirDate     *string  `json:"air_date,omitempty"`
-	EpisodeType *string  `json:"episode_type,omitempty"`
-	Id          *int64   `json:"id,omitempty"`
-	Name        *string  `json:"name,omitempty"`
-	Overview    *string  `json:"overview,omitempty"`
-	Runtime     *int     `json:"runtime,omitempty"`
-	StillUrl    *string  `json:"still_url,omitempty"`
-	VoteAverage *float32 `json:"vote_average,omitempty"`
+	AirDate     string  `json:"air_date"`
+	EpisodeType string  `json:"episode_type"`
+	Id          int64   `json:"id"`
+	Name        string  `json:"name"`
+	Overview    string  `json:"overview"`
+	Runtime     int     `json:"runtime"`
+	StillUrl    string  `json:"still_url"`
+	VoteAverage float32 `json:"vote_average"`
 }
 
 // TvEpisodeDetails defines model for TvEpisodeDetails.
 type TvEpisodeDetails struct {
-	AirDate     *string  `json:"air_date,omitempty"`
-	Id          *int64   `json:"id,omitempty"`
-	Name        *string  `json:"name,omitempty"`
-	Overview    *string  `json:"overview,omitempty"`
-	Runtime     *int     `json:"runtime,omitempty"`
-	StillUrl    *string  `json:"still_url,omitempty"`
-	VoteAverage *float32 `json:"vote_average,omitempty"`
+	AirDate     string  `json:"air_date"`
+	Id          int64   `json:"id"`
+	Name        string  `json:"name"`
+	Overview    string  `json:"overview"`
+	Runtime     int     `json:"runtime"`
+	StillUrl    string  `json:"still_url"`
+	VoteAverage float32 `json:"vote_average"`
 }
 
 // TvEpisodeDetailsResponse defines model for TvEpisodeDetailsResponse.
 type TvEpisodeDetailsResponse struct {
-	Episode *TvEpisodeDetails `json:"episode,omitempty"`
+	Episode TvEpisodeDetails `json:"episode"`
 }
 
 // TvSeason defines model for TvSeason.
 type TvSeason struct {
-	AirDate      *string  `json:"air_date,omitempty"`
-	EpisodeCount *int     `json:"episode_count,omitempty"`
-	Id           *int64   `json:"id,omitempty"`
-	Name         *string  `json:"name,omitempty"`
-	Overview     *string  `json:"overview,omitempty"`
-	PosterUrl    *string  `json:"poster_url,omitempty"`
-	VoteAverage  *float32 `json:"vote_average,omitempty"`
+	AirDate      string  `json:"air_date"`
+	EpisodeCount int     `json:"episode_count"`
+	Id           int64   `json:"id"`
+	Name         string  `json:"name"`
+	Overview     string  `json:"overview"`
+	PosterUrl    string  `json:"poster_url"`
+	VoteAverage  float32 `json:"vote_average"`
 }
 
 // TvSeasonDetails defines model for TvSeasonDetails.
 type TvSeasonDetails struct {
-	AirDate     *string      `json:"air_date,omitempty"`
-	Episodes    *[]TvEpisode `json:"episodes,omitempty"`
-	Id          *int64       `json:"id,omitempty"`
-	Name        *string      `json:"name,omitempty"`
-	Overview    *string      `json:"overview,omitempty"`
-	PosterUrl   *string      `json:"poster_url,omitempty"`
-	VoteAverage *float32     `json:"vote_average,omitempty"`
+	AirDate     string      `json:"air_date"`
+	Episodes    []TvEpisode `json:"episodes"`
+	Id          int64       `json:"id"`
+	Name        string      `json:"name"`
+	Overview    string      `json:"overview"`
+	PosterUrl   string      `json:"poster_url"`
+	VoteAverage float32     `json:"vote_average"`
 }
 
 // TvSeasonDetailsResponse defines model for TvSeasonDetailsResponse.
 type TvSeasonDetailsResponse struct {
-	Season *TvSeasonDetails `json:"season,omitempty"`
-}
-
-// TvWatchlistAddedSuccess defines model for TvWatchlistAddedSuccess.
-type TvWatchlistAddedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// TvWatchlistRemovedSuccess defines model for TvWatchlistRemovedSuccess.
-type TvWatchlistRemovedSuccess struct {
-	Message *string `json:"message,omitempty"`
+	Season TvSeasonDetails `json:"season"`
 }
 
 // User defines model for User.
 type User struct {
 	// CreatedAt User creation date
-	CreatedAt *string `json:"created_at,omitempty"`
+	CreatedAt string `json:"created_at"`
 
 	// Email User supplied email
-	Email *string `json:"email,omitempty"`
+	Email string `json:"email"`
 
 	// Id User id
-	Id *int64 `json:"id,omitempty"`
+	Id int64 `json:"id"`
 
 	// Name User supplied name
-	Name *string `json:"name,omitempty"`
+	Name string `json:"name"`
 }
 
 // UserResponse defines model for UserResponse.
 type UserResponse struct {
-	User *User `json:"user,omitempty"`
+	User User `json:"user"`
 }
 
 // WatchProviders defines model for WatchProviders.
 type WatchProviders struct {
-	Id        *int64 `json:"id,omitempty"`
-	Providers *struct {
-		Buy      *[]Buy      `json:"buy,omitempty"`
-		Flatrate *[]Flatrate `json:"flatrate,omitempty"`
-		Rent     *[]Rent     `json:"rent,omitempty"`
-	} `json:"providers,omitempty"`
+	Id        int64 `json:"id"`
+	Providers struct {
+		Buy      []Provider `json:"buy"`
+		Flatrate []Provider `json:"flatrate"`
+		Rent     []Provider `json:"rent"`
+	} `json:"providers"`
 }
 
 // WatchProvidersResponse defines model for WatchProvidersResponse.
 type WatchProvidersResponse struct {
-	WatchProviders *WatchProviders `json:"watch_providers,omitempty"`
+	WatchProviders WatchProviders `json:"watch_providers"`
 }
 
 // Watched defines model for Watched.
 type Watched struct {
-	Movies *[]SearchMoviesResponse `json:"movies,omitempty"`
-	Tv     *[]SearchTVResponse     `json:"tv,omitempty"`
-}
-
-// WatchedMovieAddedSuccess defines model for WatchedMovieAddedSuccess.
-type WatchedMovieAddedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// WatchedMovieRemovedSuccess defines model for WatchedMovieRemovedSuccess.
-type WatchedMovieRemovedSuccess struct {
-	Message *string `json:"message,omitempty"`
+	Movies []SearchMoviesResponse `json:"movies"`
+	Tv     []SearchTVResponse     `json:"tv"`
 }
 
 // WatchedTv defines model for WatchedTv.
 type WatchedTv = []struct {
-	Id      *int64             `json:"id,omitempty"`
-	Seasons *[]WatchedTvSeason `json:"seasons,omitempty"`
-	Status  *WatchedTvStatus   `json:"status,omitempty"`
+	Id      int64             `json:"id"`
+	Seasons []WatchedTvSeason `json:"seasons"`
+	Status  WatchedTvStatus   `json:"status"`
 }
 
 // WatchedTvStatus defines model for WatchedTv.Status.
 type WatchedTvStatus string
 
-// WatchedTvAddedSuccess defines model for WatchedTvAddedSuccess.
-type WatchedTvAddedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// WatchedTvEpisodeAddedSuccess defines model for WatchedTvEpisodeAddedSuccess.
-type WatchedTvEpisodeAddedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// WatchedTvEpisodeRemovedSuccess defines model for WatchedTvEpisodeRemovedSuccess.
-type WatchedTvEpisodeRemovedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// WatchedTvRemovedSuccess defines model for WatchedTvRemovedSuccess.
-type WatchedTvRemovedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
 // WatchedTvSeason defines model for WatchedTvSeason.
 type WatchedTvSeason struct {
-	Episodes *[]struct {
-		EpisodeNumber *int  `json:"episode_number,omitempty"`
-		InWatched     *bool `json:"in_watched,omitempty"`
-	} `json:"episodes,omitempty"`
-	SeasonNumber *int                   `json:"season_number,omitempty"`
-	Status       *WatchedTvSeasonStatus `json:"status,omitempty"`
+	Episodes []struct {
+		EpisodeNumber int  `json:"episode_number"`
+		InWatched     bool `json:"in_watched"`
+	} `json:"episodes"`
+	SeasonNumber int                   `json:"season_number"`
+	Status       WatchedTvSeasonStatus `json:"status"`
 }
 
 // WatchedTvSeasonStatus defines model for WatchedTvSeason.Status.
 type WatchedTvSeasonStatus string
 
-// WatchedTvSeasonAddedSuccess defines model for WatchedTvSeasonAddedSuccess.
-type WatchedTvSeasonAddedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
-// WatchedTvSeasonRemovedSuccess defines model for WatchedTvSeasonRemovedSuccess.
-type WatchedTvSeasonRemovedSuccess struct {
-	Message *string `json:"message,omitempty"`
-}
-
 // Watchlist defines model for Watchlist.
 type Watchlist struct {
-	Movies *[]SearchMovie `json:"movies,omitempty"`
-	Tv     *[]SearchTv    `json:"tv,omitempty"`
+	Movies []SearchMovie `json:"movies"`
+	Tv     []SearchTv    `json:"tv"`
 }
 
 // SearchMoviesHandlerParams defines parameters for SearchMoviesHandler.
@@ -472,15 +360,6 @@ type SearchTvHandlerParams struct {
 	// Q The search query
 	Q string `form:"q" json:"q"`
 }
-
-// GetWatchedHandlerParams defines parameters for GetWatchedHandler.
-type GetWatchedHandlerParams struct {
-	// Type The type of the watched list
-	Type *GetWatchedHandlerParamsType `form:"type,omitempty" json:"type,omitempty"`
-}
-
-// GetWatchedHandlerParamsType defines parameters for GetWatchedHandler.
-type GetWatchedHandlerParamsType string
 
 // CreateAuthenticationTokenHandlerJSONRequestBody defines body for CreateAuthenticationTokenHandler for application/json ContentType.
 type CreateAuthenticationTokenHandlerJSONRequestBody = AuthenticateUser
