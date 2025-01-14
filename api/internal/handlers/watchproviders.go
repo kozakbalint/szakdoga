@@ -27,7 +27,7 @@ func (h *WatchProviderHandler) WatchProvidersMovieHandler(w http.ResponseWriter,
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": providers}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watch_providers": providers}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
@@ -46,7 +46,7 @@ func (h *WatchProviderHandler) WatchProvidersTvHandler(w http.ResponseWriter, r 
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"providers": providers}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watch_providers": providers}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
