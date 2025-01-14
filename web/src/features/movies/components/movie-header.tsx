@@ -118,7 +118,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
           </div>
         </div>
         <div>
-          <MovieWatchProvider movieId={movieId} type="streaming" />
+          <MovieWatchProvider movieId={movieId} />
         </div>
       </div>
     </div>

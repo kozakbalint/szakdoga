@@ -118,7 +118,7 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
           </div>
         </div>
         <div>
-          <TvWatchProvider tvId={tvId} type="streaming" />
+          <TvWatchProvider tvId={tvId} />
         </div>
       </div>
     </div>

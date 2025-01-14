@@ -1,16 +1,13 @@
 import { Card } from '@/components/ui/card';
 import { useGetMovieWatchProviders } from '../api/get-movie-watch-providers';
+import { useLocalStorage } from '@uidotdev/usehooks';
 
-export const MovieWatchProvider = ({
-  movieId,
-  type,
-}: {
-  movieId: string;
-  type: 'streaming' | 'buy';
-}) => {
+export const MovieWatchProvider = ({ movieId }: { movieId: string }) => {
   const movieWatchProviderQuery = useGetMovieWatchProviders({
     id: movieId,
   });
+
+  const [type] = useLocalStorage('preferredProvider', 'Stream');
 
   if (movieWatchProviderQuery.isLoading) {
     return <div>Loading...</div>;
@@ -22,7 +19,7 @@ export const MovieWatchProvider = ({
     return <div>Providers not found</div>;
   }
 
-  if (!providers?.flatrate && type === 'streaming') {
+  if (providers.flatrate.length === 0 && type === 'Stream') {
     return (
       <div>
         <p className="text-xl font-bold">Stream at:</p>
@@ -31,7 +28,7 @@ export const MovieWatchProvider = ({
     );
   }
 
-  if (!providers?.buy && type === 'buy') {
+  if (providers.buy.length === 0 && type === 'Buy') {
     return (
       <div>
         <p className="text-xl font-bold">Buy at:</p>
@@ -40,7 +37,16 @@ export const MovieWatchProvider = ({
     );
   }
 
-  if (type === 'streaming') {
+  if (providers.rent.length === 0 && type === 'Rent') {
+    return (
+      <div>
+        <p className="text-xl font-bold">Rent at:</p>
+        <div>Renting is not available</div>
+      </div>
+    );
+  }
+
+  if (type === 'Stream') {
     return (
       <div className="flex flex-col gap-2">
         <p className="text-xl font-bold">Stream at:</p>
@@ -60,7 +66,7 @@ export const MovieWatchProvider = ({
     );
   }
 
-  if (type === 'buy') {
+  if (type === 'Buy') {
     return (
       <div className="flex flex-col gap-2">
         <p className="text-xl font-bold">Buy at:</p>
@@ -73,6 +79,26 @@ export const MovieWatchProvider = ({
                 className="h-10 rounded-xl"
               />
               <p className="px-2 truncate">{buy.name}</p>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'Rent') {
+    return (
+      <div className="flex flex-col gap-2">
+        <p className="text-xl font-bold">Rent at:</p>
+        <div className="flex gap-2 flex-wrap">
+          {providers.rent.map((rent) => (
+            <Card className="flex items-center w-fit max-h-11" key={rent.id}>
+              <img
+                src={rent.logo_url}
+                alt={rent.name}
+                className="h-10 rounded-xl"
+              />
+              <p className="px-2 truncate">{rent.name}</p>
             </Card>
           ))}
         </div>
