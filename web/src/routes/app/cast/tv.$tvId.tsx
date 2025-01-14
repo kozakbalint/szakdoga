@@ -1,12 +1,12 @@
 import { ContentLayout } from '@/components/layouts';
 import {
-  getTvByIdQueryOptions,
-  useGetTvById,
-} from '@/features/tv/api/get-tv-by-id';
+  getTvDetailsQueryOptions,
+  useGetTvDetails,
+} from '@/features/tv/api/get-tv-details';
 import {
-  getTvCastByIdQueryOptions,
-  useGetTvCastById,
-} from '@/features/tv/api/get-tv-cast-by-id';
+  getTvCastQueryOptions,
+  useGetTvCast,
+} from '@/features/cast/api/get-tv-cast';
 import { QueryClient } from '@tanstack/react-query';
 import {
   createFileRoute,
@@ -28,8 +28,8 @@ export const Route = createFileRoute('/app/cast/tv/$tvId')({
   },
   component: TvCastRoute,
   loader: async ({ params }) => {
-    queryClient.ensureQueryData(getTvByIdQueryOptions({ id: params.tvId }));
-    queryClient.ensureQueryData(getTvCastByIdQueryOptions({ id: params.tvId }));
+    queryClient.ensureQueryData(getTvDetailsQueryOptions({ id: params.tvId }));
+    queryClient.ensureQueryData(getTvCastQueryOptions({ id: params.tvId }));
   },
 });
 
@@ -37,8 +37,8 @@ function TvCastRoute() {
   const params = useParams({ strict: false });
   const tvId = params.tvId as string;
 
-  const tvQuery = useGetTvById({ id: tvId });
-  const tvCastQuery = useGetTvCastById({ id: tvId });
+  const tvQuery = useGetTvDetails({ id: tvId });
+  const tvCastQuery = useGetTvCast({ id: tvId });
 
   if (tvCastQuery.isLoading || tvQuery.isLoading) {
     return <div>Loading...</div>;
@@ -72,7 +72,10 @@ function TvCastRoute() {
                     })}
                   </p>
                   <p className="text-base">
-                    Total Episode Count: {actor.total_episode_count}
+                    Total Episode Count:{' '}
+                    {actor.roles
+                      .map((role) => role.episode_count)
+                      .reduce((a, b) => a + b, 0)}
                   </p>
                 </div>
               </div>

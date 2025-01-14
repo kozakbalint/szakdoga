@@ -5,13 +5,13 @@ import {
   SelectTrigger,
 } from '@/components/ui/select';
 import {
-  getTvSeasonByIdQueryOptions,
-  useGetTvSeasonById,
-} from '../api/get-tv-season-by-id';
+  getTvSeasonDetailsQueryOptions,
+  useGetTvSeasonDetails,
+} from '../api/get-tv-season-details';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useGetTvById } from '../api/get-tv-by-id';
+import { useGetTvDetails } from '../api/get-tv-details';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
@@ -19,8 +19,8 @@ import { Link } from '@tanstack/react-router';
 export const TvSeasons = ({ tvId }: { tvId: string }) => {
   const [selectedSeason, setSelectedSeason] = useState<number>(1);
   const queryClient = useQueryClient();
-  const tvQuery = useGetTvById({ id: tvId });
-  const tvSeasonQuery = useGetTvSeasonById({
+  const tvQuery = useGetTvDetails({ id: tvId });
+  const tvSeasonQuery = useGetTvSeasonDetails({
     id: tvId,
     seasonId: selectedSeason.toString(),
   });
@@ -38,7 +38,7 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
 
   const prefetchNextSeason = async (tvId: string, seasonNumber: number) => {
     queryClient.prefetchQuery(
-      getTvSeasonByIdQueryOptions({
+      getTvSeasonDetailsQueryOptions({
         id: tvId,
         seasonId: seasonNumber.toString(),
       }),
@@ -82,14 +82,14 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
         </Select>
       </div>
       <div className="flex flex-col items-center gap-2 h-96 overflow-scroll">
-        {season.season.episodes.map((episode) => (
+        {season.episodes.map((episode, index) => (
           <Link
-            to={`/app/episode/${tvId}/${season.season.season_number}/${episode.episode_number}`}
+            to={`/app/episode/${tvId}/${selectedSeason}/${index + 1}`}
             className="hover:underline w-full"
-            key={episode.episode_number}
+            key={index + 1}
           >
             <Card
-              key={episode.episode_number}
+              key={index + 1}
               className="flex flex-col h-4/5 w-full md:flex-row md:h-32"
             >
               <CardHeader className="p-0 min-w-fit">
@@ -103,7 +103,7 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
                 <div className="flex flex-row gap-4">
                   <div className="flex flex-col">
                     <div className="flex flex-row gap-2 font-bold text-lg md:text-xl">
-                      <div>{episode.episode_number}.</div>
+                      <div>{index + 1}.</div>
                       <div className="line-clamp-2">{episode.name}</div>
                     </div>
                     <div className="line-clamp-2 lg:line-clamp-3">

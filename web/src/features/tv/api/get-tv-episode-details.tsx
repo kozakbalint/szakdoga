@@ -2,21 +2,23 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
-import { GetTvEpisodeResponse } from '@/types/api';
+import { TvEpisodeDetailsResponse } from '@/types/types.gen';
 
-export const getTvEpisodeById = (
+export const getTvEpisodeDetails = (
   id: string,
   seasonId: string,
   episodeId: string,
-): Promise<GetTvEpisodeResponse> => {
+): Promise<TvEpisodeDetailsResponse> => {
   if (!id || !seasonId || !episodeId) {
-    return Promise.resolve({ episode: null });
+    return Promise.reject(
+      new Error('Tv id, season id and episode id are required'),
+    );
   }
   const url = `/tv/${id}/seasons/${seasonId}/episodes/${episodeId}`;
-  return apiClient.get(url, true) as Promise<GetTvEpisodeResponse>;
+  return apiClient.get(url, true) as Promise<TvEpisodeDetailsResponse>;
 };
 
-export const getTvEpisodeByIdQueryOptions = ({
+export const getTvEpisodeDetailsQueryOptions = ({
   id,
   seasonId,
   episodeId,
@@ -30,25 +32,25 @@ export const getTvEpisodeByIdQueryOptions = ({
       id && seasonId
         ? ['tv-episode', { id, seasonId, episodeId }]
         : ['tv-episode'],
-    queryFn: () => getTvEpisodeById(id, seasonId, episodeId),
+    queryFn: () => getTvEpisodeDetails(id, seasonId, episodeId),
   });
 };
 
-type UseGetTvEpisodeByIdOptions = {
+type UseGetTvEpisodeDetailsOptions = {
   id: string;
   seasonId: string;
   episodeId: string;
-  queryConfig?: QueryConfig<typeof getTvEpisodeByIdQueryOptions>;
+  queryConfig?: QueryConfig<typeof getTvEpisodeDetailsQueryOptions>;
 };
 
-export const useGetTvEpisodeById = ({
+export const useGetTvEpisodeDetails = ({
   id,
   seasonId,
   episodeId,
   queryConfig,
-}: UseGetTvEpisodeByIdOptions) => {
+}: UseGetTvEpisodeDetailsOptions) => {
   return useQuery({
-    ...getTvEpisodeByIdQueryOptions({ id, seasonId, episodeId }),
+    ...getTvEpisodeDetailsQueryOptions({ id, seasonId, episodeId }),
     ...queryConfig,
   });
 };

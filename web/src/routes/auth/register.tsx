@@ -1,5 +1,5 @@
 import { AuthLayout } from '@/components/layouts/auth-layout';
-import { RegisterForm } from '@/features/auth/components/register-form';
+import { RegisterForm } from '@/features/users/components/register-form';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/auth/register')({

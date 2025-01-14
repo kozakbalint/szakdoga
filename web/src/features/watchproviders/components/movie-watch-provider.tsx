@@ -1,26 +1,28 @@
 import { Card } from '@/components/ui/card';
-import { useGetTvWatchProvidersById } from '../api/get-tv-watch-providers-by-id';
+import { useGetMovieWatchProviders } from '../api/get-movie-watch-providers';
 
-export const TvWatchProvider = ({
-  tvId,
+export const MovieWatchProvider = ({
+  movieId,
   type,
 }: {
-  tvId: string;
-  type: 'streming' | 'buy';
+  movieId: string;
+  type: 'streaming' | 'buy';
 }) => {
-  const tvWatchProviderQuery = useGetTvWatchProvidersById({ id: tvId });
+  const movieWatchProviderQuery = useGetMovieWatchProviders({
+    id: movieId,
+  });
 
-  if (tvWatchProviderQuery.isLoading) {
+  if (movieWatchProviderQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
-  const providers = tvWatchProviderQuery.data?.providers;
+  const providers = movieWatchProviderQuery.data?.watch_providers;
 
   if (!providers) {
     return <div>Providers not found</div>;
   }
 
-  if (!providers?.streaming && type === 'streming') {
+  if (!providers?.flatrate && type === 'streaming') {
     return (
       <div>
         <p className="text-xl font-bold">Stream at:</p>
@@ -38,12 +40,12 @@ export const TvWatchProvider = ({
     );
   }
 
-  if (type === 'streming') {
+  if (type === 'streaming') {
     return (
       <div className="flex flex-col gap-2">
         <p className="text-xl font-bold">Stream at:</p>
         <div className="flex gap-2 flex-wrap">
-          {providers.streaming.map((stream) => (
+          {providers.flatrate.map((stream) => (
             <Card className="flex items-center w-fit max-h-11" key={stream.id}>
               <img
                 src={stream.logo_url}

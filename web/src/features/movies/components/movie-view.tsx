@@ -1,5 +1,5 @@
 import { MovieHeader } from './movie-header';
-import { MovieCast } from './movie-cast';
+import { MovieCast } from '@/features/cast/components/movie-cast';
 
 export const MovieView = ({ movieId }: { movieId: string }) => {
   return (

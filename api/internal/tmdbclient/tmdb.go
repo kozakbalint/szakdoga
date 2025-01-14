@@ -246,6 +246,10 @@ func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
 
 	seasons := []types.TvSeason{}
 	for _, season := range tv.Seasons {
+		if season.SeasonNumber == 0 {
+			continue
+		}
+
 		posterUrl := tmdb.GetImageURL(season.PosterPath, "w500")
 
 		seasons = append(seasons, types.TvSeason{
@@ -344,13 +348,16 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 	huProviders := providers.Results["HU"]
 	id := int64(tmdbID)
 	var response = types.WatchProviders{
-		Id: id,
+		Id:       id,
+		Flatrate: []types.Provider{},
+		Rent:     []types.Provider{},
+		Buy:      []types.Provider{},
 	}
 
 	for _, provider := range huProviders.Flatrate {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		response.Providers.Flatrate = append(response.Providers.Flatrate, types.Provider{
+		response.Flatrate = append(response.Flatrate, types.Provider{
 			Id:              provider.ProviderID,
 			Name:            provider.ProviderName,
 			LogoUrl:         logoURL,
@@ -361,7 +368,7 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 	for _, provider := range huProviders.Buy {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		response.Providers.Buy = append(response.Providers.Buy, types.Provider{
+		response.Buy = append(response.Buy, types.Provider{
 			Id:              provider.ProviderID,
 			Name:            provider.ProviderName,
 			LogoUrl:         logoURL,
@@ -372,7 +379,7 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 	for _, provider := range huProviders.Rent {
 		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
 		displayPriority := int(provider.DisplayPriority)
-		response.Providers.Rent = append(response.Providers.Rent, types.Provider{
+		response.Rent = append(response.Rent, types.Provider{
 			Id:              provider.ProviderID,
 			Name:            provider.ProviderName,
 			LogoUrl:         logoURL,
@@ -392,40 +399,49 @@ func (m *Client) GetTvWatchProviders(tmdbID int) (*types.WatchProviders, error) 
 	huProviders := providers.Results["HU"]
 	id := int64(tmdbID)
 	var response = types.WatchProviders{
-		Id: id,
+		Id:       id,
+		Flatrate: []types.Provider{},
+		Buy:      []types.Provider{},
+		Rent:     []types.Provider{},
 	}
 
-	for _, provider := range huProviders.Flatrate {
-		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
-		displayPriority := int(provider.DisplayPriority)
-		response.Providers.Flatrate = append(response.Providers.Flatrate, types.Provider{
-			Id:              provider.ProviderID,
-			Name:            provider.ProviderName,
-			LogoUrl:         logoURL,
-			DisplayPriority: displayPriority,
-		})
+	if huProviders.Flatrate != nil {
+		for _, provider := range huProviders.Flatrate {
+			logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
+			displayPriority := int(provider.DisplayPriority)
+			response.Flatrate = append(response.Flatrate, types.Provider{
+				Id:              provider.ProviderID,
+				Name:            provider.ProviderName,
+				LogoUrl:         logoURL,
+				DisplayPriority: displayPriority,
+			})
+		}
 	}
 
-	for _, provider := range huProviders.Buy {
-		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
-		displayPriority := int(provider.DisplayPriority)
-		response.Providers.Buy = append(response.Providers.Buy, types.Provider{
-			Id:              provider.ProviderID,
-			Name:            provider.ProviderName,
-			LogoUrl:         logoURL,
-			DisplayPriority: displayPriority,
-		})
+	if huProviders.Buy != nil {
+		for _, provider := range huProviders.Buy {
+			logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
+			displayPriority := int(provider.DisplayPriority)
+			response.Buy = append(response.Buy, types.Provider{
+				Id:              provider.ProviderID,
+				Name:            provider.ProviderName,
+				LogoUrl:         logoURL,
+				DisplayPriority: displayPriority,
+			})
+		}
 	}
 
-	for _, provider := range huProviders.Rent {
-		logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
-		displayPriority := int(provider.DisplayPriority)
-		response.Providers.Rent = append(response.Providers.Rent, types.Provider{
-			Id:              provider.ProviderID,
-			Name:            provider.ProviderName,
-			LogoUrl:         logoURL,
-			DisplayPriority: displayPriority,
-		})
+	if huProviders.Rent != nil {
+		for _, provider := range huProviders.Rent {
+			logoURL := tmdb.GetImageURL(provider.LogoPath, "w92")
+			displayPriority := int(provider.DisplayPriority)
+			response.Rent = append(response.Rent, types.Provider{
+				Id:              provider.ProviderID,
+				Name:            provider.ProviderName,
+				LogoUrl:         logoURL,
+				DisplayPriority: displayPriority,
+			})
+		}
 	}
 
 	return &response, nil

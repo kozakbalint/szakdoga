@@ -1,21 +1,18 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { useGetTvById } from '../api/get-tv-by-id';
-import { useGetTvSeasonsById } from '../api/get-tv-seasons-by-id';
+import { useGetTvDetails } from '../api/get-tv-details';
 import { Button } from '@/components/ui/button';
 import { Link } from '@tanstack/react-router';
 
 export const SeasonsView = ({ id }: { id: string }) => {
-  const tvQuery = useGetTvById({ id });
-  const seasonQuery = useGetTvSeasonsById({ id });
+  const tvQuery = useGetTvDetails({ id });
 
-  if (tvQuery.isLoading || seasonQuery.isLoading) {
+  if (tvQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
   const tv = tvQuery.data?.tv;
-  const seasons = seasonQuery.data?.seasons;
 
-  if (!tv || !seasons) {
+  if (!tv) {
     return <div>No seasons found</div>;
   }
 
@@ -23,14 +20,14 @@ export const SeasonsView = ({ id }: { id: string }) => {
     <div className="flex flex-col gap-4">
       <div className="text-2xl">{tv.name} Seasons:</div>
       <div className="flex flex-row sm:flex-col gap-2 flex-wrap justify-center sm:justify-start">
-        {seasons.seasons_without_episodes.map((season) => (
+        {tv.seasons.map((season, index) => (
           <Link
-            to={`/app/season/${tv.id}/${season.season_number}`}
+            to={`/app/season/${tv.id}/${index + 1}`}
             className="hover:underline w-3/4 sm:w-full"
-            key={season.season_number}
+            key={index + 1}
           >
             <Card
-              key={season.season_number}
+              key={index + 1}
               className="flex flex-col h-full w-full sm:flex-row sm:h-32"
             >
               <CardHeader className="p-0 min-w-fit">

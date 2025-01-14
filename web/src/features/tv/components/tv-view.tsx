@@ -1,4 +1,4 @@
-import { TvCast } from './tv-cast';
+import { TvCast } from '@/features/cast/components/tv-cast';
 import { TvHeader } from './tv-header';
 import { TvSeasons } from './tv-seasons';
 

@@ -595,17 +595,10 @@ export type components = {
     schemas: {
         HealthCheck: {
             healthcheck: {
-                /** @example available */
                 status: string;
                 systemInfo: {
-                    /** @example development */
                     environment: string;
-                    /** @example [
-                     *       "http://localhost:3000",
-                     *       "http://localhost:3001"
-                     *     ] */
                     cors_trusted_origins: string[];
-                    /** @example 1.0.0 */
                     version: string;
                 };
             };
@@ -617,402 +610,235 @@ export type components = {
             /**
              * Format: int64
              * @description User id
-             * @example 15
              */
             id: number;
             /**
              * Format: rfc3339
              * @description User creation date
-             * @example 2021-10-10T12:00:00Z
              */
             created_at: string;
-            /**
-             * @description User supplied name
-             * @example John Doe
-             */
+            /** @description User supplied name */
             name: string;
-            /**
-             * @description User supplied email
-             * @example john.doe@example.com
-             */
+            /** @description User supplied email */
             email: string;
         };
         CreateUser: {
-            /** @example John Doe */
             name: string;
-            /** @example john.doe@example.com */
             email: string;
-            /** @example password123 */
             password: string;
         };
         AuthenticateUser: {
-            /** @example john.doe@example.com */
             email: string;
-            /** @example password123 */
             password: string;
         };
         AuthenticationToken: {
             authentication_token: {
-                /** @example a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 */
                 token: string;
-                /**
-                 * Format: rfc3339
-                 * @example 2021-10-10T12:00:00Z
-                 */
+                /** Format: rfc3339 */
                 expiry: string;
             };
         };
         Logout: {
-            /** @example authentication token(s) successfully deleted */
             message: string;
         };
         SearchMoviesResponse: {
             movies: components["schemas"]["SearchMovie"][];
         };
         SearchMovie: {
-            /**
-             * Format: int64
-             * @example 278
-             */
+            /** Format: int64 */
             id: number;
-            /** @example The Shawshank Redemption */
             title: string;
-            /** @example Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope. */
             overview: string;
-            /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
             poster_url: string;
-            /** @example 1994-09-23 */
             release_date: string;
-            /**
-             * Format: float
-             * @example 8.3
-             */
+            /** Format: float */
             vote_average: number;
-            /**
-             * Format: float
-             * @example 186.654
-             */
+            /** Format: float */
             popularity: number;
         };
         SearchTVResponse: {
             tv: components["schemas"]["SearchTv"][];
         };
         SearchTv: {
-            /**
-             * Format: int64
-             * @example 1399
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Game of Thrones */
             title: string;
-            /** @example Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond. */
             overview: string;
-            /** @example https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg */
             poster_url: string;
-            /** @example 2011-04-17 */
             release_date: string;
-            /**
-             * Format: float
-             * @example 8.4
-             */
+            /** Format: float */
             vote_average: number;
-            /**
-             * Format: float
-             * @example 749.726
-             */
+            /** Format: float */
             popularity: number;
         };
         SearchPeopleResponse: {
             people: components["schemas"]["SearchPeople"][];
         };
         SearchPeople: {
-            /**
-             * Format: int64
-             * @example 115440
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Sydney Sweeney */
             name: string;
-            /** @example https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg */
             profile_url: string;
-            /**
-             * Format: float
-             * @example 152.351
-             */
+            /** Format: float */
             popularity: number;
         };
         MovieDetailsResponse: {
             movie: components["schemas"]["MovieDetails"];
         };
         MovieDetails: {
-            /**
-             * Format: int64
-             * @example 278
-             */
+            /** Format: int64 */
             id: number;
-            /** @example The Shawshank Redemption */
             title: string;
-            /** @example Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope. */
             overview: string;
-            /** @example 1994-09-23 */
             release_date: string;
             genres: string[];
-            /** @example 142 */
             runtime: number;
-            /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
             poster_url: string;
-            /**
-             * Format: float
-             * @example 186.654
-             */
+            /** Format: float */
             popularity: number;
-            /**
-             * Format: float
-             * @example 8.7
-             */
+            /** Format: float */
             vote_average: number;
         };
         CastMoviesResponse: {
             cast: components["schemas"]["CastMovies"][];
         };
         CastMovies: {
-            /**
-             * Format: int64
-             * @example 6941
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Cameron Diaz */
             name: string;
-            /** @example Princess Fiona (voice) */
             character: string;
-            /** @example https://image.tmdb.org/t/p/w92/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg */
             profile_url: string;
-            /** @example 2 */
             order: number;
-            /**
-             * Format: float
-             * @example 57.269
-             */
+            /** Format: float */
             popularity: number;
         };
         TvDetailsResponse: {
             tv: components["schemas"]["TvDetails"];
         };
         TvDetails: {
-            /**
-             * Format: int64
-             * @example 1399
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Game of Thrones */
             name: string;
-            /** @example Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond. */
             overview: string;
-            /** @example 2011-04-17 */
             first_air_date: string;
-            /** @example 2019-05-19 */
             last_air_date: string;
             genres: string[];
-            /** @example 8 */
             number_of_seasons: number;
-            /** @example 73 */
             number_of_episodes: number;
             seasons: components["schemas"]["TvSeason"][];
-            /** @example https://image.tmdb.org/t/p/w92/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg */
             poster_url: string;
-            /** @example Ended */
             status: string;
-            /**
-             * Format: float
-             * @example 749.726
-             */
+            /** Format: float */
             popularity: number;
-            /**
-             * Format: float
-             * @example 8.4
-             */
+            /** Format: float */
             vote_average: number;
         };
         TvSeason: {
-            /**
-             * Format: int64
-             * @example 3624
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Season 1 */
             name: string;
-            /** @example 2011-04-17 */
             air_date: string;
-            /** @example 10 */
             episode_count: number;
-            /** @example Winter Is Coming */
             overview: string;
-            /** @example https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg */
             poster_url: string;
-            /**
-             * Format: float
-             * @example 8.3
-             */
+            /** Format: float */
             vote_average: number;
         };
         TvSeasonDetailsResponse: {
             season: components["schemas"]["TvSeasonDetails"];
         };
         TvSeasonDetails: {
-            /**
-             * Format: int64
-             * @example 3624
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Season 1 */
             name: string;
-            /** @example 2011-04-17 */
             air_date: string;
-            /** @example Winter Is Coming */
             overview: string;
-            /** @example https://image.tmdb.org/t/p/w92/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg */
             poster_url: string;
             episodes: components["schemas"]["TvEpisode"][];
-            /**
-             * Format: float
-             * @example 8.3
-             */
+            /** Format: float */
             vote_average: number;
         };
         TvEpisode: {
-            /**
-             * Format: int64
-             * @example 63056
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Winter Is Coming */
             name: string;
-            /** @example 2011-04-17 */
             air_date: string;
-            /** @example 62 */
             runtime: number;
-            /** @example standard */
             episode_type: string;
-            /** @example Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army. */
             overview: string;
-            /** @example https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg */
             still_url: string;
-            /**
-             * Format: float
-             * @example 8.046
-             */
+            /** Format: float */
             vote_average: number;
         };
         TvEpisodeDetailsResponse: {
             episode: components["schemas"]["TvEpisodeDetails"];
         };
         TvEpisodeDetails: {
-            /**
-             * Format: int64
-             * @example 63056
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Winter Is Coming */
             name: string;
-            /** @example 2011-04-17 */
             air_date: string;
-            /** @example 62 */
             runtime: number;
-            /** @example Jon Arryn, the Hand of the King, is dead. King Robert Baratheon plans to ask his oldest friend, Eddard Stark, to take Jon's place. Across the sea, Viserys Targaryen plans to wed his sister to a nomadic warlord in exchange for an army. */
             overview: string;
-            /** @example https://image.tmdb.org/t/p/w92/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg */
             still_url: string;
-            /**
-             * Format: float
-             * @example 8.046
-             */
+            /** Format: float */
             vote_average: number;
         };
         CastTvResponse: {
             cast: components["schemas"]["CastTv"][];
         };
         CastTv: {
-            /**
-             * Format: int64
-             * @example 1223786
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Emilia Clarke */
             name: string;
             roles: components["schemas"]["Role"][];
-            /** @example https://image.tmdb.org/t/p/w92/wb8VfDPGpyqcFltnRcJR1Wj3h4Z.jpg */
             profile_url: string;
-            /** @example 8 */
             order: number;
-            /**
-             * Format: float
-             * @example 57.269
-             */
+            /** Format: float */
             popularity: number;
         };
         Role: {
-            /** @example Daenerys Targaryen */
             character: string;
-            /** @example 73 */
             episode_count: number;
         };
         PersonDetailsResponse: {
             person: components["schemas"]["PersonDetails"];
         };
         PersonDetails: {
-            /**
-             * Format: int64
-             * @example 115440
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Sydney Sweeney */
             name: string;
-            /** @example Sydney Bernice Sweeney (born September 12, 1997) is an American actress. She gained mainstream attention for her role as Emaline Addario in the Netflix series Everything Sucks! (2018). */
             biography: string;
-            /** @example 1997-09-12 */
             birthday: string;
-            /** @example https://image.tmdb.org/t/p/w92/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg */
             profile_url: string;
-            /**
-             * Format: float
-             * @example 152.351
-             */
+            /** Format: float */
             popularity: number;
         };
         WatchProvidersResponse: {
             watch_providers: components["schemas"]["WatchProviders"];
         };
         WatchProviders: {
-            /**
-             * Format: int64
-             * @example 278
-             */
+            /** Format: int64 */
             id: number;
-            providers: {
-                flatrate: components["schemas"]["Provider"][];
-                rent: components["schemas"]["Provider"][];
-                buy: components["schemas"]["Provider"][];
-            };
+            flatrate: components["schemas"]["Provider"][];
+            rent: components["schemas"]["Provider"][];
+            buy: components["schemas"]["Provider"][];
         };
         Provider: {
-            /**
-             * Format: int64
-             * @example 8
-             */
+            /** Format: int64 */
             id: number;
-            /** @example Netflix */
             name: string;
-            /** @example https://image.tmdb.org/t/p/w92/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg */
             logo_url: string;
-            /** @example 1 */
             display_priority: number;
+        };
+        WatchlistResponse: {
+            watchlist: components["schemas"]["Watchlist"];
         };
         Watchlist: {
             movies: components["schemas"]["SearchMovie"][];
             tv: components["schemas"]["SearchTv"][];
         };
         InWatchlist: {
-            /** @example true */
             in_watchlist: boolean;
         };
         Watched: {
@@ -1020,28 +846,21 @@ export type components = {
             tv: components["schemas"]["SearchTVResponse"][];
         };
         InWatched: {
-            /** @example true */
             in_watched: boolean;
         };
         WatchedTv: {
-            /**
-             * Format: int64
-             * @example 1399
-             */
+            /** Format: int64 */
             id: number;
             /** @enum {string} */
             status: WatchedTvStatus;
             seasons: components["schemas"]["WatchedTvSeason"][];
         }[];
         WatchedTvSeason: {
-            /** @example 1 */
             season_number: number;
             /** @enum {string} */
             status: WatchedTvStatus;
             episodes: {
-                /** @example 1 */
                 episode_number: number;
-                /** @example true */
                 in_watched: boolean;
             }[];
         };
@@ -1088,6 +907,7 @@ export type PersonDetails = components['schemas']['PersonDetails'];
 export type WatchProvidersResponse = components['schemas']['WatchProvidersResponse'];
 export type WatchProviders = components['schemas']['WatchProviders'];
 export type Provider = components['schemas']['Provider'];
+export type WatchlistResponse = components['schemas']['WatchlistResponse'];
 export type Watchlist = components['schemas']['Watchlist'];
 export type InWatchlist = components['schemas']['InWatchlist'];
 export type Watched = components['schemas']['Watched'];
@@ -1932,7 +1752,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Watchlist"];
+                    "application/json": components["schemas"]["WatchlistResponse"];
                 };
             };
             /** @description Unauthorized */

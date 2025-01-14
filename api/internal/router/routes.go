@@ -27,7 +27,7 @@ func New(ctx *context.ServerContext) http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v1/movies/:id", middleware.RequireAuthenticatedUser(h.MovieHandler.GetMovieByIDHandler))
 
 	router.HandlerFunc(http.MethodGet, "/v1/tv/:id", middleware.RequireAuthenticatedUser(h.TvHandler.GetTvByIDHandler))
-	router.HandlerFunc(http.MethodGet, "/v1/tv/:id/seasons/:season_number", middleware.RequireAuthenticatedUser(h.TvHandler.GetTvEpisodesHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/tv/:id/seasons/:season_number", middleware.RequireAuthenticatedUser(h.TvHandler.GetTvSeasonHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/tv/:id/seasons/:season_number/episodes/:episode_number", middleware.RequireAuthenticatedUser(h.TvHandler.GetTvEpisodeHandler))
 
 	router.HandlerFunc(http.MethodGet, "/v1/people/:id", middleware.RequireAuthenticatedUser(h.PeopleHandler.GetPersonByIDHandler))

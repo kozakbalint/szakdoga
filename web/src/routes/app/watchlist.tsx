@@ -1,6 +1,6 @@
 import { ContentLayout } from '@/components/layouts';
-import { MoviesWatchlist } from '@/features/watchlist/movies/components/watchlist';
-import { TVWatchlist } from '@/features/watchlist/tv/components/watchlist';
+import { MoviesWatchlist } from '@/features/watchlist/components/movies-watchlist';
+import { TvWatchlist } from '@/features/watchlist/components/tv-watchlist';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/app/watchlist')({
@@ -22,7 +22,7 @@ function WatchlistRoute() {
         <div className="text-xl">Movies:</div>
         <MoviesWatchlist />
         <div className="text-xl">TV Shows:</div>
-        <TVWatchlist />
+        <TvWatchlist />
       </div>
     </ContentLayout>
   );

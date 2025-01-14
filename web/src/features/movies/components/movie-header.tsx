@@ -1,12 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Heart, Star } from 'lucide-react';
-import { useGetMovieById } from '../api/get-movie-by-id';
+import { useGetMovieDetails } from '../api/get-movie-details';
 import { Badge } from '@/components/ui/badge';
-import { MovieWatchProvider } from './movie-watch-provider';
-import { Link } from '@tanstack/react-router';
-import { useAddMovieToWatchlist } from '@/features/watchlist/movies/api/add-movie-to-watchlist';
-import { useGetMoviesWatchlist } from '@/features/watchlist/movies/api/get-movies-watchlist';
-import { useRemoveMovieFromWatchlist } from '@/features/watchlist/movies/api/remove-movie-from-watchlist';
+import { MovieWatchProvider } from '@/features/watchproviders/components/movie-watch-provider';
+import { useAddMovieToWatchlist } from '@/features/watchlist/api/add-movie-to-watchlist';
+import { useIsMovieOnWatchlist } from '@/features/watchlist/api/is-movie-on-watchlist';
+import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-movie-from-watchlist';
 import {
   Tooltip,
   TooltipContent,
@@ -16,24 +15,25 @@ import { useGetMovieWatchedDates } from '@/features/watched/movies/api/get-movie
 import { MovieWatched } from './movie-watched';
 
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
-  const movieQuery = useGetMovieById({ id: movieId });
-  const watchlistQuery = useGetMoviesWatchlist({});
+  const movieQuery = useGetMovieDetails({ id: movieId });
+  const onWatchlistQuery = useIsMovieOnWatchlist({ id: movieId });
   const watchedDatesQuery = useGetMovieWatchedDates({ id: movieId });
-  const addMovieToWatchlistMutation = useAddMovieToWatchlist();
-  const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist();
+  const addMovieToWatchlistMutation = useAddMovieToWatchlist({ id: movieId });
+  const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist({
+    id: movieId,
+  });
 
   if (
     movieQuery.isLoading ||
-    watchlistQuery.isLoading ||
+    onWatchlistQuery.isLoading ||
     watchedDatesQuery.isLoading
   ) {
     return <div>Loading...</div>;
   }
 
   const movie = movieQuery.data?.movie;
-  const watchlist = watchlistQuery.data?.watchlist;
+  const isOnWatchlist = onWatchlistQuery.data?.in_watchlist;
   const watchedDates = watchedDatesQuery.data?.watched_dates || [];
-  const onWatchlist = watchlist?.find((m) => m.movie.tmdb_id === movie?.id);
 
   if (!movie) {
     return '';
@@ -64,11 +64,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
           </div>
           <div className="flex gap-2 flex-wrap">
             {movie.genres.map((genre) => (
-              <Link key={genre.id} to={`/app/categories/${genre.id}`}>
-                <Badge key={genre.id} className="cursor-pointer">
-                  {genre.name}
-                </Badge>
-              </Link>
+              <Badge key={genre}>{genre}</Badge>
             ))}
           </div>
           <div className="text-justify lg:pr-4 overflow-scroll">
@@ -79,16 +75,14 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
         <div className="flex">
           <div>
-            {onWatchlist ? (
+            {isOnWatchlist ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     onClick={() => {
-                      removeMovieFromWatchlistMutation.mutate({
-                        id: onWatchlist?.id,
-                      });
+                      removeMovieFromWatchlistMutation.mutate(movieId);
                     }}
-                    disabled={addMovieToWatchlistMutation.isPending}
+                    disabled={removeMovieFromWatchlistMutation.isPending}
                     className="flex items-center"
                     size={'icon'}
                     variant={'outline'}
@@ -105,7 +99,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
                 <TooltipTrigger asChild>
                   <Button
                     onClick={() => {
-                      addMovieToWatchlistMutation.mutate({ tmdb_id: movie.id });
+                      addMovieToWatchlistMutation.mutate(movieId);
                     }}
                     disabled={addMovieToWatchlistMutation.isPending}
                     className="flex items-center"
@@ -124,7 +118,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
           </div>
         </div>
         <div>
-          <MovieWatchProvider movieId={movieId} type="streming" />
+          <MovieWatchProvider movieId={movieId} type="streaming" />
         </div>
       </div>
     </div>

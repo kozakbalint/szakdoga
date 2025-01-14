@@ -1,14 +1,14 @@
-import { ContentLayout } from '@/components/layouts'
+import { ContentLayout } from '@/components/layouts';
 import {
-  getMovieByIdQueryOptions,
-  useGetMovieById,
-} from '@/features/movies/api/get-movie-by-id'
-import { MovieView } from '@/features/movies/components/movie-view'
-import { QueryClient } from '@tanstack/react-query'
-import { createFileRoute, redirect, useParams } from '@tanstack/react-router'
-import { ErrorBoundary } from 'react-error-boundary'
+  getMovieDetailsQueryOptions,
+  useGetMovieDetails,
+} from '@/features/movies/api/get-movie-details';
+import { MovieView } from '@/features/movies/components/movie-view';
+import { QueryClient } from '@tanstack/react-query';
+import { createFileRoute, redirect, useParams } from '@tanstack/react-router';
+import { ErrorBoundary } from 'react-error-boundary';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export const Route = createFileRoute('/app/movies/$movieId')({
   beforeLoad: async ({ context, location }) => {
@@ -16,29 +16,29 @@ export const Route = createFileRoute('/app/movies/$movieId')({
       throw redirect({
         to: '/auth/login',
         search: { redirect: location.pathname },
-      })
+      });
     }
   },
   component: MovieRoute,
   loader: async ({ params }) => {
     await queryClient.ensureQueryData(
-      getMovieByIdQueryOptions({ id: params.movieId }),
-    )
+      getMovieDetailsQueryOptions({ id: params.movieId }),
+    );
   },
-})
+});
 
 function MovieRoute() {
-  const params = useParams({ strict: false })
-  const movieId = params.movieId as string
-  const movieQuery = useGetMovieById({ id: movieId })
+  const params = useParams({ strict: false });
+  const movieId = params.movieId as string;
+  const movieQuery = useGetMovieDetails({ id: movieId });
 
   if (movieQuery.isLoading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
-  const movie = movieQuery.data?.movie
+  const movie = movieQuery.data?.movie;
   if (!movie) {
-    return <div>Movie not found</div>
+    return <div>Movie not found</div>;
   }
 
   return (
@@ -54,5 +54,5 @@ function MovieRoute() {
         </div>
       </ContentLayout>
     </>
-  )
+  );
 }

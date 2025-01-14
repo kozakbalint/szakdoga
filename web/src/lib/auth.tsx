@@ -1,11 +1,11 @@
 import { configureAuth } from 'react-query-auth';
 import { z } from 'zod';
 import {
-  GetProfileResponse,
-  LoginAuthResponse,
-  LogoutResponse,
   User,
-} from '@/types/api';
+  UserResponse,
+  AuthenticationToken,
+  Logout,
+} from '@/types/types.gen';
 import { apiClient } from './api-client';
 import { Navigate, useLocation } from '@tanstack/react-router';
 
@@ -20,9 +20,9 @@ const loginWithEmailAndPassword = async (
 ): Promise<User | null> => {
   try {
     const response = (await apiClient.post(
-      '/users/authenticate',
+      '/users/login',
       data,
-    )) as LoginAuthResponse;
+    )) as AuthenticationToken;
     if (
       response.authentication_token &&
       response.authentication_token.expiry !== undefined
@@ -48,7 +48,7 @@ const registerWithEmailAndPassword = async (
   data: RegisterInput,
 ): Promise<null> => {
   try {
-    await apiClient.post('/users', data);
+    await apiClient.post('/users/register', data);
     return null;
   } catch (error) {
     return Promise.reject(error);
@@ -61,19 +61,13 @@ const getUser = async (): Promise<User | null> => {
   if (!authObj || !authObj.token || !authObj.expiry) {
     return null;
   }
-  const response = (await apiClient.get(
-    '/users/me',
-    true,
-  )) as GetProfileResponse;
+  const response = (await apiClient.get('/users/me', true)) as UserResponse;
 
-  return response.user;
+  return response.user!;
 };
 
 const logout = async (): Promise<void> => {
-  const response = (await apiClient.get(
-    '/users/logout',
-    true,
-  )) as LogoutResponse;
+  const response = (await apiClient.get('/users/logout', true)) as Logout;
   localStorage.removeItem('auth');
 
   if (response.message) {

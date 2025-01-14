@@ -25,7 +25,6 @@ import { Route as AppTvTvIdImport } from './routes/app/tv/$tvId'
 import { Route as AppSeasonsTvIdImport } from './routes/app/seasons/$tvId'
 import { Route as AppPeoplePersonIdImport } from './routes/app/people.$personId'
 import { Route as AppMoviesMovieIdImport } from './routes/app/movies.$movieId'
-import { Route as AppCategoriesCategoryIdImport } from './routes/app/categories.$categoryId'
 import { Route as AppSeasonTvIdSeasonIdImport } from './routes/app/season/$tvId/$seasonId'
 import { Route as AppCastTvTvIdImport } from './routes/app/cast/tv.$tvId'
 import { Route as AppCastMovieMovieIdImport } from './routes/app/cast/movie.$movieId'
@@ -112,12 +111,6 @@ const AppPeoplePersonIdRoute = AppPeoplePersonIdImport.update({
 const AppMoviesMovieIdRoute = AppMoviesMovieIdImport.update({
   id: '/movies/$movieId',
   path: '/movies/$movieId',
-  getParentRoute: () => AppRoute,
-} as any)
-
-const AppCategoriesCategoryIdRoute = AppCategoriesCategoryIdImport.update({
-  id: '/categories/$categoryId',
-  path: '/categories/$categoryId',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -213,13 +206,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof rootRoute
     }
-    '/app/categories/$categoryId': {
-      id: '/app/categories/$categoryId'
-      path: '/categories/$categoryId'
-      fullPath: '/app/categories/$categoryId'
-      preLoaderRoute: typeof AppCategoriesCategoryIdImport
-      parentRoute: typeof AppImport
-    }
     '/app/movies/$movieId': {
       id: '/app/movies/$movieId'
       path: '/movies/$movieId'
@@ -287,7 +273,6 @@ interface AppRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
   AppWatchedRoute: typeof AppWatchedRoute
   AppWatchlistRoute: typeof AppWatchlistRoute
-  AppCategoriesCategoryIdRoute: typeof AppCategoriesCategoryIdRoute
   AppMoviesMovieIdRoute: typeof AppMoviesMovieIdRoute
   AppPeoplePersonIdRoute: typeof AppPeoplePersonIdRoute
   AppSeasonsTvIdRoute: typeof AppSeasonsTvIdRoute
@@ -304,7 +289,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsRoute: AppSettingsRoute,
   AppWatchedRoute: AppWatchedRoute,
   AppWatchlistRoute: AppWatchlistRoute,
-  AppCategoriesCategoryIdRoute: AppCategoriesCategoryIdRoute,
   AppMoviesMovieIdRoute: AppMoviesMovieIdRoute,
   AppPeoplePersonIdRoute: AppPeoplePersonIdRoute,
   AppSeasonsTvIdRoute: AppSeasonsTvIdRoute,
@@ -327,7 +311,6 @@ export interface FileRoutesByFullPath {
   '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/app/categories/$categoryId': typeof AppCategoriesCategoryIdRoute
   '/app/movies/$movieId': typeof AppMoviesMovieIdRoute
   '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/seasons/$tvId': typeof AppSeasonsTvIdRoute
@@ -348,7 +331,6 @@ export interface FileRoutesByTo {
   '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/app/categories/$categoryId': typeof AppCategoriesCategoryIdRoute
   '/app/movies/$movieId': typeof AppMoviesMovieIdRoute
   '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/seasons/$tvId': typeof AppSeasonsTvIdRoute
@@ -370,7 +352,6 @@ export interface FileRoutesById {
   '/app/watchlist': typeof AppWatchlistRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/app/categories/$categoryId': typeof AppCategoriesCategoryIdRoute
   '/app/movies/$movieId': typeof AppMoviesMovieIdRoute
   '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/seasons/$tvId': typeof AppSeasonsTvIdRoute
@@ -393,7 +374,6 @@ export interface FileRouteTypes {
     | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
-    | '/app/categories/$categoryId'
     | '/app/movies/$movieId'
     | '/app/people/$personId'
     | '/app/seasons/$tvId'
@@ -413,7 +393,6 @@ export interface FileRouteTypes {
     | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
-    | '/app/categories/$categoryId'
     | '/app/movies/$movieId'
     | '/app/people/$personId'
     | '/app/seasons/$tvId'
@@ -433,7 +412,6 @@ export interface FileRouteTypes {
     | '/app/watchlist'
     | '/auth/login'
     | '/auth/register'
-    | '/app/categories/$categoryId'
     | '/app/movies/$movieId'
     | '/app/people/$personId'
     | '/app/seasons/$tvId'
@@ -486,7 +464,6 @@ export const routeTree = rootRoute
         "/app/settings",
         "/app/watched",
         "/app/watchlist",
-        "/app/categories/$categoryId",
         "/app/movies/$movieId",
         "/app/people/$personId",
         "/app/seasons/$tvId",
@@ -522,10 +499,6 @@ export const routeTree = rootRoute
     },
     "/auth/register": {
       "filePath": "auth/register.tsx"
-    },
-    "/app/categories/$categoryId": {
-      "filePath": "app/categories.$categoryId.tsx",
-      "parent": "/app"
     },
     "/app/movies/$movieId": {
       "filePath": "app/movies.$movieId.tsx",

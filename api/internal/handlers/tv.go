@@ -33,7 +33,7 @@ func (h *TvHandler) GetTvByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *TvHandler) GetTvEpisodesHandler(w http.ResponseWriter, r *http.Request) {
+func (h *TvHandler) GetTvSeasonHandler(w http.ResponseWriter, r *http.Request) {
 	tvID, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)

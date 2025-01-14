@@ -295,12 +295,10 @@ type UserResponse struct {
 
 // WatchProviders defines model for WatchProviders.
 type WatchProviders struct {
-	Id        int64 `json:"id"`
-	Providers struct {
-		Buy      []Provider `json:"buy"`
-		Flatrate []Provider `json:"flatrate"`
-		Rent     []Provider `json:"rent"`
-	} `json:"providers"`
+	Buy      []Provider `json:"buy"`
+	Flatrate []Provider `json:"flatrate"`
+	Id       int64      `json:"id"`
+	Rent     []Provider `json:"rent"`
 }
 
 // WatchProvidersResponse defines model for WatchProvidersResponse.
@@ -341,6 +339,11 @@ type WatchedTvSeasonStatus string
 type Watchlist struct {
 	Movies []SearchMovie `json:"movies"`
 	Tv     []SearchTv    `json:"tv"`
+}
+
+// WatchlistResponse defines model for WatchlistResponse.
+type WatchlistResponse struct {
+	Watchlist Watchlist `json:"watchlist"`
 }
 
 // SearchMoviesHandlerParams defines parameters for SearchMoviesHandler.

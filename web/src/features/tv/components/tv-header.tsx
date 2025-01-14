@@ -1,12 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Heart, Star } from 'lucide-react';
-import { useGetTvById } from '../api/get-tv-by-id';
+import { useGetTvDetails } from '../api/get-tv-details';
 import { Badge } from '@/components/ui/badge';
-import { TvWatchProvider } from './tv-watch-provider';
-import { Link } from '@tanstack/react-router';
-import { useAddTVToWatchlist } from '@/features/watchlist/tv/api/add-tv-to-watchlist';
-import { useGetTVWatchlist } from '@/features/watchlist/tv/api/get-tv-watchlist';
-import { useRemoveTVFromWatchlist } from '@/features/watchlist/tv/api/remove-movie-from-watchlist';
+import { TvWatchProvider } from '@/features/watchproviders/components/tv-watch-provider';
+import { useAddTvToWatchlist } from '@/features/watchlist/api/add-tv-to-watchlist';
+import { useIsTvOnWatchlist } from '@/features/watchlist/api/is-tv-on-watchlist';
+import { useRemoveTvFromWatchlist } from '@/features/watchlist/api/remove-tv-from-watchlist';
 import {
   Tooltip,
   TooltipContent,
@@ -16,24 +15,23 @@ import { TvWatched } from './tv-watched';
 import { useGetTvShowWatchedDates } from '@/features/watched/tv/api/get-tv-show-watched-dates';
 
 export const TvHeader = ({ tvId }: { tvId: string }) => {
-  const tvQuery = useGetTvById({ id: tvId });
-  const watchlistQuery = useGetTVWatchlist({});
-  const addTvToWatchlistMutation = useAddTVToWatchlist();
-  const removeTvFromWatchlistMutation = useRemoveTVFromWatchlist();
+  const tvQuery = useGetTvDetails({ id: tvId });
+  const isOnWatchlistQuery = useIsTvOnWatchlist({ id: tvId });
+  const addTvToWatchlistMutation = useAddTvToWatchlist({ id: tvId });
+  const removeTvFromWatchlistMutation = useRemoveTvFromWatchlist({ id: tvId });
   const watchedDatesQuery = useGetTvShowWatchedDates({ id: tvId });
 
   if (
     tvQuery.isLoading ||
-    watchlistQuery.isLoading ||
+    isOnWatchlistQuery.isLoading ||
     watchedDatesQuery.isLoading
   ) {
     return <div>Loading...</div>;
   }
 
   const tv = tvQuery.data?.tv;
-  const watchlist = watchlistQuery.data?.watchlist;
+  const isOnWatchlist = isOnWatchlistQuery.data?.in_watchlist;
   const watchdates = watchedDatesQuery.data?.watched_dates || [];
-  const onWatchlist = watchlist?.find((m) => m.tv_show.tmdb_id === tv?.id);
 
   if (!tv) {
     return '';
@@ -64,11 +62,9 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
           </div>
           <div className="flex gap-2">
             {tv.genres.map((genre) => (
-              <Link key={genre.id} to={`/app/categories/${genre.id}`}>
-                <Badge key={genre.id} className="cursor-pointer">
-                  {genre.name}
-                </Badge>
-              </Link>
+              <Badge key={genre} className="cursor-pointer">
+                {genre}
+              </Badge>
             ))}
           </div>
           <div className="text-justify lg:pr-4 overflow-scroll">
@@ -79,14 +75,12 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
         <div className="flex gap-2">
           <div>
-            {onWatchlist ? (
+            {isOnWatchlist ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     onClick={() => {
-                      removeTvFromWatchlistMutation.mutate({
-                        id: onWatchlist?.id,
-                      });
+                      removeTvFromWatchlistMutation.mutate(tvId);
                     }}
                     disabled={removeTvFromWatchlistMutation.isPending}
                     className="flex items-center"
@@ -105,7 +99,7 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
                 <TooltipTrigger asChild>
                   <Button
                     onClick={() => {
-                      addTvToWatchlistMutation.mutate({ tmdb_id: tv.id });
+                      addTvToWatchlistMutation.mutate(tvId);
                     }}
                     disabled={addTvToWatchlistMutation.isPending}
                     className="flex items-center"
@@ -124,7 +118,7 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
           </div>
         </div>
         <div>
-          <TvWatchProvider tvId={tvId} type="streming" />
+          <TvWatchProvider tvId={tvId} type="streaming" />
         </div>
       </div>
     </div>

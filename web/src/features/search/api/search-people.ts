@@ -2,7 +2,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
-import { SearchPeopleResponse } from '@/types/api';
+import { SearchPeopleResponse } from '@/types/types.gen';
 
 export const searchPeople = (q: string): Promise<SearchPeopleResponse> => {
   if (!q) {
@@ -15,7 +15,7 @@ export const searchPeople = (q: string): Promise<SearchPeopleResponse> => {
 
 export const searchPeopleQueryOptions = ({ q }: { q: string }) => {
   return queryOptions({
-    queryKey: q ? ['searchedPeople', { q }] : ['searchedPeople'],
+    queryKey: q ? ['search-people', { q }] : ['search-people'],
     queryFn: () => searchPeople(q),
   });
 };
