@@ -1,6 +1,6 @@
 import { ContentLayout } from '@/components/layouts';
-import { MoviesWatchlist } from '@/features/watchlist/components/movies-watchlist';
-import { TvWatchlist } from '@/features/watchlist/components/tv-watchlist';
+import { MoviesWatchlist } from '@/features/watchlist/components/watchlist-movies';
+import { TvWatchlist } from '@/features/watchlist/components/watchlist-tv';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/app/watchlist')({

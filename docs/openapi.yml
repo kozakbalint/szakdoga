@@ -2655,7 +2655,7 @@ components:
             - 1399
         status:
           type: string
-          enum: ["watched", "in_progress", "not_watched"]
+          enum: ["watched", "in progress", "not watched"]
         progress:
           type: number
           format: double
@@ -2689,7 +2689,7 @@ components:
             - 1
         status:
           type: string
-          enum: ["watched", "in_progress", "not_watched"]
+          enum: ["watched", "in progress", "not watched"]
         episodes:
           type: array
           items:

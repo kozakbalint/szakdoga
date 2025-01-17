@@ -2743,6 +2743,6 @@ export interface operations {
 }
 export enum WatchedTvStatus {
     watched = "watched",
-    in_progress = "in_progress",
-    not_watched = "not_watched"
+    in_progress = "in progress",
+    not_watched = "not watched"
 }

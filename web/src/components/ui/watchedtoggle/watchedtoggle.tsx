@@ -8,18 +8,19 @@ import {
 } from '@/components/ui/tooltip';
 import { Eye, EyeOff } from 'lucide-react';
 
-export const MovieWatchedStatus = ({
-  movieID,
+export const WatchedToggle = ({
+  id,
+  type,
   isOnWatched,
+  addMutation,
+  removeMutation,
 }: {
-  movieID: string;
+  id: string;
+  type: string;
   isOnWatched: boolean;
+  addMutation: ReturnType<typeof useAddMovieToWatched>;
+  removeMutation: ReturnType<typeof useRemoveMovieFromWatched>;
 }) => {
-  const id = movieID;
-
-  const addMovieToWatchedMutation = useAddMovieToWatched({ id });
-  const removeMovieFromWatchedMutation = useRemoveMovieFromWatched({ id });
-
   return (
     <div className="flex">
       <div>
@@ -28,9 +29,9 @@ export const MovieWatchedStatus = ({
             <TooltipTrigger asChild>
               <Button
                 onClick={() => {
-                  removeMovieFromWatchedMutation.mutate(id);
+                  removeMutation.mutate(id);
                 }}
-                disabled={addMovieToWatchedMutation.isPending}
+                disabled={removeMutation.isPending}
                 className="flex items-center"
                 size={'icon'}
                 variant={'outline'}
@@ -38,16 +39,18 @@ export const MovieWatchedStatus = ({
                 <Eye />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Remove from watched</TooltipContent>
+            <TooltipContent side="bottom">
+              Remove {type} from watched
+            </TooltipContent>
           </Tooltip>
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 onClick={() => {
-                  addMovieToWatchedMutation.mutate(id);
+                  addMutation.mutate(id);
                 }}
-                disabled={addMovieToWatchedMutation.isPending}
+                disabled={addMutation.isPending}
                 className="flex items-center"
                 size={'icon'}
                 variant={'outline'}
@@ -55,7 +58,7 @@ export const MovieWatchedStatus = ({
                 <EyeOff />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Add to watched</TooltipContent>
+            <TooltipContent side="bottom">Add {type} to watched</TooltipContent>
           </Tooltip>
         )}
       </div>

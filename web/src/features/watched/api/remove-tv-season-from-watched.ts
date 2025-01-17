@@ -3,13 +3,17 @@ import { MutationConfig } from '@/lib/react-query';
 import { isMovieOnWatchedQueryOptions } from './is-movie-on-watched';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getWatchedQueryOptions } from './get-watched';
+import { Message } from '@/types/types.gen';
 
-export const removeTvSeasonFromWatched = (id: string, seasonNumber: string) => {
+export const removeTvSeasonFromWatched = (
+  id: string,
+  seasonNumber: string,
+): Promise<Message> => {
   if (!id || !seasonNumber) {
     return Promise.reject(new Error('Tv id and season number are required'));
   }
   const url = `/watched/tv/${id}/season/${seasonNumber}`;
-  return apiClient.delete(url, true);
+  return apiClient.delete(url, true) as Promise<Message>;
 };
 
 type UseRemoveTvSeasonFromWatchedOptions = {

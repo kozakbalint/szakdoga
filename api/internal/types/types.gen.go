@@ -9,15 +9,15 @@ const (
 
 // Defines values for WatchedTvStatus.
 const (
-	WatchedTvStatusInProgress WatchedTvStatus = "in_progress"
-	WatchedTvStatusNotWatched WatchedTvStatus = "not_watched"
+	WatchedTvStatusInProgress WatchedTvStatus = "in progress"
+	WatchedTvStatusNotWatched WatchedTvStatus = "not watched"
 	WatchedTvStatusWatched    WatchedTvStatus = "watched"
 )
 
 // Defines values for WatchedTvSeasonStatus.
 const (
-	WatchedTvSeasonStatusInProgress WatchedTvSeasonStatus = "in_progress"
-	WatchedTvSeasonStatusNotWatched WatchedTvSeasonStatus = "not_watched"
+	WatchedTvSeasonStatusInProgress WatchedTvSeasonStatus = "in progress"
+	WatchedTvSeasonStatusNotWatched WatchedTvSeasonStatus = "not watched"
 	WatchedTvSeasonStatusWatched    WatchedTvSeasonStatus = "watched"
 )
 

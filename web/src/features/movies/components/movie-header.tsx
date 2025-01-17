@@ -1,18 +1,16 @@
-import { Button } from '@/components/ui/button';
-import { Heart, Star } from 'lucide-react';
-import { useGetMovieDetails } from '../api/get-movie-details';
 import { Badge } from '@/components/ui/badge';
-import { MovieWatchProvider } from '@/features/watchproviders/components/movie-watch-provider';
+import { WatchedToggle } from '@/components/ui/watchedtoggle';
+import { WatchlistToggle } from '@/components/ui/watchlisttoggle';
+import { WatchProvider } from '@/components/ui/watchprovider';
+import { useAddMovieToWatched } from '@/features/watched/api/add-movie-to-watched';
+import { useIsMovieOnWatched } from '@/features/watched/api/is-movie-on-watched';
+import { useRemoveMovieFromWatched } from '@/features/watched/api/remove-movie-from-watched';
 import { useAddMovieToWatchlist } from '@/features/watchlist/api/add-movie-to-watchlist';
 import { useIsMovieOnWatchlist } from '@/features/watchlist/api/is-movie-on-watchlist';
 import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-movie-from-watchlist';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { useIsMovieOnWatched } from '@/features/watched/api/is-movie-on-watched';
-import { MovieWatchedStatus } from '../../watched/components/movie-watched-status';
+import { useGetMovieWatchProviders } from '@/features/watchproviders/api/get-movie-watch-providers';
+import { Star } from 'lucide-react';
+import { useGetMovieDetails } from '../api/get-movie-details';
 
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movieQuery = useGetMovieDetails({ id: movieId });
@@ -22,11 +20,17 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist({
     id: movieId,
   });
+  const addMovieToWatchedMutation = useAddMovieToWatched({ id: movieId });
+  const removeMovieFromWatchedMutation = useRemoveMovieFromWatched({
+    id: movieId,
+  });
+  const watchproviderQuery = useGetMovieWatchProviders({ id: movieId });
 
   if (
     movieQuery.isLoading ||
     onWatchlistQuery.isLoading ||
-    watchedQuery.isLoading
+    watchedQuery.isLoading ||
+    watchproviderQuery.isLoading
   ) {
     return <div>Loading...</div>;
   }
@@ -34,12 +38,14 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movie = movieQuery.data?.movie;
   const isOnWatchlist = onWatchlistQuery.data?.in_watchlist;
   const isOnWatched = watchedQuery.data?.in_watched;
+  const watchProviderData = watchproviderQuery.data?.watch_providers;
 
-  if (!movie) {
-    return '';
-  }
-
-  if (isOnWatched === undefined || isOnWatchlist === undefined) {
+  if (
+    !movie ||
+    !watchProviderData ||
+    isOnWatched === undefined ||
+    isOnWatchlist === undefined
+  ) {
     return '';
   }
 
@@ -79,50 +85,26 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
         <div className="flex">
           <div>
-            {isOnWatchlist ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => {
-                      removeMovieFromWatchlistMutation.mutate(movieId);
-                    }}
-                    disabled={removeMovieFromWatchlistMutation.isPending}
-                    className="flex items-center"
-                    size={'icon'}
-                    variant={'outline'}
-                  >
-                    <Heart fill="red" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  Remove from watchlist
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => {
-                      addMovieToWatchlistMutation.mutate(movieId);
-                    }}
-                    disabled={addMovieToWatchlistMutation.isPending}
-                    className="flex items-center"
-                    size={'icon'}
-                    variant={'outline'}
-                  >
-                    <Heart fill="none" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">Add to watchlist</TooltipContent>
-              </Tooltip>
-            )}
+            <WatchlistToggle
+              id={movieId}
+              type="Movie"
+              isOnWatchlist={isOnWatchlist}
+              addMutatuion={addMovieToWatchlistMutation}
+              removeMutation={removeMovieFromWatchlistMutation}
+            />
           </div>
           <div>
-            <MovieWatchedStatus movieID={movieId} isOnWatched={isOnWatched} />
+            <WatchedToggle
+              id={movieId}
+              type="Movie"
+              isOnWatched={isOnWatched}
+              addMutation={addMovieToWatchedMutation}
+              removeMutation={removeMovieFromWatchedMutation}
+            />
           </div>
         </div>
         <div>
-          <MovieWatchProvider movieId={movieId} />
+          <WatchProvider watchproviders={watchProviderData} />
         </div>
       </div>
     </div>

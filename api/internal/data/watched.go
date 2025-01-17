@@ -79,7 +79,7 @@ func (m WatchedModel) AddMovieToWatched(tmdbId, userId int32) error {
 }
 
 func (m WatchedModel) RemoveMovieFromWatched(tmdbId, userId int32) error {
-	args := repository.DeleteWatchlistMovieParams{
+	args := repository.DeleteWatchedMovieParams{
 		TmdbID: tmdbId,
 		UserID: userId,
 	}
@@ -87,7 +87,7 @@ func (m WatchedModel) RemoveMovieFromWatched(tmdbId, userId int32) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := m.Repository.DeleteWatchlistMovie(ctx, args)
+	_, err := m.Repository.DeleteWatchedMovie(ctx, args)
 	if err != nil {
 		return WrapError(err)
 	}

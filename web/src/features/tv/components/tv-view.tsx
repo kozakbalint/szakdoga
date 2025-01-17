@@ -6,8 +6,8 @@ export const TvView = ({ tvId }: { tvId: string }) => {
   return (
     <div className="flex flex-col gap-8">
       <TvHeader tvId={tvId} />
-      <TvSeasons tvId={tvId} />
       <TvCast tvId={tvId} />
+      <TvSeasons tvId={tvId} />
     </div>
   );
 };
