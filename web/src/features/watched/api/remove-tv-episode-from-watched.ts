@@ -26,7 +26,7 @@ type UseRemoveTvSeasonFromWatchedOptions = {
   mutationConfig?: MutationConfig<typeof removeTvEpisodeFromWatched>;
 };
 
-export const useRemoveTvSeasonFromWatched = ({
+export const useRemoveTvEpisodeFromWatched = ({
   id,
   seasonNumber,
   episodeNumber,
