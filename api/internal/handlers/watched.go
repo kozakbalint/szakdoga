@@ -180,7 +180,7 @@ func (h *WatchedHandler) AddTvToWatchedHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID))
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(len(tv.Seasons)))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -281,7 +281,7 @@ func (h *WatchedHandler) AddTvSeasonToWatchedHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID))
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(len(tv.Seasons)))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
@@ -389,7 +389,7 @@ func (h *WatchedHandler) AddTvEpisodeToWatchedHandler(w http.ResponseWriter, r *
 		return
 	}
 
-	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID))
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(len(tv.Seasons)))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
