@@ -1,39 +1,36 @@
 import { Button } from '@/components/ui/button';
-import { useAddMovieToWatched } from '@/features/watched/movies/api/add-movie-to-watched';
-import { useRemoveMovieFromWatched } from '@/features/watched/movies/api/remove-movie-from-watched';
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from '@/components/ui/tooltip';
+import { useAddTvToWatched } from '@/features/watched/api/add-tv-to-watched';
+import { useRemoveTvFromWatched } from '@/features/watched/api/remove-tv-from-watched';
 import { Eye, EyeOff } from 'lucide-react';
 
-export const MovieWatched = ({
-  movieID,
-  watchedDates,
+export const TvWatchedStatus = ({
+  tvID,
+  isOnWatched,
 }: {
-  movieID: string;
-  watchedDates: string[];
+  tvID: string;
+  isOnWatched: boolean;
 }) => {
-  const id = movieID;
-  const isWatched = watchedDates.length > 0;
+  const id = tvID;
 
-  const addMovieToWatchedMutation = useAddMovieToWatched();
-  const removeMovieFromWatchedMutation = useRemoveMovieFromWatched();
+  const addTvShowToWatchedMutation = useAddTvToWatched({ id: tvID });
+  const removeTvShowFromWatchedMutation = useRemoveTvFromWatched({ id: tvID });
 
   return (
     <div className="flex">
       <div>
-        {isWatched ? (
+        {isOnWatched ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 onClick={() => {
-                  removeMovieFromWatchedMutation.mutate({
-                    id: Number(id),
-                  });
+                  removeTvShowFromWatchedMutation.mutate(id);
                 }}
-                disabled={addMovieToWatchedMutation.isPending}
+                disabled={removeTvShowFromWatchedMutation.isPending}
                 className="flex items-center"
                 size={'icon'}
                 variant={'outline'}
@@ -48,9 +45,9 @@ export const MovieWatched = ({
             <TooltipTrigger asChild>
               <Button
                 onClick={() => {
-                  addMovieToWatchedMutation.mutate({ movie_id: Number(id) });
+                  addTvShowToWatchedMutation.mutate(id);
                 }}
-                disabled={addMovieToWatchedMutation.isPending}
+                disabled={addTvShowToWatchedMutation.isPending}
                 className="flex items-center"
                 size={'icon'}
                 variant={'outline'}

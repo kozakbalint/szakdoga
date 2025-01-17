@@ -1,0 +1,3 @@
+drop trigger if exists trigger_recalculate_tv_show_progress_on_episode on watched_tv_episodes;
+
+drop trigger if exists trigger_recalculate_tv_show_progress_on_season on watched_tv_seasons;

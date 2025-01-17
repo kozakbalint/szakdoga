@@ -1,6 +1,6 @@
 import { ContentLayout } from '@/components/layouts';
-import { MoviesWatched } from '@/features/watched/movies/components/watched';
-import { TvWatched } from '@/features/watched/tv/components/watched';
+import { MoviesWatched } from '@/features/watched/components/watched-movies';
+import { TvWatched } from '@/features/watched/components/watched-tv';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/app/watched')({

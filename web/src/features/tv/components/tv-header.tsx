@@ -11,27 +11,34 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { TvWatched } from './tv-watched';
-import { useGetTvShowWatchedDates } from '@/features/watched/tv/api/get-tv-show-watched-dates';
+import { TvWatchedStatus } from '../../watched/components/tv-watched-status';
+import { useIsTvOnWatched } from '@/features/watched/api/is-tv-on-watched';
+import { WatchedTvStatus } from '@/types/types.gen';
 
 export const TvHeader = ({ tvId }: { tvId: string }) => {
   const tvQuery = useGetTvDetails({ id: tvId });
   const isOnWatchlistQuery = useIsTvOnWatchlist({ id: tvId });
   const addTvToWatchlistMutation = useAddTvToWatchlist({ id: tvId });
   const removeTvFromWatchlistMutation = useRemoveTvFromWatchlist({ id: tvId });
-  const watchedDatesQuery = useGetTvShowWatchedDates({ id: tvId });
+  const watchedQuery = useIsTvOnWatched({ id: tvId });
 
   if (
     tvQuery.isLoading ||
     isOnWatchlistQuery.isLoading ||
-    watchedDatesQuery.isLoading
+    watchedQuery.isLoading
   ) {
     return <div>Loading...</div>;
   }
 
   const tv = tvQuery.data?.tv;
   const isOnWatchlist = isOnWatchlistQuery.data?.in_watchlist;
-  const watchdates = watchedDatesQuery.data?.watched_dates || [];
+  const watchedData = watchedQuery.data?.watched_tv;
+  let isOnWatched = false;
+  if (!watchedData || watchedData.status === WatchedTvStatus.not_watched) {
+    isOnWatched = false;
+  } else {
+    isOnWatched = true;
+  }
 
   if (!tv) {
     return '';
@@ -114,7 +121,7 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
             )}
           </div>
           <div>
-            <TvWatched tvID={tvId} watchedDates={watchdates} />
+            <TvWatchedStatus tvID={tvId} isOnWatched={isOnWatched} />
           </div>
         </div>
         <div>

@@ -1,15 +1,15 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Star } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { useGetTvShowWatched } from '../api/get-tv-show-watched';
+import { useGetWatched } from '../api/get-watched';
 
 export const TvWatched = () => {
-  const watchedTvQuery = useGetTvShowWatched({});
+  const watchedTvQuery = useGetWatched({});
   if (watchedTvQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
-  const watchedTv = watchedTvQuery.data?.watched_tv_shows;
+  const watchedTv = watchedTvQuery.data?.watched.tv;
   if (!watchedTv) {
     return 'No tv shows in watched list';
   }
@@ -18,7 +18,7 @@ export const TvWatched = () => {
     <div className="flex flex-row flex-wrap gap-2 justify-center lg:justify-start w-full">
       {watchedTv.map((tv) => (
         <Link
-          to={`/app/tv/${tv.tmdb_id}`}
+          to={`/app/tv/${tv.id}`}
           key={tv.id}
           className="hover:underline w-2/5 md:w-1/3 lg:w-1/6"
         >

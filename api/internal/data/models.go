@@ -19,6 +19,7 @@ type Models struct {
 	Tokens    TokenModel
 	Users     UserModel
 	Watchlist WatchlistModel
+	Watched   WatchedModel
 }
 
 func NewModels(repo *repository.Queries) Models {
@@ -30,6 +31,9 @@ func NewModels(repo *repository.Queries) Models {
 			Repository: repo,
 		},
 		Watchlist: WatchlistModel{
+			Repository: repo,
+		},
+		Watched: WatchedModel{
 			Repository: repo,
 		},
 	}

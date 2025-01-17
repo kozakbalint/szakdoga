@@ -1,21 +1,26 @@
 import { apiClient } from '@/lib/api-client';
 import { MutationConfig } from '@/lib/react-query';
-import { getMoviesWatchedQueryOptions } from './get-movies-watched';
+import { isMovieOnWatchedQueryOptions } from './is-movie-on-watched';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { getMovieWatchedDatesQueryOptions } from './get-movie-watch-dates';
+import { getWatchedQueryOptions } from './get-watched';
 
-export const removeMovieFromWatched = ({ id }: { id: number }) => {
+export const removeMovieFromWatched = (id: string) => {
+  if (!id) {
+    return Promise.reject(new Error('Movie id is required'));
+  }
   const url = `/watched/movies/${id}`;
   return apiClient.delete(url, true);
 };
 
 type UseRemoveMovieFromWatchedOptions = {
+  id: string;
   mutationConfig?: MutationConfig<typeof removeMovieFromWatched>;
 };
 
 export const useRemoveMovieFromWatched = ({
+  id,
   mutationConfig,
-}: UseRemoveMovieFromWatchedOptions = {}) => {
+}: UseRemoveMovieFromWatchedOptions) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
@@ -23,20 +28,14 @@ export const useRemoveMovieFromWatched = ({
   return useMutation({
     ...restConfig,
     mutationFn: removeMovieFromWatched,
-    onSuccess: (data, variables, context) => {
+    onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: getMoviesWatchedQueryOptions().queryKey,
+        queryKey: isMovieOnWatchedQueryOptions({ id }).queryKey,
       });
-
-      if (variables?.id) {
-        queryClient.invalidateQueries({
-          queryKey: getMovieWatchedDatesQueryOptions({
-            id: variables.id.toString(),
-          }).queryKey,
-        });
-      }
-
-      onSuccess?.(data, variables, context);
+      queryClient.invalidateQueries({
+        queryKey: getWatchedQueryOptions().queryKey,
+      });
+      onSuccess?.(...args);
     },
   });
 };

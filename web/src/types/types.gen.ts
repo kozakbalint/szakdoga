@@ -841,28 +841,36 @@ export type components = {
         InWatchlist: {
             in_watchlist: boolean;
         };
+        WatchedResponse: {
+            watched: components["schemas"]["Watched"];
+        };
         Watched: {
-            movies: components["schemas"]["SearchMoviesResponse"][];
-            tv: components["schemas"]["SearchTVResponse"][];
+            movies: components["schemas"]["SearchMovie"][];
+            tv: components["schemas"]["SearchTv"][];
         };
         InWatched: {
             in_watched: boolean;
+        };
+        WatchedTvResponse: {
+            watched_tv: components["schemas"]["WatchedTv"];
         };
         WatchedTv: {
             /** Format: int64 */
             id: number;
             /** @enum {string} */
             status: WatchedTvStatus;
+            /** Format: double */
+            progress: number;
             seasons: components["schemas"]["WatchedTvSeason"][];
-        }[];
+        };
+        WatchedTvSeasonResponse: {
+            watched_season: components["schemas"]["WatchedTvSeason"];
+        };
         WatchedTvSeason: {
             season_number: number;
             /** @enum {string} */
             status: WatchedTvStatus;
-            episodes: {
-                episode_number: number;
-                in_watched: boolean;
-            }[];
+            episodes: number[];
         };
         Message: {
             message: string;
@@ -910,9 +918,12 @@ export type Provider = components['schemas']['Provider'];
 export type WatchlistResponse = components['schemas']['WatchlistResponse'];
 export type Watchlist = components['schemas']['Watchlist'];
 export type InWatchlist = components['schemas']['InWatchlist'];
+export type WatchedResponse = components['schemas']['WatchedResponse'];
 export type Watched = components['schemas']['Watched'];
 export type InWatched = components['schemas']['InWatched'];
+export type WatchedTvResponse = components['schemas']['WatchedTvResponse'];
 export type WatchedTv = components['schemas']['WatchedTv'];
+export type WatchedTvSeasonResponse = components['schemas']['WatchedTvSeasonResponse'];
 export type WatchedTvSeason = components['schemas']['WatchedTvSeason'];
 export type Message = components['schemas']['Message'];
 export type $defs = Record<string, never>;
@@ -2090,7 +2101,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Watched"];
+                    "application/json": components["schemas"]["WatchedResponse"];
                 };
             };
             /** @description Unauthorized */
@@ -2281,7 +2292,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTv"];
+                    "application/json": components["schemas"]["WatchedTvResponse"];
                 };
             };
             /** @description Bad request */
@@ -2431,7 +2442,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WatchedTvSeason"];
+                    "application/json": components["schemas"]["WatchedTvSeasonResponse"];
                 };
             };
             /** @description Bad request */

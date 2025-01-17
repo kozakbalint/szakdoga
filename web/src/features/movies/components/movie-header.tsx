@@ -11,13 +11,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useGetMovieWatchedDates } from '@/features/watched/movies/api/get-movie-watch-dates';
-import { MovieWatched } from './movie-watched';
+import { useIsMovieOnWatched } from '@/features/watched/api/is-movie-on-watched';
+import { MovieWatchedStatus } from '../../watched/components/movie-watched-status';
 
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movieQuery = useGetMovieDetails({ id: movieId });
   const onWatchlistQuery = useIsMovieOnWatchlist({ id: movieId });
-  const watchedDatesQuery = useGetMovieWatchedDates({ id: movieId });
+  const watchedQuery = useIsMovieOnWatched({ id: movieId });
   const addMovieToWatchlistMutation = useAddMovieToWatchlist({ id: movieId });
   const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist({
     id: movieId,
@@ -26,16 +26,20 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
   if (
     movieQuery.isLoading ||
     onWatchlistQuery.isLoading ||
-    watchedDatesQuery.isLoading
+    watchedQuery.isLoading
   ) {
     return <div>Loading...</div>;
   }
 
   const movie = movieQuery.data?.movie;
   const isOnWatchlist = onWatchlistQuery.data?.in_watchlist;
-  const watchedDates = watchedDatesQuery.data?.watched_dates || [];
+  const isOnWatched = watchedQuery.data?.in_watched;
 
   if (!movie) {
+    return '';
+  }
+
+  if (isOnWatched === undefined || isOnWatchlist === undefined) {
     return '';
   }
 
@@ -114,7 +118,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
             )}
           </div>
           <div>
-            <MovieWatched movieID={movieId} watchedDates={watchedDates} />
+            <MovieWatchedStatus movieID={movieId} isOnWatched={isOnWatched} />
           </div>
         </div>
         <div>

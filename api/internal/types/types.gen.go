@@ -308,32 +308,45 @@ type WatchProvidersResponse struct {
 
 // Watched defines model for Watched.
 type Watched struct {
-	Movies []SearchMoviesResponse `json:"movies"`
-	Tv     []SearchTVResponse     `json:"tv"`
+	Movies []SearchMovie `json:"movies"`
+	Tv     []SearchTv    `json:"tv"`
+}
+
+// WatchedResponse defines model for WatchedResponse.
+type WatchedResponse struct {
+	Watched Watched `json:"watched"`
 }
 
 // WatchedTv defines model for WatchedTv.
-type WatchedTv = []struct {
-	Id      int64             `json:"id"`
-	Seasons []WatchedTvSeason `json:"seasons"`
-	Status  WatchedTvStatus   `json:"status"`
+type WatchedTv struct {
+	Id       int64             `json:"id"`
+	Progress float64           `json:"progress"`
+	Seasons  []WatchedTvSeason `json:"seasons"`
+	Status   WatchedTvStatus   `json:"status"`
 }
 
 // WatchedTvStatus defines model for WatchedTv.Status.
 type WatchedTvStatus string
 
+// WatchedTvResponse defines model for WatchedTvResponse.
+type WatchedTvResponse struct {
+	WatchedTv WatchedTv `json:"watched_tv"`
+}
+
 // WatchedTvSeason defines model for WatchedTvSeason.
 type WatchedTvSeason struct {
-	Episodes []struct {
-		EpisodeNumber int  `json:"episode_number"`
-		InWatched     bool `json:"in_watched"`
-	} `json:"episodes"`
+	Episodes     []int                 `json:"episodes"`
 	SeasonNumber int                   `json:"season_number"`
 	Status       WatchedTvSeasonStatus `json:"status"`
 }
 
 // WatchedTvSeasonStatus defines model for WatchedTvSeason.Status.
 type WatchedTvSeasonStatus string
+
+// WatchedTvSeasonResponse defines model for WatchedTvSeasonResponse.
+type WatchedTvSeasonResponse struct {
+	WatchedSeason WatchedTvSeason `json:"watched_season"`
+}
 
 // Watchlist defines model for Watchlist.
 type Watchlist struct {

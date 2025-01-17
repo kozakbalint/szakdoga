@@ -6,6 +6,8 @@ package repository
 
 import (
 	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Token struct {
@@ -21,6 +23,46 @@ type User struct {
 	Email        string    `json:"email"`
 	PasswordHash []byte    `json:"password_hash"`
 	Version      int32     `json:"version"`
+}
+
+type WatchedMovie struct {
+	ID      int64     `json:"id"`
+	TmdbID  int32     `json:"tmdb_id"`
+	UserID  int32     `json:"user_id"`
+	AddedAt time.Time `json:"added_at"`
+}
+
+type WatchedTvEpisode struct {
+	ID            int64              `json:"id"`
+	UserID        int32              `json:"user_id"`
+	TmdbID        int32              `json:"tmdb_id"`
+	SeasonNumber  int32              `json:"season_number"`
+	EpisodeNumber int32              `json:"episode_number"`
+	WatchedAt     pgtype.Timestamptz `json:"watched_at"`
+	CreatedAt     time.Time          `json:"created_at"`
+	UpdatedAt     time.Time          `json:"updated_at"`
+}
+
+type WatchedTvSeason struct {
+	ID            int64     `json:"id"`
+	UserID        int32     `json:"user_id"`
+	TmdbID        int32     `json:"tmdb_id"`
+	SeasonNumber  int32     `json:"season_number"`
+	TotalEpisodes int32     `json:"total_episodes"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	Status        string    `json:"status"`
+}
+
+type WatchedTvShow struct {
+	ID           int64     `json:"id"`
+	UserID       int32     `json:"user_id"`
+	TmdbID       int32     `json:"tmdb_id"`
+	Status       string    `json:"status"`
+	TotalSeasons int32     `json:"total_seasons"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	Progress     float64   `json:"progress"`
 }
 
 type WatchlistMovie struct {
