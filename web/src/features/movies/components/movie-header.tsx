@@ -1,10 +1,7 @@
 import { Badge } from '@/components/ui/badge';
-import { WatchedToggle } from '@/components/ui/watchedtoggle';
+import { MovieWatchedToggle } from '@/components/ui/watchedtoggle';
 import { WatchlistToggle } from '@/components/ui/watchlisttoggle';
 import { WatchProvider } from '@/components/ui/watchprovider';
-import { useAddMovieToWatched } from '@/features/watched/api/add-movie-to-watched';
-import { useIsMovieOnWatched } from '@/features/watched/api/is-movie-on-watched';
-import { useRemoveMovieFromWatched } from '@/features/watched/api/remove-movie-from-watched';
 import { useAddMovieToWatchlist } from '@/features/watchlist/api/add-movie-to-watchlist';
 import { useIsMovieOnWatchlist } from '@/features/watchlist/api/is-movie-on-watchlist';
 import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-movie-from-watchlist';
@@ -15,13 +12,8 @@ import { useGetMovieDetails } from '../api/get-movie-details';
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movieQuery = useGetMovieDetails({ id: movieId });
   const onWatchlistQuery = useIsMovieOnWatchlist({ id: movieId });
-  const watchedQuery = useIsMovieOnWatched({ id: movieId });
   const addMovieToWatchlistMutation = useAddMovieToWatchlist({ id: movieId });
   const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist({
-    id: movieId,
-  });
-  const addMovieToWatchedMutation = useAddMovieToWatched({ id: movieId });
-  const removeMovieFromWatchedMutation = useRemoveMovieFromWatched({
     id: movieId,
   });
   const watchproviderQuery = useGetMovieWatchProviders({ id: movieId });
@@ -29,7 +21,6 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
   if (
     movieQuery.isLoading ||
     onWatchlistQuery.isLoading ||
-    watchedQuery.isLoading ||
     watchproviderQuery.isLoading
   ) {
     return <div>Loading...</div>;
@@ -37,15 +28,9 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
 
   const movie = movieQuery.data?.movie;
   const isOnWatchlist = onWatchlistQuery.data?.in_watchlist;
-  const isOnWatched = watchedQuery.data?.in_watched;
   const watchProviderData = watchproviderQuery.data?.watch_providers;
 
-  if (
-    !movie ||
-    !watchProviderData ||
-    isOnWatched === undefined ||
-    isOnWatchlist === undefined
-  ) {
+  if (!movie || !watchProviderData || isOnWatchlist === undefined) {
     return '';
   }
 
@@ -94,13 +79,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
             />
           </div>
           <div>
-            <WatchedToggle
-              id={movieId}
-              type="Movie"
-              isOnWatched={isOnWatched}
-              addMutation={addMovieToWatchedMutation}
-              removeMutation={removeMovieFromWatchedMutation}
-            />
+            <MovieWatchedToggle id={movieId} />
           </div>
         </div>
         <div>

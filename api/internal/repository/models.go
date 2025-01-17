@@ -55,14 +55,15 @@ type WatchedTvSeason struct {
 }
 
 type WatchedTvShow struct {
-	ID           int64     `json:"id"`
-	UserID       int32     `json:"user_id"`
-	TmdbID       int32     `json:"tmdb_id"`
-	Status       string    `json:"status"`
-	TotalSeasons int32     `json:"total_seasons"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
-	Progress     float64   `json:"progress"`
+	ID            int64     `json:"id"`
+	UserID        int32     `json:"user_id"`
+	TmdbID        int32     `json:"tmdb_id"`
+	Status        string    `json:"status"`
+	TotalSeasons  int32     `json:"total_seasons"`
+	TotalEpisodes int32     `json:"total_episodes"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	Progress      float64   `json:"progress"`
 }
 
 type WatchlistMovie struct {

@@ -91,7 +91,7 @@ func (q *Queries) DeleteAllWatchedTvSeasons(ctx context.Context, arg DeleteAllWa
 
 const deleteWatchedTv = `-- name: DeleteWatchedTv :one
 DELETE FROM watched_tv_shows WHERE tmdb_id = $1 AND user_id = $2
-RETURNING id, user_id, tmdb_id, status, total_seasons, created_at, updated_at, progress
+RETURNING id, user_id, tmdb_id, status, total_seasons, total_episodes, created_at, updated_at, progress
 `
 
 type DeleteWatchedTvParams struct {
@@ -108,6 +108,7 @@ func (q *Queries) DeleteWatchedTv(ctx context.Context, arg DeleteWatchedTvParams
 		&i.TmdbID,
 		&i.Status,
 		&i.TotalSeasons,
+		&i.TotalEpisodes,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Progress,
@@ -176,7 +177,7 @@ func (q *Queries) DeleteWatchedTvSeason(ctx context.Context, arg DeleteWatchedTv
 }
 
 const getWatchedTv = `-- name: GetWatchedTv :one
-SELECT id, user_id, tmdb_id, status, total_seasons, created_at, updated_at, progress FROM watched_tv_shows WHERE tmdb_id = $1 AND user_id = $2 AND status in ('watched', 'in progress')
+SELECT id, user_id, tmdb_id, status, total_seasons, total_episodes, created_at, updated_at, progress FROM watched_tv_shows WHERE tmdb_id = $1 AND user_id = $2 AND status in ('watched', 'in progress')
 `
 
 type GetWatchedTvParams struct {
@@ -193,6 +194,7 @@ func (q *Queries) GetWatchedTv(ctx context.Context, arg GetWatchedTvParams) (Wat
 		&i.TmdbID,
 		&i.Status,
 		&i.TotalSeasons,
+		&i.TotalEpisodes,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Progress,
@@ -260,19 +262,25 @@ func (q *Queries) GetWatchedTvSeason(ctx context.Context, arg GetWatchedTvSeason
 
 const insertWatchedTv = `-- name: InsertWatchedTv :one
 INSERT INTO watched_tv_shows
-(tmdb_id, user_id, total_seasons)
-VALUES($1, $2, $3) ON CONFLICT (tmdb_id, user_id) DO NOTHING
-RETURNING id, user_id, tmdb_id, status, total_seasons, created_at, updated_at, progress
+(tmdb_id, user_id, total_seasons, total_episodes)
+VALUES($1, $2, $3, $4) ON CONFLICT (tmdb_id, user_id) DO NOTHING
+RETURNING id, user_id, tmdb_id, status, total_seasons, total_episodes, created_at, updated_at, progress
 `
 
 type InsertWatchedTvParams struct {
-	TmdbID       int32 `json:"tmdb_id"`
-	UserID       int32 `json:"user_id"`
-	TotalSeasons int32 `json:"total_seasons"`
+	TmdbID        int32 `json:"tmdb_id"`
+	UserID        int32 `json:"user_id"`
+	TotalSeasons  int32 `json:"total_seasons"`
+	TotalEpisodes int32 `json:"total_episodes"`
 }
 
 func (q *Queries) InsertWatchedTv(ctx context.Context, arg InsertWatchedTvParams) (WatchedTvShow, error) {
-	row := q.db.QueryRow(ctx, insertWatchedTv, arg.TmdbID, arg.UserID, arg.TotalSeasons)
+	row := q.db.QueryRow(ctx, insertWatchedTv,
+		arg.TmdbID,
+		arg.UserID,
+		arg.TotalSeasons,
+		arg.TotalEpisodes,
+	)
 	var i WatchedTvShow
 	err := row.Scan(
 		&i.ID,
@@ -280,6 +288,7 @@ func (q *Queries) InsertWatchedTv(ctx context.Context, arg InsertWatchedTvParams
 		&i.TmdbID,
 		&i.Status,
 		&i.TotalSeasons,
+		&i.TotalEpisodes,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Progress,
@@ -360,7 +369,7 @@ func (q *Queries) InsertWatchedTvSeason(ctx context.Context, arg InsertWatchedTv
 }
 
 const listWatchedTv = `-- name: ListWatchedTv :many
-SELECT id, user_id, tmdb_id, status, total_seasons, created_at, updated_at, progress FROM watched_tv_shows WHERE user_id = $1 AND
+SELECT id, user_id, tmdb_id, status, total_seasons, total_episodes, created_at, updated_at, progress FROM watched_tv_shows WHERE user_id = $1 AND
 status in ('watched', 'in progress')
 `
 
@@ -379,6 +388,7 @@ func (q *Queries) ListWatchedTv(ctx context.Context, userID int32) ([]WatchedTvS
 			&i.TmdbID,
 			&i.Status,
 			&i.TotalSeasons,
+			&i.TotalEpisodes,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.Progress,

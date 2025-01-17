@@ -149,11 +149,12 @@ func (m WatchedModel) IsTvOnWatched(tmdbId, userId int32) (types.WatchedTv, erro
 	return watchedTv, nil
 }
 
-func (m WatchedModel) AddTvToWatched(tmdbId, userId, totalSeasons int32) error {
+func (m WatchedModel) AddTvToWatched(tmdbId, userId, totalSeasons, totalEpisodes int32) error {
 	args := repository.InsertWatchedTvParams{
-		TmdbID:       tmdbId,
-		UserID:       userId,
-		TotalSeasons: totalSeasons,
+		TmdbID:        tmdbId,
+		UserID:        userId,
+		TotalSeasons:  totalSeasons,
+		TotalEpisodes: totalEpisodes,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)

@@ -180,24 +180,30 @@ func (h *WatchedHandler) AddTvToWatchedHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(len(tv.Seasons)))
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(tv.NumberOfSeasons), int32(tv.NumberOfEpisodes))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	for i, season := range tv.Seasons {
 		err = h.Model.Watched.AddTvSeasonToWatched(int32(id), int32(user.ID), int32(i+1), int32(season.EpisodeCount))
 		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
+			if err.Error() != "record not found" {
+				errors.ServerErrorResponse(w, r, err)
+				return
+			}
 		}
 
 		for j := 1; j <= season.EpisodeCount; j++ {
 			err = h.Model.Watched.AddTvEpisodeToWatched(int32(id), int32(user.ID), int32(i+1), int32(j))
 			if err != nil {
-				errors.ServerErrorResponse(w, r, err)
-				return
+				if err.Error() != "record not found" {
+					errors.ServerErrorResponse(w, r, err)
+					return
+				}
 			}
 		}
 	}
@@ -281,23 +287,29 @@ func (h *WatchedHandler) AddTvSeasonToWatchedHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(len(tv.Seasons)))
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(tv.NumberOfSeasons), int32(tv.NumberOfEpisodes))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	err = h.Model.Watched.AddTvSeasonToWatched(int32(id), int32(user.ID), int32(season), int32(tv.Seasons[season-1].EpisodeCount))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	for i := 1; i <= tv.Seasons[season-1].EpisodeCount; i++ {
 		err = h.Model.Watched.AddTvEpisodeToWatched(int32(id), int32(user.ID), int32(season), int32(i))
 		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
+			if err.Error() != "record not found" {
+				errors.ServerErrorResponse(w, r, err)
+				return
+			}
 		}
 	}
 
@@ -358,7 +370,7 @@ func (h *WatchedHandler) GetTvEpisodeWatchedHandler(w http.ResponseWriter, r *ht
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"in_watchlist": watchedStatus}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"in_watched": watchedStatus}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
@@ -389,22 +401,28 @@ func (h *WatchedHandler) AddTvEpisodeToWatchedHandler(w http.ResponseWriter, r *
 		return
 	}
 
-	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(len(tv.Seasons)))
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(tv.NumberOfSeasons), int32(tv.NumberOfEpisodes))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	err = h.Model.Watched.AddTvSeasonToWatched(int32(id), int32(user.ID), int32(season), int32(tv.Seasons[season-1].EpisodeCount))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	err = h.Model.Watched.AddTvEpisodeToWatched(int32(id), int32(user.ID), int32(season), int32(episode))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv episode successfully added to watched"}, nil)

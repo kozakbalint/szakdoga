@@ -8,10 +8,10 @@ as $$
         season_status text;
     begin
         if tg_op = 'INSERT' then
-            select coalesce(sum(watched_tv_seasons.total_episodes), 0)
+            select total_episodes
             into total_eps
-            from watched_tv_seasons
-            where watched_tv_seasons.tmdb_id = new.tmdb_id;
+            from watched_tv_shows
+            where watched_tv_shows.tmdb_id = new.tmdb_id;
 
             select coalesce(count(*), 0)
             into watched_eps
@@ -50,10 +50,10 @@ as $$
             set status = season_status
             where tmdb_id = new.tmdb_id and season_number = new.season_number;
         elseif tg_op = 'DELETE' then
-            select coalesce(sum(watched_tv_seasons.total_episodes), 0)
+            select total_episodes
             into total_eps
-            from watched_tv_seasons
-            where watched_tv_seasons.tmdb_id = old.tmdb_id;
+            from watched_tv_shows
+            where watched_tv_shows.tmdb_id = old.tmdb_id;
 
             select coalesce(count(*), 0)
             into watched_eps

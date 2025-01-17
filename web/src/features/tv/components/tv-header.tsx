@@ -1,10 +1,8 @@
 import { Badge } from '@/components/ui/badge';
-import { WatchedToggle } from '@/components/ui/watchedtoggle';
+import { TvWatchedToggle } from '@/components/ui/watchedtoggle';
 import { WatchlistToggle } from '@/components/ui/watchlisttoggle';
 import { WatchProvider } from '@/components/ui/watchprovider';
-import { useAddTvToWatched } from '@/features/watched/api/add-tv-to-watched';
 import { useIsTvOnWatched } from '@/features/watched/api/is-tv-on-watched';
-import { useRemoveTvFromWatched } from '@/features/watched/api/remove-tv-from-watched';
 import { useAddTvToWatchlist } from '@/features/watchlist/api/add-tv-to-watchlist';
 import { useIsTvOnWatchlist } from '@/features/watchlist/api/is-tv-on-watchlist';
 import { useRemoveTvFromWatchlist } from '@/features/watchlist/api/remove-tv-from-watchlist';
@@ -20,8 +18,6 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
   const watchproviderQuery = useGetTvWatchProviders({ id: tvId });
   const addTvToWatchlistMutation = useAddTvToWatchlist({ id: tvId });
   const removeTvFromWatchlistMutation = useRemoveTvFromWatchlist({ id: tvId });
-  const addTvToWatchedMutation = useAddTvToWatched({ id: tvId });
-  const removeTvFromWatchedMutation = useRemoveTvFromWatched({ id: tvId });
 
   if (
     tvQuery.isLoading ||
@@ -99,13 +95,7 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
             />
           </div>
           <div>
-            <WatchedToggle
-              id={tvId}
-              type="TV"
-              isOnWatched={isOnWatched}
-              addMutation={addTvToWatchedMutation}
-              removeMutation={removeTvFromWatchedMutation}
-            />
+            <TvWatchedToggle id={tvId} />
           </div>
         </div>
         <div>

@@ -1,6 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { useAddMovieToWatched } from '@/features/watched/api/add-movie-to-watched';
-import { useRemoveMovieFromWatched } from '@/features/watched/api/remove-movie-from-watched';
 import {
   Tooltip,
   TooltipTrigger,
@@ -9,17 +7,17 @@ import {
 import { Eye, EyeOff } from 'lucide-react';
 
 export const WatchedToggle = ({
-  id,
   type,
   isOnWatched,
-  addMutation,
-  removeMutation,
+  disabled,
+  addOnClicked,
+  removeOnClicked,
 }: {
-  id: string;
   type: string;
   isOnWatched: boolean;
-  addMutation: ReturnType<typeof useAddMovieToWatched>;
-  removeMutation: ReturnType<typeof useRemoveMovieFromWatched>;
+  disabled: boolean;
+  addOnClicked: () => void;
+  removeOnClicked: () => void;
 }) => {
   return (
     <div className="flex">
@@ -28,10 +26,8 @@ export const WatchedToggle = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                onClick={() => {
-                  removeMutation.mutate(id);
-                }}
-                disabled={removeMutation.isPending}
+                onClick={removeOnClicked}
+                disabled={disabled}
                 className="flex items-center"
                 size={'icon'}
                 variant={'outline'}
@@ -47,10 +43,8 @@ export const WatchedToggle = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                onClick={() => {
-                  addMutation.mutate(id);
-                }}
-                disabled={addMutation.isPending}
+                onClick={addOnClicked}
+                disabled={disabled}
                 className="flex items-center"
                 size={'icon'}
                 variant={'outline'}

@@ -10,11 +10,11 @@ import {
 } from '../api/get-tv-season-details';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { useGetTvDetails } from '../api/get-tv-details';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
+import { EpisodeWatchedToggle } from '@/components/ui/watchedtoggle';
 
 export const TvSeasons = ({ tvId }: { tvId: string }) => {
   const [selectedSeason, setSelectedSeason] = useState<number>(1);
@@ -83,24 +83,24 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
       </div>
       <div className="flex flex-col items-center gap-2 h-96 overflow-scroll">
         {season.episodes.map((episode, index) => (
-          <Link
-            to={`/app/episode/${tvId}/${selectedSeason}/${index + 1}`}
-            className="hover:underline w-full"
+          <Card
             key={index + 1}
+            className="flex flex-col h-4/5 w-full md:flex-row md:h-32"
           >
-            <Card
-              key={index + 1}
-              className="flex flex-col h-4/5 w-full md:flex-row md:h-32"
-            >
-              <CardHeader className="p-0 min-w-fit">
-                <img
-                  src={episode.still_url}
-                  alt={episode.name}
-                  className="h-full w-full rounded-xl object-cover"
-                />
-              </CardHeader>
-              <CardContent className="py-2 w-full">
-                <div className="flex flex-row gap-4">
+            <CardHeader className="p-0 min-w-fit">
+              <img
+                src={episode.still_url}
+                alt={episode.name}
+                className="h-full w-full rounded-xl object-cover"
+              />
+            </CardHeader>
+            <CardContent className="py-2 w-full">
+              <div className="flex flex-row gap-4">
+                <Link
+                  to={`/app/episode/${tvId}/${selectedSeason}/${index + 1}`}
+                  className="hover:underline w-full"
+                  key={index + 1}
+                >
                   <div className="flex flex-col">
                     <div className="flex flex-row gap-2 font-bold text-lg md:text-xl">
                       <div>{index + 1}.</div>
@@ -110,14 +110,18 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
                       {episode.overview}
                     </div>
                   </div>
-                  <div className="flex flex-col lg:flex-row gap-2 flex-grow justify-center lg:justify-end">
-                    <Button size={'icon'} variant={'default'}></Button>
-                    <Button size={'icon'} variant={'default'}></Button>
-                  </div>
+                </Link>
+                <div className="flex flex-col lg:flex-row gap-2 flex-grow justify-center lg:justify-end">
+                  <EpisodeWatchedToggle
+                    key={index}
+                    id={tvId}
+                    seasonNumber={selectedSeason.toString()}
+                    episodeNumber={(index + 1).toString()}
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

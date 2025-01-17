@@ -19,8 +19,8 @@ SELECT * FROM watched_tv_episodes WHERE tmdb_id = $1 AND user_id = $2 AND season
 
 -- name: InsertWatchedTv :one
 INSERT INTO watched_tv_shows
-(tmdb_id, user_id, total_seasons)
-VALUES($1, $2, $3) ON CONFLICT (tmdb_id, user_id) DO NOTHING
+(tmdb_id, user_id, total_seasons, total_episodes)
+VALUES($1, $2, $3, $4) ON CONFLICT (tmdb_id, user_id) DO NOTHING
 RETURNING *;
 
 -- name: InsertWatchedTvSeason :one
