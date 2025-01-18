@@ -19,7 +19,7 @@ as $$
             where watched_tv_episodes.tmdb_id = new.tmdb_id and watched_at is not null;
 
             update watched_tv_shows
-            set progress = case when total_eps = 0 then 0 else (watched_eps / total_eps) * 100 end
+            set progress = case when total_eps = 0 then 0 else (watched_eps::float / total_eps::float) * 100 end
             where tmdb_id = new.tmdb_id;
 
             if watched_eps = total_eps then
@@ -61,7 +61,7 @@ as $$
             where watched_tv_episodes.tmdb_id = old.tmdb_id and watched_at is not null;
 
             update watched_tv_shows
-            set progress = case when total_eps = 0 then 0 else (watched_eps / total_eps) * 100 end
+            set progress = case when total_eps = 0 then 0 else (watched_eps::float / total_eps::float) * 100 end
             where tmdb_id = old.tmdb_id;
 
             if watched_eps = total_eps then
