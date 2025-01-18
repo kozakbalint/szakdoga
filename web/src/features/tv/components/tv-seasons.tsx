@@ -14,7 +14,10 @@ import { useGetTvDetails } from '../api/get-tv-details';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { EpisodeWatchedToggle } from '@/components/ui/watchedtoggle';
+import {
+  EpisodeWatchedToggle,
+  SeasonWatchedToggle,
+} from '@/components/ui/watchedtoggle';
 
 export const TvSeasons = ({ tvId }: { tvId: string }) => {
   const [selectedSeason, setSelectedSeason] = useState<number>(1);
@@ -54,19 +57,22 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
           <ChevronRight size={24} />
         </div>
       </Link>
-      <div>
-        <Select
-          onValueChange={(value) => {
-            const seasonNumber = parseInt(value);
-            setSelectedSeason(seasonNumber);
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            Season {selectedSeason}
-          </SelectTrigger>
-          <SelectContent>
-            {Array.from({ length: tv.number_of_seasons }, (_, i) => i + 1).map(
-              (seasonNumber) => (
+      <div className="flex justify-between">
+        <div>
+          <Select
+            onValueChange={(value) => {
+              const seasonNumber = parseInt(value);
+              setSelectedSeason(seasonNumber);
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              Season {selectedSeason}
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from(
+                { length: tv.number_of_seasons },
+                (_, i) => i + 1,
+              ).map((seasonNumber) => (
                 <SelectItem
                   key={seasonNumber}
                   value={seasonNumber.toString()}
@@ -76,10 +82,17 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
                 >
                   Season {seasonNumber}
                 </SelectItem>
-              ),
-            )}
-          </SelectContent>
-        </Select>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <SeasonWatchedToggle
+            key={selectedSeason}
+            id={tvId}
+            seasonNumber={selectedSeason.toString()}
+          />
+        </div>
       </div>
       <div className="flex flex-col items-center gap-2 h-96 overflow-scroll">
         {season.episodes.map((episode, index) => (
