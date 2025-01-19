@@ -76,7 +76,7 @@ func (h *WatchedHandler) GetWatchedHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (h *WatchedHandler) GetMovieWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -96,7 +96,7 @@ func (h *WatchedHandler) GetMovieWatchedHandler(w http.ResponseWriter, r *http.R
 }
 
 func (h *WatchedHandler) AddMovieToWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -117,7 +117,7 @@ func (h *WatchedHandler) AddMovieToWatchedHandler(w http.ResponseWriter, r *http
 }
 
 func (h *WatchedHandler) DeleteMovieFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -138,7 +138,7 @@ func (h *WatchedHandler) DeleteMovieFromWatchedHandler(w http.ResponseWriter, r 
 }
 
 func (h *WatchedHandler) GetTvWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -152,7 +152,7 @@ func (h *WatchedHandler) GetTvWatchedHandler(w http.ResponseWriter, r *http.Requ
 			return
 		}
 		watchedStatus = types.WatchedTv{
-			Id:       id,
+			Id:       int64(id),
 			Progress: 0,
 			Status:   "not watched",
 			Seasons:  nil,
@@ -166,7 +166,7 @@ func (h *WatchedHandler) GetTvWatchedHandler(w http.ResponseWriter, r *http.Requ
 }
 
 func (h *WatchedHandler) AddTvToWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -215,7 +215,7 @@ func (h *WatchedHandler) AddTvToWatchedHandler(w http.ResponseWriter, r *http.Re
 }
 
 func (h *WatchedHandler) DeleteTvFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -236,12 +236,12 @@ func (h *WatchedHandler) DeleteTvFromWatchedHandler(w http.ResponseWriter, r *ht
 }
 
 func (h *WatchedHandler) GetTvSeasonWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	season, err := utils.ReadSeasonParam(r)
+	season, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -268,12 +268,12 @@ func (h *WatchedHandler) GetTvSeasonWatchedHandler(w http.ResponseWriter, r *htt
 }
 
 func (h *WatchedHandler) AddTvSeasonToWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	season, err := utils.ReadSeasonParam(r)
+	season, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -320,12 +320,12 @@ func (h *WatchedHandler) AddTvSeasonToWatchedHandler(w http.ResponseWriter, r *h
 }
 
 func (h *WatchedHandler) DeleteTvSeasonFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	season, err := utils.ReadSeasonParam(r)
+	season, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -346,17 +346,17 @@ func (h *WatchedHandler) DeleteTvSeasonFromWatchedHandler(w http.ResponseWriter,
 }
 
 func (h *WatchedHandler) GetTvEpisodeWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	season, err := utils.ReadSeasonParam(r)
+	season, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	episode, err := utils.ReadEpisodeParam(r)
+	episode, err := utils.ReadPathParam(r, "episode_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -377,17 +377,17 @@ func (h *WatchedHandler) GetTvEpisodeWatchedHandler(w http.ResponseWriter, r *ht
 }
 
 func (h *WatchedHandler) AddTvEpisodeToWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	season, err := utils.ReadSeasonParam(r)
+	season, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	episode, err := utils.ReadEpisodeParam(r)
+	episode, err := utils.ReadPathParam(r, "episode_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -432,17 +432,17 @@ func (h *WatchedHandler) AddTvEpisodeToWatchedHandler(w http.ResponseWriter, r *
 }
 
 func (h *WatchedHandler) DeleteTvEpisodeFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	season, err := utils.ReadSeasonParam(r)
+	season, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	episode, err := utils.ReadEpisodeParam(r)
+	episode, err := utils.ReadPathParam(r, "episode_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return

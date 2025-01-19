@@ -15,7 +15,7 @@ type TvHandler struct {
 }
 
 func (h *TvHandler) GetTvByIDHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -34,12 +34,12 @@ func (h *TvHandler) GetTvByIDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TvHandler) GetTvSeasonHandler(w http.ResponseWriter, r *http.Request) {
-	tvID, err := utils.ReadIDParam(r)
+	tvID, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	seasonNumber, err := utils.ReadSeasonParam(r)
+	seasonNumber, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -58,17 +58,17 @@ func (h *TvHandler) GetTvSeasonHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TvHandler) GetTvEpisodeHandler(w http.ResponseWriter, r *http.Request) {
-	tvID, err := utils.ReadIDParam(r)
+	tvID, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	seasonNumber, err := utils.ReadSeasonParam(r)
+	seasonNumber, err := utils.ReadPathParam(r, "season_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-	episodeNumber, err := utils.ReadEpisodeParam(r)
+	episodeNumber, err := utils.ReadPathParam(r, "episode_number")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return

@@ -60,5 +60,5 @@ func New(ctx *context.ServerContext) http.Handler {
 	router.HandlerFunc(http.MethodPost, "/v1/watched/tv/:id/season/:season_number/episode/:episode_number", middleware.RequireAuthenticatedUser(h.WatchedHandler.AddTvEpisodeToWatchedHandler))
 	router.HandlerFunc(http.MethodDelete, "/v1/watched/tv/:id/season/:season_number/episode/:episode_number", middleware.RequireAuthenticatedUser(h.WatchedHandler.DeleteTvEpisodeFromWatchedHandler))
 
-	return middleware.RecoverPanic(middleware.EnableCORS(ctx.Config, middleware.Authenticate(&ctx.Models, router)))
+	return middleware.LogRequest(ctx.Logger, middleware.RecoverPanic(middleware.EnableCORS(ctx.Config, middleware.Authenticate(&ctx.Models, router))))
 }

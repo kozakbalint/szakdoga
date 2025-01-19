@@ -3,8 +3,10 @@ package middleware
 import (
 	e "errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/config"
 	"github.com/kozakbalint/szakdoga/api/internal/context"
@@ -111,4 +113,25 @@ func RequireAuthenticatedUser(next http.HandlerFunc) http.HandlerFunc {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func LogRequest(logger slog.Logger, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		lw := &logResponseWriter{ResponseWriter: w, statusCode: http.StatusOK}
+		next.ServeHTTP(lw, r)
+		duration := time.Since(start)
+
+		logger.Info("request", slog.String("method", r.Method), slog.String("path", r.URL.Path), slog.Int("status", lw.statusCode), slog.String("duration", duration.String()))
+	})
+}
+
+type logResponseWriter struct {
+	http.ResponseWriter
+	statusCode int
+}
+
+func (w *logResponseWriter) WriteHeader(statusCode int) {
+	w.statusCode = statusCode
+	w.ResponseWriter.WriteHeader(statusCode)
 }

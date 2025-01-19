@@ -10,10 +10,12 @@ import (
 	"github.com/kozakbalint/szakdoga/api/internal/database"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
 	"github.com/kozakbalint/szakdoga/api/internal/tmdbclient"
+	"github.com/redis/go-redis/v9"
 )
 
 type ServerContext struct {
 	DB         database.Service
+	Redis      *redis.Client
 	Repository *repository.Queries
 	Config     *config.Config
 	Logger     slog.Logger

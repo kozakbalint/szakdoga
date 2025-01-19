@@ -15,7 +15,7 @@ type CastHandler struct {
 }
 
 func (h *CastHandler) GetMovieCastHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -34,7 +34,7 @@ func (h *CastHandler) GetMovieCastHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (h *CastHandler) GetTvCastHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return

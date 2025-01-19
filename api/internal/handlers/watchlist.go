@@ -76,7 +76,7 @@ func (h *WatchlistHandler) GetWatchlistHandler(w http.ResponseWriter, r *http.Re
 }
 
 func (h *WatchlistHandler) GetMovieWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -96,7 +96,7 @@ func (h *WatchlistHandler) GetMovieWatchlistHandler(w http.ResponseWriter, r *ht
 }
 
 func (h *WatchlistHandler) GetTvShowWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -116,7 +116,7 @@ func (h *WatchlistHandler) GetTvShowWatchlistHandler(w http.ResponseWriter, r *h
 }
 
 func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -137,7 +137,7 @@ func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *
 }
 
 func (h *WatchlistHandler) AddTvShowToWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -158,7 +158,7 @@ func (h *WatchlistHandler) AddTvShowToWatchlistHandler(w http.ResponseWriter, r 
 }
 
 func (h *WatchlistHandler) DeleteMovieFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
@@ -179,7 +179,7 @@ func (h *WatchlistHandler) DeleteMovieFromWatchlistHandler(w http.ResponseWriter
 }
 
 func (h *WatchlistHandler) DeleteTvShowFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return

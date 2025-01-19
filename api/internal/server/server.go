@@ -34,6 +34,8 @@ func NewServer() *http.Server {
 		fmt.Println("Error connecting to database: ", err)
 	}
 
+	redis := database.NewRedisClient(&c)
+
 	tmdbInit, err := tmdb.Init(c.TMDB.APIKey)
 	if err != nil {
 		fmt.Println("Error connecting to tmdb: ", err)
@@ -45,9 +47,10 @@ func NewServer() *http.Server {
 	serverContext := &context.ServerContext{
 		Logger:     *logger,
 		DB:         db,
+		Redis:      redis,
 		Repository: db.GetQueries(),
 		Config:     &c,
-		TmdbClient: tmdbclient.NewClient(tmdbInit, db.GetQueries()),
+		TmdbClient: tmdbclient.NewClient(tmdbInit, db.GetQueries(), redis, logger),
 		Models:     data.NewModels(db.GetQueries()),
 	}
 

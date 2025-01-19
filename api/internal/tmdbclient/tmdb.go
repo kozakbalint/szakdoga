@@ -1,24 +1,47 @@
 package tmdbclient
 
 import (
+	"fmt"
+	"log/slog"
+	"time"
+
 	tmdb "github.com/cyruzin/golang-tmdb"
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
 	"github.com/kozakbalint/szakdoga/api/internal/types"
+	"github.com/kozakbalint/szakdoga/api/internal/utils"
+	"github.com/redis/go-redis/v9"
 )
 
-func NewClient(tmdbClient *tmdb.Client, repo *repository.Queries) *Client {
+func NewClient(tmdb *tmdb.Client, repo *repository.Queries, redis *redis.Client, logger *slog.Logger) *Client {
 	return &Client{
-		Client:     tmdbClient,
+		Client:     tmdb,
 		Repository: repo,
+		Redis:      redis,
+		Logger:     logger,
 	}
 }
 
 type Client struct {
 	Client     *tmdb.Client
+	Redis      *redis.Client
 	Repository *repository.Queries
+	Logger     *slog.Logger
 }
 
 func (m *Client) GetMovieCast(tmdbID int) (*[]types.CastMovies, error) {
+	cacheKey := fmt.Sprintf("movie_cast:%d", tmdbID)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[[]types.CastMovies](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	cast, err := m.Client.GetMovieCredits(tmdbID, nil)
 	if err != nil {
 		return nil, err
@@ -42,10 +65,33 @@ func (m *Client) GetMovieCast(tmdbID int) (*[]types.CastMovies, error) {
 		})
 	}
 
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
 	return &response, nil
 }
 
 func (m *Client) GetTvCast(tmdbID int) (*[]types.CastTv, error) {
+	cacheKey := fmt.Sprintf("tv_cast:%d", tmdbID)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[[]types.CastTv](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	cast, err := m.Client.GetTVAggregateCredits(tmdbID, nil)
 	if err != nil {
 		return nil, err
@@ -84,10 +130,33 @@ func (m *Client) GetTvCast(tmdbID int) (*[]types.CastTv, error) {
 		})
 	}
 
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
 	return &response, nil
 }
 
 func (m *Client) GetMovie(tmdbID int) (*types.MovieDetails, error) {
+	cacheKey := fmt.Sprintf("movie:%d", tmdbID)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[types.MovieDetails](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	movie, err := m.Client.GetMovieDetails(tmdbID, nil)
 	if err != nil {
 		return nil, err
@@ -103,7 +172,7 @@ func (m *Client) GetMovie(tmdbID int) (*types.MovieDetails, error) {
 		genres = append(genres, genre.Name)
 	}
 
-	return &types.MovieDetails{
+	response := &types.MovieDetails{
 		Id:          movie.ID,
 		Title:       movie.Title,
 		Overview:    movie.Overview,
@@ -113,10 +182,35 @@ func (m *Client) GetMovie(tmdbID int) (*types.MovieDetails, error) {
 		PosterUrl:   posterURL,
 		Popularity:  movie.Popularity,
 		VoteAverage: movie.VoteAverage,
-	}, nil
+	}
+
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
+	return response, nil
 }
 
 func (m *Client) GetPerson(tmdbID int) (*types.PersonDetails, error) {
+	cacheKey := fmt.Sprintf("person:%d", tmdbID)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[types.PersonDetails](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	person, err := m.Client.GetPersonDetails(tmdbID, nil)
 	if err != nil {
 		return nil, err
@@ -127,17 +221,42 @@ func (m *Client) GetPerson(tmdbID int) (*types.PersonDetails, error) {
 		profileURL = tmdb.GetImageURL(person.ProfilePath, "w185")
 	}
 
-	return &types.PersonDetails{
+	response := &types.PersonDetails{
 		Id:         person.ID,
 		Name:       person.Name,
 		Biography:  person.Biography,
 		Birthday:   person.Birthday,
 		ProfileUrl: profileURL,
 		Popularity: person.Popularity,
-	}, nil
+	}
+
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
+	return response, nil
 }
 
 func (m *Client) SearchMovies(query string) (*[]types.SearchMovie, error) {
+	cacheKey := fmt.Sprintf("search_movies:%s", query)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[[]types.SearchMovie](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	movies, err := m.Client.GetSearchMovies(query, nil)
 	if err != nil {
 		return nil, err
@@ -165,10 +284,33 @@ func (m *Client) SearchMovies(query string) (*[]types.SearchMovie, error) {
 		response = []types.SearchMovie{}
 	}
 
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
 	return &response, nil
 }
 
 func (m *Client) SearchTv(query string) (*[]types.SearchTv, error) {
+	cacheKey := fmt.Sprintf("search_tv:%s", query)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[[]types.SearchTv](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	tvShows, err := m.Client.GetSearchTVShow(query, nil)
 	if err != nil {
 		return nil, err
@@ -196,10 +338,33 @@ func (m *Client) SearchTv(query string) (*[]types.SearchTv, error) {
 		response = []types.SearchTv{}
 	}
 
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
 	return &response, nil
 }
 
 func (m *Client) SearchPeople(query string) (*[]types.SearchPeople, error) {
+	cacheKey := fmt.Sprintf("search_people:%s", query)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[[]types.SearchPeople](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	people, err := m.Client.GetSearchPeople(query, nil)
 	if err != nil {
 		return nil, err
@@ -225,10 +390,33 @@ func (m *Client) SearchPeople(query string) (*[]types.SearchPeople, error) {
 		response = []types.SearchPeople{}
 	}
 
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
 	return &response, nil
 }
 
 func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
+	cacheKey := fmt.Sprintf("tv:%d", tmdbID)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[types.TvDetails](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	tv, err := m.Client.GetTVDetails(tmdbID, nil)
 	if err != nil {
 		return nil, err
@@ -263,7 +451,7 @@ func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
 		})
 	}
 
-	return &types.TvDetails{
+	response := &types.TvDetails{
 		Id:               tv.ID,
 		Name:             tv.Name,
 		Overview:         tv.Overview,
@@ -276,10 +464,35 @@ func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
 		VoteAverage:      tv.VoteAverage,
 		Status:           tv.Status,
 		Seasons:          seasons,
-	}, nil
+	}
+
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
+	return response, nil
 }
 
 func (m *Client) GetTvSeason(tmdbID int, seasonNumber int) (*types.TvSeasonDetails, error) {
+	cacheKey := fmt.Sprintf("tv_season:%d:%d", tmdbID, seasonNumber)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[types.TvSeasonDetails](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	tvDetails, err := m.Client.GetTVSeasonDetails(tmdbID, seasonNumber, nil)
 	if err != nil {
 		return nil, err
@@ -304,7 +517,7 @@ func (m *Client) GetTvSeason(tmdbID int, seasonNumber int) (*types.TvSeasonDetai
 		})
 	}
 
-	var tvSeasonsResponse = types.TvSeasonDetails{
+	var response = types.TvSeasonDetails{
 		Id:          tvDetails.ID,
 		Name:        tvDetails.Name,
 		Overview:    tvDetails.Overview,
@@ -314,10 +527,33 @@ func (m *Client) GetTvSeason(tmdbID int, seasonNumber int) (*types.TvSeasonDetai
 		Episodes:    episodes,
 	}
 
-	return &tvSeasonsResponse, nil
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
+	return &response, nil
 }
 
 func (m *Client) GetTvEpisode(tmdbID, seasonNumber, episodeNumber int) (*types.TvEpisodeDetails, error) {
+	cacheKey := fmt.Sprintf("tv_episode:%d:%d:%d", tmdbID, seasonNumber, episodeNumber)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[types.TvEpisodeDetails](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	episode, err := m.Client.GetTVEpisodeDetails(tmdbID, seasonNumber, episodeNumber, nil)
 	if err != nil {
 		return nil, err
@@ -328,7 +564,7 @@ func (m *Client) GetTvEpisode(tmdbID, seasonNumber, episodeNumber int) (*types.T
 		stillURL = tmdb.GetImageURL(episode.StillPath, "w500")
 	}
 
-	return &types.TvEpisodeDetails{
+	response := &types.TvEpisodeDetails{
 		Id:          episode.ID,
 		Name:        episode.Name,
 		Overview:    episode.Overview,
@@ -336,10 +572,35 @@ func (m *Client) GetTvEpisode(tmdbID, seasonNumber, episodeNumber int) (*types.T
 		StillUrl:    stillURL,
 		VoteAverage: episode.VoteAverage,
 		Runtime:     episode.Runtime,
-	}, nil
+	}
+
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
+	return response, nil
 }
 
 func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, error) {
+	cacheKey := fmt.Sprintf("movie_watch_providers:%d", tmdbID)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[types.WatchProviders](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	providers, err := m.Client.GetMovieWatchProviders(tmdbID, nil)
 	if err != nil {
 		return nil, err
@@ -387,10 +648,33 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 		})
 	}
 
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
+		}
+	}
+
 	return &response, nil
 }
 
 func (m *Client) GetTvWatchProviders(tmdbID int) (*types.WatchProviders, error) {
+	cacheKey := fmt.Sprintf("tv_watch_providers:%d", tmdbID)
+
+	cachedData, err := utils.GetFromCache(m.Redis, cacheKey)
+	if err != nil {
+		m.Logger.Debug("Failed to get cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else if cachedData != nil {
+		cachedResponse, err := utils.UnmarshalCacheData[types.WatchProviders](cachedData)
+		if err == nil {
+			return cachedResponse, nil
+		}
+		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	}
+
 	providers, err := m.Client.GetTVWatchProviders(tmdbID, nil)
 	if err != nil {
 		return nil, err
@@ -441,6 +725,16 @@ func (m *Client) GetTvWatchProviders(tmdbID int) (*types.WatchProviders, error) 
 				LogoUrl:         logoURL,
 				DisplayPriority: displayPriority,
 			})
+		}
+	}
+
+	serializedData, err := utils.MarshalData(response)
+	if err != nil {
+		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
+	} else {
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		if err != nil {
+			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
 	}
 
