@@ -15,7 +15,7 @@ type MovieHandler struct {
 }
 
 func (h *MovieHandler) GetMovieByIDHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ReadIDParam(r)
+	id, err := utils.ReadPathParam(r, "id")
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return

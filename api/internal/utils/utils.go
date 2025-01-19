@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -8,8 +9,10 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/redis/go-redis/v9"
 )
 
 func ReadQueryParams(r *http.Request) (map[string]string, error) {
@@ -25,37 +28,15 @@ func ReadQueryParams(r *http.Request) (map[string]string, error) {
 	return queryParams, nil
 }
 
-func ReadIDParam(r *http.Request) (int64, error) {
+func ReadPathParam(r *http.Request, pathName string) (int, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
-	id, err := strconv.ParseInt(params.ByName("id"), 10, 64)
+	param, err := strconv.Atoi(params.ByName(pathName))
 	if err != nil {
-		return 0, errors.New("invalid id parameter")
+		return 0, errors.New(fmt.Sprintf("invalid %s parameter", pathName))
 	}
 
-	return id, nil
-}
-
-func ReadSeasonParam(r *http.Request) (int, error) {
-	params := httprouter.ParamsFromContext(r.Context())
-
-	season, err := strconv.Atoi(params.ByName("season_number"))
-	if err != nil {
-		return 0, errors.New("invalid season parameter")
-	}
-
-	return season, nil
-}
-
-func ReadEpisodeParam(r *http.Request) (int, error) {
-	params := httprouter.ParamsFromContext(r.Context())
-
-	episode, err := strconv.Atoi(params.ByName("episode_number"))
-	if err != nil {
-		return 0, errors.New("invalid episode parameter")
-	}
-
-	return episode, nil
+	return param, nil
 }
 
 type Envelope map[string]any
@@ -133,4 +114,33 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 	}
 
 	return nil
+}
+
+func GetFromCache(redisClient *redis.Client, key string) ([]byte, error) {
+	data, err := redisClient.Get(context.Background(), key).Result()
+	if err != redis.Nil {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	return []byte(data), nil
+}
+
+func SaveToCache(redisClient *redis.Client, key string, data []byte, ttl time.Duration) error {
+	err := redisClient.Set(context.Background(), key, data, ttl).Err()
+	return err
+}
+
+func UnmarshalCacheData[T any](data []byte) (*T, error) {
+	var result T
+	err := json.Unmarshal(data, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func MarshalData(data interface{}) ([]byte, error) {
+	return json.Marshal(data)
 }
