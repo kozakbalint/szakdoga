@@ -51,6 +51,7 @@ export function WatchlistTvDataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
+          id="tv-watchlist-search"
           placeholder="Search..."
           value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
