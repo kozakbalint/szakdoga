@@ -1,9 +1,9 @@
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
 import { AspectRatio } from '@/components/ui/aspectratio';
 import { CommandLoading, useCommandState } from 'cmdk';
-import { SearchPersonResponse } from '@/types/api';
+import { SearchPeople } from '@/types/types.gen';
 import { useSearchPeople } from '../api/search-people';
-import { getPersonByIdQueryOptions } from '@/features/people/api/get-person-by-id';
+import { getPersonDetailsQueryOptions } from '@/features/people/api/get-person-details';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { Spinner } from '@/components/ui/spinner';
@@ -11,7 +11,7 @@ import { useDebounce } from '@uidotdev/usehooks';
 
 export interface SearchPagePeopleProps {
   searchTerm: string;
-  onSelect: (person: SearchPersonResponse) => void;
+  onSelect: (person: SearchPeople) => void;
 }
 
 export const SearchPagePeople = ({
@@ -24,7 +24,7 @@ export const SearchPagePeople = ({
   const currentItem = useCommandState((state) => state.value);
   React.useEffect(() => {
     const prefetchPerson = (id: string) => {
-      queryClient.prefetchQuery(getPersonByIdQueryOptions({ id }));
+      queryClient.prefetchQuery(getPersonDetailsQueryOptions({ id }));
     };
     if (currentItem) {
       const idString = currentItem.split('_');

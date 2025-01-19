@@ -1,19 +1,19 @@
 import { AspectRatio } from '@/components/ui/aspectratio';
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
-import { getMovieByIdQueryOptions } from '@/features/movies/api/get-movie-by-id';
-import { SearchMovieResponse } from '@/types/api';
+import { getMovieDetailsQueryOptions } from '@/features/movies/api/get-movie-details';
+import { SearchMovie } from '@/types/types.gen';
 import { useQueryClient } from '@tanstack/react-query';
 import { CommandLoading, useCommandState } from 'cmdk';
 import { useSearchMovies } from '../api/search-movies';
 import React from 'react';
-import { getMovieCastByIdQueryOptions } from '@/features/movies/api/get-movie-cast-by-id';
-import { getMovieWatchProvidersByIdQueryOptions } from '@/features/movies/api/get-movie-watch-providers-by-id';
+import { getMovieCastQueryOptions } from '@/features/cast/api/get-movie-cast';
+import { getMovieWatchProvidersQueryOptions } from '@/features/watchproviders/api/get-movie-watch-providers';
 import { Spinner } from '@/components/ui/spinner';
 import { useDebounce } from '@uidotdev/usehooks';
 
 export interface SearchPageMoviesProps {
   searchTerm: string;
-  onSelect: (movie: SearchMovieResponse) => void;
+  onSelect: (movie: SearchMovie) => void;
 }
 
 export const SearchPageMovies = ({
@@ -26,9 +26,9 @@ export const SearchPageMovies = ({
   const currentItem = useCommandState((state) => state.value);
   React.useEffect(() => {
     const prefetchMovie = (id: string) => {
-      queryClient.prefetchQuery(getMovieByIdQueryOptions({ id }));
-      queryClient.prefetchQuery(getMovieCastByIdQueryOptions({ id }));
-      queryClient.prefetchQuery(getMovieWatchProvidersByIdQueryOptions({ id }));
+      queryClient.prefetchQuery(getMovieDetailsQueryOptions({ id }));
+      queryClient.prefetchQuery(getMovieCastQueryOptions({ id }));
+      queryClient.prefetchQuery(getMovieWatchProvidersQueryOptions({ id }));
     };
     if (currentItem) {
       const idString = currentItem.split('_');

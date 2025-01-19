@@ -1,9 +1,9 @@
 import { ContentLayout } from '@/components/layouts'
 import { EpisodeView } from '@/features/tv/components/episode-view'
 import {
-  getTvEpisodeByIdQueryOptions,
-  useGetTvEpisodeById,
-} from '@/features/tv/api/get-tv-episode-by-id'
+  getTvEpisodeDetailsQueryOptions,
+  useGetTvEpisodeDetails,
+} from '@/features/tv/api/get-tv-episode-details'
 import { ErrorBoundary } from 'react-error-boundary'
 import { createFileRoute, redirect, useParams } from '@tanstack/react-router'
 import { QueryClient } from '@tanstack/react-query'
@@ -23,7 +23,7 @@ export const Route = createFileRoute('/app/episode/$tvId/$seasonId/$episodeId')(
     component: EpisodeRoute,
     loader: async ({ params }) => {
       queryClient.ensureQueryData(
-        getTvEpisodeByIdQueryOptions({
+        getTvEpisodeDetailsQueryOptions({
           id: params.tvId,
           seasonId: params.seasonId,
           episodeId: params.episodeId,
@@ -38,7 +38,7 @@ function EpisodeRoute() {
   const tvId = params.tvId as string
   const seasonNumber = params.seasonId as string
   const episodeNumber = params.episodeId as string
-  const episodeQuery = useGetTvEpisodeById({
+  const episodeQuery = useGetTvEpisodeDetails({
     id: tvId,
     seasonId: seasonNumber,
     episodeId: episodeNumber,
@@ -55,7 +55,7 @@ function EpisodeRoute() {
 
   return (
     <>
-      <ContentLayout head={episode.episode.name}>
+      <ContentLayout head={episode.name}>
         <EpisodeView
           id={tvId}
           seasonId={seasonNumber}
@@ -64,7 +64,7 @@ function EpisodeRoute() {
         <div className="mt-8">
           <ErrorBoundary
             fallback={
-              <div>Failed to load the movie. Try to refresh the page.</div>
+              <div>Failed to load the episode. Try to refresh the page.</div>
             }
           ></ErrorBoundary>
         </div>

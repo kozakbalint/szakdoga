@@ -39,7 +39,7 @@ func ReadIDParam(r *http.Request) (int64, error) {
 func ReadSeasonParam(r *http.Request) (int, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
-	season, err := strconv.Atoi(params.ByName("season"))
+	season, err := strconv.Atoi(params.ByName("season_number"))
 	if err != nil {
 		return 0, errors.New("invalid season parameter")
 	}
@@ -50,7 +50,7 @@ func ReadSeasonParam(r *http.Request) (int, error) {
 func ReadEpisodeParam(r *http.Request) (int, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
-	episode, err := strconv.Atoi(params.ByName("episode"))
+	episode, err := strconv.Atoi(params.ByName("episode_number"))
 	if err != nil {
 		return 0, errors.New("invalid episode parameter")
 	}

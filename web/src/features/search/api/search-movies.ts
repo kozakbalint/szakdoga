@@ -2,7 +2,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
-import { SearchMoviesResponse } from '@/types/api';
+import { SearchMoviesResponse } from '@/types/types.gen';
 
 export const searchMovies = (q: string): Promise<SearchMoviesResponse> => {
   if (!q) {
@@ -15,7 +15,7 @@ export const searchMovies = (q: string): Promise<SearchMoviesResponse> => {
 
 export const searchMoviesQueryOptions = ({ q }: { q: string }) => {
   return queryOptions({
-    queryKey: q ? ['searchedMovies', { q }] : ['searchedMovies'],
+    queryKey: q ? ['search-movies', { q }] : ['search-movies'],
     queryFn: () => searchMovies(q),
   });
 };

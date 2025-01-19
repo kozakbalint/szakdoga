@@ -1,41 +1,50 @@
-import { Button } from '@/components/ui/button';
-import { Heart, Star } from 'lucide-react';
-import { useGetTvById } from '../api/get-tv-by-id';
 import { Badge } from '@/components/ui/badge';
-import { TvWatchProvider } from './tv-watch-provider';
-import { Link } from '@tanstack/react-router';
-import { useAddTVToWatchlist } from '@/features/watchlist/tv/api/add-tv-to-watchlist';
-import { useGetTVWatchlist } from '@/features/watchlist/tv/api/get-tv-watchlist';
-import { useRemoveTVFromWatchlist } from '@/features/watchlist/tv/api/remove-movie-from-watchlist';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { TvWatched } from './tv-watched';
-import { useGetTvShowWatchedDates } from '@/features/watched/tv/api/get-tv-show-watched-dates';
+import { TvWatchedToggle } from '@/components/ui/watchedtoggle';
+import { WatchlistToggle } from '@/components/ui/watchlisttoggle';
+import { WatchProvider } from '@/components/ui/watchprovider';
+import { useIsTvOnWatched } from '@/features/watched/api/is-tv-on-watched';
+import { useAddTvToWatchlist } from '@/features/watchlist/api/add-tv-to-watchlist';
+import { useIsTvOnWatchlist } from '@/features/watchlist/api/is-tv-on-watchlist';
+import { useRemoveTvFromWatchlist } from '@/features/watchlist/api/remove-tv-from-watchlist';
+import { useGetTvWatchProviders } from '@/features/watchproviders/api/get-tv-watch-providers';
+import { WatchedTvStatus } from '@/types/types.gen';
+import { Star } from 'lucide-react';
+import { useGetTvDetails } from '../api/get-tv-details';
 
 export const TvHeader = ({ tvId }: { tvId: string }) => {
-  const tvQuery = useGetTvById({ id: tvId });
-  const watchlistQuery = useGetTVWatchlist({});
-  const addTvToWatchlistMutation = useAddTVToWatchlist();
-  const removeTvFromWatchlistMutation = useRemoveTVFromWatchlist();
-  const watchedDatesQuery = useGetTvShowWatchedDates({ id: tvId });
+  const tvQuery = useGetTvDetails({ id: tvId });
+  const isOnWatchlistQuery = useIsTvOnWatchlist({ id: tvId });
+  const watchedQuery = useIsTvOnWatched({ id: tvId });
+  const watchproviderQuery = useGetTvWatchProviders({ id: tvId });
+  const addTvToWatchlistMutation = useAddTvToWatchlist({ id: tvId });
+  const removeTvFromWatchlistMutation = useRemoveTvFromWatchlist({ id: tvId });
 
   if (
     tvQuery.isLoading ||
-    watchlistQuery.isLoading ||
-    watchedDatesQuery.isLoading
+    isOnWatchlistQuery.isLoading ||
+    watchedQuery.isLoading ||
+    watchproviderQuery.isLoading
   ) {
     return <div>Loading...</div>;
   }
 
   const tv = tvQuery.data?.tv;
-  const watchlist = watchlistQuery.data?.watchlist;
-  const watchdates = watchedDatesQuery.data?.watched_dates || [];
-  const onWatchlist = watchlist?.find((m) => m.tv_show.tmdb_id === tv?.id);
+  const isOnWatchlist = isOnWatchlistQuery.data?.in_watchlist;
+  const watchedData = watchedQuery.data?.watched_tv;
+  const watchProviderData = watchproviderQuery.data?.watch_providers;
+  let isOnWatched = false;
+  if (!watchedData || watchedData.status === WatchedTvStatus.not_watched) {
+    isOnWatched = false;
+  } else {
+    isOnWatched = true;
+  }
 
-  if (!tv) {
+  if (
+    !tv ||
+    !watchProviderData ||
+    isOnWatched === undefined ||
+    isOnWatchlist === undefined
+  ) {
     return '';
   }
 
@@ -64,11 +73,9 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
           </div>
           <div className="flex gap-2">
             {tv.genres.map((genre) => (
-              <Link key={genre.id} to={`/app/categories/${genre.id}`}>
-                <Badge key={genre.id} className="cursor-pointer">
-                  {genre.name}
-                </Badge>
-              </Link>
+              <Badge key={genre} className="cursor-pointer">
+                {genre}
+              </Badge>
             ))}
           </div>
           <div className="text-justify lg:pr-4 overflow-scroll">
@@ -79,52 +86,20 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
       <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
         <div className="flex gap-2">
           <div>
-            {onWatchlist ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => {
-                      removeTvFromWatchlistMutation.mutate({
-                        id: onWatchlist?.id,
-                      });
-                    }}
-                    disabled={removeTvFromWatchlistMutation.isPending}
-                    className="flex items-center"
-                    size={'icon'}
-                    variant={'outline'}
-                  >
-                    <Heart fill="red" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  Remove from watchlist
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => {
-                      addTvToWatchlistMutation.mutate({ tmdb_id: tv.id });
-                    }}
-                    disabled={addTvToWatchlistMutation.isPending}
-                    className="flex items-center"
-                    size={'icon'}
-                    variant={'outline'}
-                  >
-                    <Heart fill="none" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">Add to watchlist</TooltipContent>
-              </Tooltip>
-            )}
+            <WatchlistToggle
+              id={tvId}
+              type="TV"
+              isOnWatchlist={isOnWatchlist}
+              addMutatuion={addTvToWatchlistMutation}
+              removeMutation={removeTvFromWatchlistMutation}
+            />
           </div>
           <div>
-            <TvWatched tvID={tvId} watchedDates={watchdates} />
+            <TvWatchedToggle id={tvId} />
           </div>
         </div>
         <div>
-          <TvWatchProvider tvId={tvId} type="streming" />
+          <WatchProvider watchproviders={watchProviderData} />
         </div>
       </div>
     </div>

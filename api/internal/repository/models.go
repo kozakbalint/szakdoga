@@ -6,63 +6,14 @@ package repository
 
 import (
 	"time"
-)
 
-type Movie struct {
-	ID            int64     `json:"id"`
-	TmdbID        int32     `json:"tmdb_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-	Title         string    `json:"title"`
-	ReleaseDate   string    `json:"release_date"`
-	PosterUrl     string    `json:"poster_url"`
-	Overview      string    `json:"overview"`
-	Genres        []string  `json:"genres"`
-	VoteAverage   float64   `json:"vote_average"`
-	Runtime       int32     `json:"runtime"`
-	Version       int32     `json:"version"`
-}
+	"github.com/jackc/pgx/v5/pgtype"
+)
 
 type Token struct {
 	Hash   []byte    `json:"hash"`
 	UserID int64     `json:"user_id"`
 	Expiry time.Time `json:"expiry"`
-}
-
-type TvShow struct {
-	ID            int64     `json:"id"`
-	TmdbID        int32     `json:"tmdb_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-	Title         string    `json:"title"`
-	ReleaseDate   string    `json:"release_date"`
-	PosterUrl     string    `json:"poster_url"`
-	Overview      string    `json:"overview"`
-	Genres        []string  `json:"genres"`
-	VoteAverage   float64   `json:"vote_average"`
-	Version       int32     `json:"version"`
-}
-
-type TvShowsEpisode struct {
-	ID            int64     `json:"id"`
-	TvShowID      int64     `json:"tv_show_id"`
-	SeasonID      int64     `json:"season_id"`
-	EpisodeNumber int32     `json:"episode_number"`
-	Title         string    `json:"title"`
-	Overview      string    `json:"overview"`
-	AirDate       string    `json:"air_date"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
-}
-
-type TvShowsSeason struct {
-	ID            int64     `json:"id"`
-	TvShowID      int64     `json:"tv_show_id"`
-	SeasonNumber  int32     `json:"season_number"`
-	EpisodeCount  int32     `json:"episode_count"`
-	AirDate       string    `json:"air_date"`
-	CreatedAt     time.Time `json:"created_at"`
-	LastFetchedAt time.Time `json:"last_fetched_at"`
 }
 
 type User struct {
@@ -74,30 +25,57 @@ type User struct {
 	Version      int32     `json:"version"`
 }
 
-type WatchedEpisode struct {
-	ID        int64     `json:"id"`
-	UserID    int32     `json:"user_id"`
-	EpisodeID int32     `json:"episode_id"`
-	WatchedAt time.Time `json:"watched_at"`
+type WatchedMovie struct {
+	ID      int64     `json:"id"`
+	TmdbID  int32     `json:"tmdb_id"`
+	UserID  int32     `json:"user_id"`
+	AddedAt time.Time `json:"added_at"`
 }
 
-type WatchedMovie struct {
-	ID        int32     `json:"id"`
-	UserID    int32     `json:"user_id"`
-	MovieID   int32     `json:"movie_id"`
-	WatchedAt time.Time `json:"watched_at"`
+type WatchedTvEpisode struct {
+	ID            int64              `json:"id"`
+	UserID        int32              `json:"user_id"`
+	TmdbID        int32              `json:"tmdb_id"`
+	SeasonNumber  int32              `json:"season_number"`
+	EpisodeNumber int32              `json:"episode_number"`
+	WatchedAt     pgtype.Timestamptz `json:"watched_at"`
+	CreatedAt     time.Time          `json:"created_at"`
+	UpdatedAt     time.Time          `json:"updated_at"`
+}
+
+type WatchedTvSeason struct {
+	ID            int64     `json:"id"`
+	UserID        int32     `json:"user_id"`
+	TmdbID        int32     `json:"tmdb_id"`
+	SeasonNumber  int32     `json:"season_number"`
+	TotalEpisodes int32     `json:"total_episodes"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	Status        string    `json:"status"`
+}
+
+type WatchedTvShow struct {
+	ID            int64     `json:"id"`
+	UserID        int32     `json:"user_id"`
+	TmdbID        int32     `json:"tmdb_id"`
+	Status        string    `json:"status"`
+	TotalSeasons  int32     `json:"total_seasons"`
+	TotalEpisodes int32     `json:"total_episodes"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	Progress      float64   `json:"progress"`
 }
 
 type WatchlistMovie struct {
 	ID      int64     `json:"id"`
+	TmdbID  int32     `json:"tmdb_id"`
 	UserID  int32     `json:"user_id"`
-	MovieID int32     `json:"movie_id"`
 	AddedAt time.Time `json:"added_at"`
 }
 
-type WatchlistTvShow struct {
-	ID       int64     `json:"id"`
-	UserID   int32     `json:"user_id"`
-	TvShowID int32     `json:"tv_show_id"`
-	AddedAt  time.Time `json:"added_at"`
+type WatchlistTv struct {
+	ID      int64     `json:"id"`
+	TmdbID  int32     `json:"tmdb_id"`
+	UserID  int32     `json:"user_id"`
+	AddedAt time.Time `json:"added_at"`
 }

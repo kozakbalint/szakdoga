@@ -1,242 +1,199 @@
 package handlers
 
 import (
-	e "errors"
-	"fmt"
 	"net/http"
 
 	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
 	"github.com/kozakbalint/szakdoga/api/internal/tmdbclient"
+	"github.com/kozakbalint/szakdoga/api/internal/types"
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
 
 type WatchlistHandler struct {
-	Models     *data.Models
+	Model      *data.Models
 	TmdbClient *tmdbclient.Client
 }
 
-func (h *WatchlistHandler) GetMoviesWatchlistHandler(w http.ResponseWriter, r *http.Request) {
+func (h *WatchlistHandler) GetWatchlistHandler(w http.ResponseWriter, r *http.Request) {
 	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
 
-	moviesWatchlist, err := h.Models.WatchlistMovies.GetWatchlist(user.ID)
+	tmdbIds, err := h.Model.Watchlist.GetWatchlist(int32(user.ID))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": moviesWatchlist}, nil)
+	var movies []types.SearchMovie
+	var tvShows []types.SearchTv
+
+	for _, id := range tmdbIds.Movies {
+		movie, err := h.TmdbClient.GetMovie(int(*id))
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+
+		movies = append(movies, types.SearchMovie{
+			Id:          movie.Id,
+			Title:       movie.Title,
+			Overview:    movie.Overview,
+			PosterUrl:   movie.PosterUrl,
+			ReleaseDate: movie.ReleaseDate,
+			VoteAverage: movie.VoteAverage,
+			Popularity:  movie.Popularity,
+		})
+	}
+
+	for _, id := range tmdbIds.Tv {
+		tvShow, err := h.TmdbClient.GetTv(int(*id))
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+
+		tvShows = append(tvShows, types.SearchTv{
+			Id:          tvShow.Id,
+			Title:       tvShow.Name,
+			Overview:    tvShow.Overview,
+			PosterUrl:   tvShow.PosterUrl,
+			ReleaseDate: tvShow.FirstAirDate,
+			VoteAverage: tvShow.VoteAverage,
+			Popularity:  tvShow.Popularity,
+		})
+	}
+
+	resp := &types.Watchlist{
+		Movies: movies,
+		Tv:     tvShows,
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": resp}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (h *WatchlistHandler) GetTvShowsWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
+func (h *WatchlistHandler) GetMovieWatchlistHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
 		return
 	}
+	user := context.GetUser(r)
 
-	tvShowsWatchlist, err := h.Models.WatchlistTvShows.GetWatchlist(user.ID)
+	watchlistStatus, err := h.Model.Watchlist.IsMovieOnWatchlist(int32(id), int32(user.ID))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watchlist": tvShowsWatchlist}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"in_watchlist": watchlistStatus}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchlistHandler) GetTvShowWatchlistHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	user := context.GetUser(r)
+
+	watchlistStatus, err := h.Model.Watchlist.IsTvShowOnWatchlist(int32(id), int32(user.ID))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"in_watchlist": watchlistStatus}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
 func (h *WatchlistHandler) AddMovieToWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	var input struct {
-		TmdbID int64 `json:"tmdb_id"`
-	}
-
-	err := utils.ReadJSON(w, r, &input)
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
-	movie, err := h.Models.Movies.GetByTmdbID(int(input.TmdbID))
-	if err != nil {
-		if !e.Is(err, data.ErrNotFound) {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
+	user := context.GetUser(r)
 
-	if movie == nil {
-		movie, err = h.TmdbClient.GetMovieData(int(input.TmdbID))
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-
-		movie, err = h.Models.Movies.Insert(movie)
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
-
-	moviesWatchlistEntry := &data.WatchlistMoviesEntry{
-		UserID:  user.ID,
-		MovieID: movie.ID,
-	}
-
-	_, err = h.Models.WatchlistMovies.Insert(moviesWatchlistEntry)
+	err = h.Model.Watchlist.AddMovieToWatchlist(int32(id), int32(user.ID))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message": "movie added to watchlist"}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "movie successfully added to watchlist"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
 func (h *WatchlistHandler) AddTvShowToWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	var input struct {
-		TmdbID int64 `json:"tmdb_id"`
-	}
-
-	err := utils.ReadJSON(w, r, &input)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(input.TmdbID))
-	if err != nil {
-		fmt.Println(err)
-		if !e.Is(err, data.ErrNotFound) {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-		tvShow = nil
-	}
-
-	if tvShow == nil {
-		fmt.Println(input.TmdbID)
-		tvShow, err = h.TmdbClient.GetTvData(int(input.TmdbID))
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-
-		tvShow, err = h.Models.TVShows.Insert(tvShow, &tvShow.Seasons)
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
-
-	tvShowsWatchlistEntry := &data.WatchlistTVShowsEntry{
-		UserID: user.ID,
-		TVID:   tvShow.ID,
-	}
-
-	_, err = h.Models.WatchlistTvShows.Insert(tvShowsWatchlistEntry)
-	if err != nil {
-		fmt.Println(err)
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	err = utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message": "tv show added to watchlist"}, nil)
-	if err != nil {
-		fmt.Println(err)
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
-func (h *WatchlistHandler) RemoveMovieFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
-	_, err = h.Models.WatchlistMovies.GetWatchlistEntry(user.ID, id)
-	if err != nil {
-		if e.Is(err, data.ErrNotFound) {
-			errors.NotFoundResponse(w, r)
-			return
-		}
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
+	user := context.GetUser(r)
 
-	err = h.Models.WatchlistMovies.DeleteWatchlistEntry(id)
+	err = h.Model.Watchlist.AddTvShowToWatchlist(int32(id), int32(user.ID))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "movie removed from watchlist"}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv show successfully added to watchlist"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (h *WatchlistHandler) RemoveTvShowFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
+func (h *WatchlistHandler) DeleteMovieFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
-	_, err = h.Models.WatchlistTvShows.GetWatchlistEntry(user.ID, id)
-	if err != nil {
-		if e.Is(err, data.ErrNotFound) {
-			errors.NotFoundResponse(w, r)
-			return
-		}
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
+	user := context.GetUser(r)
 
-	err = h.Models.WatchlistTvShows.DeleteWatchlistEntry(id)
+	err = h.Model.Watchlist.RemoveMovieFromWatchlist(int32(id), int32(user.ID))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv show removed from watchlist"}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "movie successfully deleted from watchlist"}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchlistHandler) DeleteTvShowFromWatchlistHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+
+	user := context.GetUser(r)
+
+	err = h.Model.Watchlist.RemoveTvShowFromWatchlist(int32(id), int32(user.ID))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv show successfully deleted from watchlist"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}

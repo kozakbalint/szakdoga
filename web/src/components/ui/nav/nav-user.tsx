@@ -17,7 +17,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useLogout } from '@/lib/auth';
-import { User } from '@/types/api';
+import { User } from '@/types/types.gen';
 import { ThemeModeToggle } from '../theme';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';

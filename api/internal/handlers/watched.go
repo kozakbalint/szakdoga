@@ -1,542 +1,462 @@
 package handlers
 
 import (
-	"encoding/json"
-	e "errors"
 	"net/http"
 
 	"github.com/kozakbalint/szakdoga/api/internal/context"
 	"github.com/kozakbalint/szakdoga/api/internal/data"
 	"github.com/kozakbalint/szakdoga/api/internal/errors"
 	"github.com/kozakbalint/szakdoga/api/internal/tmdbclient"
+	"github.com/kozakbalint/szakdoga/api/internal/types"
 	"github.com/kozakbalint/szakdoga/api/internal/utils"
 )
 
 type WatchedHandler struct {
-	Models     *data.Models
+	Model      *data.Models
 	TmdbClient *tmdbclient.Client
 }
 
-func (h *WatchedHandler) AddWatchedMovieHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		MovieID int64 `json:"movie_id"`
-	}
-
-	err := utils.ReadJSON(w, r, &input)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
+func (h *WatchedHandler) GetWatchedHandler(w http.ResponseWriter, r *http.Request) {
 	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
 
-	movie, err := h.Models.Movies.GetByTmdbID(int(input.MovieID))
-	if err != nil {
-		if !e.Is(err, data.ErrNotFound) {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
-
-	_, err = h.Models.WatchedMovies.AddWatchedMovie(user.ID, movie.ID)
+	tmdbIds, err := h.Model.Watched.GetWatched(int32(user.ID))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message": "Movie added to watched"}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
+	var movies []types.SearchMovie
+	var tvShows []types.SearchTv
 
-func (h *WatchedHandler) GetWatchDatesByMovieHandler(w http.ResponseWriter, r *http.Request) {
-	movieID, err := utils.ReadIDParam(r)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	movie, err := h.Models.Movies.GetByTmdbID(int(movieID))
-	if movie == nil {
-		err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": []string{}}, nil)
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-		}
-		return
-	}
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	watchedMovies, err := h.Models.WatchedMovies.GetWatchedMovie(user.ID, movie.ID)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	watchDates := []string{}
-	for _, watched := range *watchedMovies {
-		watchDates = append(watchDates, watched.WatchedAt.Format("2006-01-02"))
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": watchDates}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
-type WatchedMovieResponse struct {
-	ID        int64      `json:"id"`
-	Movie     data.Movie `json:"movie"`
-	WatchedAt string     `json:"watched_at"`
-}
-
-func (h *WatchedHandler) GetWatchedMoviesHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	watchedMovies, err := h.Models.WatchedMovies.GetWatchedMovies(user.ID)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-	var watchedMoviesResponse []WatchedMovieResponse
-	for _, watched := range watchedMovies {
-		movie, err := h.Models.Movies.Get(watched.MovieID)
+	for _, id := range tmdbIds.Movies {
+		movie, err := h.TmdbClient.GetMovie(int(*id))
 		if err != nil {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
-		watchedMoviesResponse = append(watchedMoviesResponse, WatchedMovieResponse{
-			ID:        watched.ID,
-			Movie:     *movie,
-			WatchedAt: watched.WatchedAt.Format("2006-01-02"),
+
+		movies = append(movies, types.SearchMovie{
+			Id:          movie.Id,
+			Title:       movie.Title,
+			Overview:    movie.Overview,
+			PosterUrl:   movie.PosterUrl,
+			ReleaseDate: movie.ReleaseDate,
+			VoteAverage: movie.VoteAverage,
+			Popularity:  movie.Popularity,
 		})
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_movies": watchedMoviesResponse}, nil)
+	for _, id := range tmdbIds.Tv {
+		tvShow, err := h.TmdbClient.GetTv(int(*id))
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+
+		tvShows = append(tvShows, types.SearchTv{
+			Id:          tvShow.Id,
+			Title:       tvShow.Name,
+			Overview:    tvShow.Overview,
+			PosterUrl:   tvShow.PosterUrl,
+			ReleaseDate: tvShow.FirstAirDate,
+			VoteAverage: tvShow.VoteAverage,
+			Popularity:  tvShow.Popularity,
+		})
+	}
+
+	resp := &types.Watched{
+		Movies: movies,
+		Tv:     tvShows,
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched": resp}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (h *WatchedHandler) RemoveWatchedMovieHandler(w http.ResponseWriter, r *http.Request) {
-	movieID, err := utils.ReadIDParam(r)
+func (h *WatchedHandler) GetMovieWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	user := context.GetUser(r)
+
+	watchedStatus, err := h.Model.Watched.IsMovieOnWatched(int32(id), int32(user.ID))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"in_watched": watchedStatus}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchedHandler) AddMovieToWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
 	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
 
-	movie, err := h.Models.Movies.GetByTmdbID(int(movieID))
-	if err != nil || movie == nil {
-		errors.NotFoundResponse(w, r)
-		return
-	}
-
-	err = h.Models.WatchedMovies.DeleteWatchedMoviesForMovie(user.ID, movie.ID)
+	err = h.Model.Watched.AddMovieToWatched(int32(id), int32(user.ID))
 	if err != nil {
-		if e.Is(err, data.ErrNotFound) {
-			errors.NotFoundResponse(w, r)
-			return
-		}
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "Movie removed from watched"}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "movie successfully added to watched"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (h *WatchedHandler) GetWatchedTvShowsHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	watchedTvShows, err := h.Models.WatchedTV.GetWatchedTVs(user.ID)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_tv_shows": watchedTvShows}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
-func (h *WatchedHandler) GetWatchDatesByTvShowHandler(w http.ResponseWriter, r *http.Request) {
-	tvID, err := utils.ReadIDParam(r)
+func (h *WatchedHandler) DeleteMovieFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
 	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
 
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(tvID))
-	if tvShow == nil {
-		err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": []string{}}, nil)
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-		}
-		return
-	}
+	err = h.Model.Watched.RemoveMovieFromWatched(int32(id), int32(user.ID))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	watchedEpisodes, err := h.Models.WatchedTV.GetWatchedEpisodesByTvID(user.ID, tvShow.ID)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	var watchedDates []string
-	for _, watched := range *watchedEpisodes {
-		watchedDates = append(watchedDates, watched.WatchedAt.Format("2006-01-02"))
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_dates": watchedDates}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "movie successfully deleted from watched"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (h *WatchedHandler) AddWatchedTvShowHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		TvID int64 `json:"tv_id"`
+func (h *WatchedHandler) GetTvWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	user := context.GetUser(r)
+
+	watchedStatus, err := h.Model.Watched.IsTvOnWatched(int32(id), int32(user.ID))
+	if err != nil {
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+		watchedStatus = types.WatchedTv{
+			Id:       id,
+			Progress: 0,
+			Status:   "not watched",
+			Seasons:  nil,
+		}
 	}
 
-	err := utils.ReadJSON(w, r, &input)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_tv": watchedStatus}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchedHandler) AddTvToWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
 	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
 
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(input.TvID))
-	if err != nil {
-		if !e.Is(err, data.ErrNotFound) {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-		tvShow = nil
-	}
-
-	if tvShow == nil {
-		tvShow, err = h.TmdbClient.GetTvData(int(input.TvID))
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-
-		tvShow, err = h.Models.TVShows.Insert(tvShow, &tvShow.Seasons)
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
-
-	jsonTv, err := json.MarshalIndent(tvShow, "", "\t")
+	tv, err := h.TmdbClient.GetTv(int(id))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	println(string(jsonTv))
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(tv.NumberOfSeasons), int32(tv.NumberOfEpisodes))
+	if err != nil {
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+	}
 
-	for _, season := range tvShow.Seasons {
-		for _, episode := range season.Episodes {
-			_, err := h.Models.WatchedTV.AddWatchedEpisode(user.ID, tvShow.ID, int64(episode.ID))
+	for i, season := range tv.Seasons {
+		err = h.Model.Watched.AddTvSeasonToWatched(int32(id), int32(user.ID), int32(i+1), int32(season.EpisodeCount))
+		if err != nil {
+			if err.Error() != "record not found" {
+				errors.ServerErrorResponse(w, r, err)
+				return
+			}
+		}
+
+		for j := 1; j <= season.EpisodeCount; j++ {
+			err = h.Model.Watched.AddTvEpisodeToWatched(int32(id), int32(user.ID), int32(i+1), int32(j))
 			if err != nil {
+				if err.Error() != "record not found" {
+					errors.ServerErrorResponse(w, r, err)
+					return
+				}
+			}
+		}
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv show successfully added to watched"}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchedHandler) DeleteTvFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+
+	user := context.GetUser(r)
+
+	err = h.Model.Watched.RemoveTvFromWatched(int32(id), int32(user.ID))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv show successfully deleted from watched"}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchedHandler) GetTvSeasonWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	season, err := utils.ReadSeasonParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	user := context.GetUser(r)
+
+	watchedStatus, err := h.Model.Watched.IsTvSeasonOnWatched(int32(id), int32(user.ID), int32(season))
+	if err != nil {
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+		watchedStatus = types.WatchedTvSeason{
+			Episodes:     nil,
+			SeasonNumber: season,
+			Status:       "not watched",
+		}
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"watched_season": watchedStatus}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchedHandler) AddTvSeasonToWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	season, err := utils.ReadSeasonParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+
+	user := context.GetUser(r)
+
+	tv, err := h.TmdbClient.GetTv(int(id))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(tv.NumberOfSeasons), int32(tv.NumberOfEpisodes))
+	if err != nil {
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+	}
+
+	err = h.Model.Watched.AddTvSeasonToWatched(int32(id), int32(user.ID), int32(season), int32(tv.Seasons[season-1].EpisodeCount))
+	if err != nil {
+		if err.Error() != "record not found" {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+	}
+
+	for i := 1; i <= tv.Seasons[season-1].EpisodeCount; i++ {
+		err = h.Model.Watched.AddTvEpisodeToWatched(int32(id), int32(user.ID), int32(season), int32(i))
+		if err != nil {
+			if err.Error() != "record not found" {
 				errors.ServerErrorResponse(w, r, err)
 				return
 			}
 		}
 	}
 
-	err = utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message": "TV Show added to watched"}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv season successfully added to watched"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (h *WatchedHandler) AddWatchedTvShowEpisodesHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		TvID      int64 `json:"tv_id"`
-		Season    int   `json:"season"`
-		Episode   int   `json:"episode"`
-		WatchedAt string
+func (h *WatchedHandler) DeleteTvSeasonFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
 	}
-
-	err := utils.ReadJSON(w, r, &input)
+	season, err := utils.ReadSeasonParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
 	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
+
+	err = h.Model.Watched.RemoveTvSeasonFromWatched(int32(id), int32(user.ID), int32(season))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(input.TvID))
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv season successfully deleted from watched"}, nil)
 	if err != nil {
-		if !e.Is(err, data.ErrNotFound) {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchedHandler) GetTvEpisodeWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	season, err := utils.ReadSeasonParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	episode, err := utils.ReadEpisodeParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	user := context.GetUser(r)
+
+	watchedStatus, err := h.Model.Watched.IsTvEpisodeOnWatched(int32(id), int32(user.ID), int32(season), int32(episode))
+	if err != nil {
+
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"in_watched": watchedStatus}, nil)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+	}
+}
+
+func (h *WatchedHandler) AddTvEpisodeToWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	season, err := utils.ReadSeasonParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	episode, err := utils.ReadEpisodeParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+
+	user := context.GetUser(r)
+
+	tv, err := h.TmdbClient.GetTv(int(id))
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = h.Model.Watched.AddTvToWatched(int32(id), int32(user.ID), int32(tv.NumberOfSeasons), int32(tv.NumberOfEpisodes))
+	if err != nil {
+		if err.Error() != "record not found" {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
 	}
 
-	tvSeasons, err := h.Models.TVShows.GetSeasons(input.TvID)
+	err = h.Model.Watched.AddTvSeasonToWatched(int32(id), int32(user.ID), int32(season), int32(tv.Seasons[season-1].EpisodeCount))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	tvEpisodes, err := h.Models.TVShows.GetEpisodesBySeasonID(tvShow.ID, tvSeasons[input.Season].ID)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	_, err = h.Models.WatchedTV.AddWatchedEpisode(user.ID, tvShow.ID, int64(tvEpisodes[input.Episode].ID))
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	err = utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message": "TV Show episode added to watched"}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
-func (h *WatchedHandler) RemoveWatchedTvShowHandler(w http.ResponseWriter, r *http.Request) {
-	tvID, err := utils.ReadIDParam(r)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(tvID))
-	if err != nil || tvShow == nil {
-		errors.NotFoundResponse(w, r)
-		return
-	}
-
-	for _, season := range tvShow.Seasons {
-		for _, episode := range season.Episodes {
-			err = h.Models.WatchedTV.RemoveWatchedEpisode(user.ID, int64(episode.ID))
-			if err != nil {
-				errors.ServerErrorResponse(w, r, err)
-				return
-			}
-		}
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "TV Show removed from watched"}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
-func (h *WatchedHandler) RemoveWatchedTvShowEpisodeHandler(w http.ResponseWriter, r *http.Request) {
-	tvID, err := utils.ReadIDParam(r)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	episodeID, err := utils.ReadIDParam(r)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(tvID))
-	if err != nil || tvShow == nil {
-		errors.NotFoundResponse(w, r)
-		return
-	}
-
-	err = h.Models.WatchedTV.RemoveWatchedEpisode(user.ID, int64(episodeID))
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "TV Show episode removed from watched"}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
-func (h *WatchedHandler) AddWatchedTvShowSeasonsHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		TvID   int64 `json:"tv_id"`
-		Season int   `json:"season"`
-	}
-
-	err := utils.ReadJSON(w, r, &input)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(input.TvID))
-	if err != nil {
-		if !e.Is(err, data.ErrNotFound) {
+		if err.Error() != "record not found" {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
 	}
 
-	tvSeasons, err := h.Models.TVShows.GetSeasons(input.TvID)
+	err = h.Model.Watched.AddTvEpisodeToWatched(int32(id), int32(user.ID), int32(season), int32(episode))
 	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	for _, episode := range tvSeasons[input.Season].Episodes {
-		_, err := h.Models.WatchedTV.AddWatchedEpisode(user.ID, tvShow.ID, int64(episode.ID))
-		if err != nil {
+		if err.Error() != "record not found" {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
 	}
 
-	err = utils.WriteJSON(w, http.StatusCreated, utils.Envelope{"message": "TV Show season added to watched"}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv episode successfully added to watched"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
 
-func (h *WatchedHandler) RemoveWatchedTvShowSeasonHandler(w http.ResponseWriter, r *http.Request) {
-	tvID, err := utils.ReadIDParam(r)
+func (h *WatchedHandler) DeleteTvEpisodeFromWatchedHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := utils.ReadIDParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
-
-	seasonID, err := utils.ReadSeasonParam(r)
+	season, err := utils.ReadSeasonParam(r)
+	if err != nil {
+		errors.BadRequestResponse(w, r, err)
+		return
+	}
+	episode, err := utils.ReadEpisodeParam(r)
 	if err != nil {
 		errors.BadRequestResponse(w, r, err)
 		return
 	}
 
 	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
 
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(tvID))
-	if err != nil || tvShow == nil {
-		errors.NotFoundResponse(w, r)
-		return
-	}
-
-	tvSeasons, err := h.Models.TVShows.GetSeasons(tvID)
+	err = h.Model.Watched.RemoveTvEpisodeFromWatched(int32(id), int32(user.ID), int32(season), int32(episode))
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 		return
 	}
 
-	for _, episode := range tvSeasons[seasonID].Episodes {
-		err = h.Models.WatchedTV.RemoveWatchedEpisode(user.ID, int64(episode.ID))
-		if err != nil {
-			errors.ServerErrorResponse(w, r, err)
-			return
-		}
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "TV Show season removed from watched"}, nil)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-	}
-}
-
-func (h *WatchedHandler) GetWatchedProgressHandler(w http.ResponseWriter, r *http.Request) {
-	user := context.GetUser(r)
-	if user == nil {
-		errors.AuthenticationRequiredResponse(w, r)
-		return
-	}
-
-	tvShowID, err := utils.ReadIDParam(r)
-	if err != nil {
-		errors.BadRequestResponse(w, r, err)
-		return
-	}
-
-	tvShow, err := h.Models.TVShows.GetByTmdbID(int(tvShowID))
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	progress, err := h.Models.WatchedTV.GetTvWatchProgress(user.ID, tvShow.ID)
-	if err != nil {
-		errors.ServerErrorResponse(w, r, err)
-		return
-	}
-
-	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"progress": progress}, nil)
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"message": "tv episode successfully deleted from watched"}, nil)
 	if err != nil {
 		errors.ServerErrorResponse(w, r, err)
 	}

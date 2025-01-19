@@ -1,13 +1,13 @@
-import { ContentLayout } from '@/components/layouts'
+import { ContentLayout } from '@/components/layouts';
 import {
-  getPersonByIdQueryOptions,
-  useGetPersonById,
-} from '@/features/people/api/get-person-by-id'
-import { AspectRatio } from '@radix-ui/react-aspect-ratio'
-import { QueryClient } from '@tanstack/react-query'
-import { createFileRoute, redirect, useParams } from '@tanstack/react-router'
+  getPersonDetailsQueryOptions,
+  useGetPersonDetails,
+} from '@/features/people/api/get-person-details';
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { QueryClient } from '@tanstack/react-query';
+import { createFileRoute, redirect, useParams } from '@tanstack/react-router';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export const Route = createFileRoute('/app/people/$personId')({
   beforeLoad: async ({ context, location }) => {
@@ -15,29 +15,29 @@ export const Route = createFileRoute('/app/people/$personId')({
       throw redirect({
         to: '/auth/login',
         search: { redirect: location.pathname },
-      })
+      });
     }
   },
   component: PersonRoute,
   loader: async ({ params }) => {
     queryClient.ensureQueryData(
-      getPersonByIdQueryOptions({ id: params.personId }),
-    )
+      getPersonDetailsQueryOptions({ id: params.personId }),
+    );
   },
-})
+});
 
 function PersonRoute() {
-  const params = useParams({ strict: false })
-  const personId = params.personId as string
-  const personQuery = useGetPersonById({ id: personId })
+  const params = useParams({ strict: false });
+  const personId = params.personId as string;
+  const personQuery = useGetPersonDetails({ id: personId });
 
   if (personQuery.isLoading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
-  const person = personQuery.data?.person
+  const person = personQuery.data?.person;
   if (!person) {
-    return <div>Person not found</div>
+    return <div>Person not found</div>;
   }
 
   return (
@@ -65,5 +65,5 @@ function PersonRoute() {
         </div>
       </ContentLayout>
     </>
-  )
+  );
 }

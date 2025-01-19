@@ -1,4 +1,4 @@
-import { User } from '@/types/api';
+import { User } from '@/types/types.gen';
 import { UseQueryResult } from '@tanstack/react-query';
 import { createRootRouteWithContext } from '@tanstack/react-router';
 import { Outlet } from '@tanstack/react-router';

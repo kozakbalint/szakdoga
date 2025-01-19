@@ -1,18 +1,20 @@
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
 import { AspectRatio } from '@/components/ui/aspectratio';
 import { CommandLoading, useCommandState } from 'cmdk';
-import { SearchTvResponse } from '@/types/api';
+import { SearchTv } from '@/types/types.gen';
 import { useSearchTV } from '../api/search-tv';
-import { getTvByIdQueryOptions } from '@/features/tv/api/get-tv-by-id';
+import { getTvDetailsQueryOptions } from '@/features/tv/api/get-tv-details';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { getTvSeasonByIdQueryOptions } from '@/features/tv/api/get-tv-season-by-id';
+import { getTvSeasonDetailsQueryOptions } from '@/features/tv/api/get-tv-season-details';
 import { Spinner } from '@/components/ui/spinner';
 import { useDebounce } from '@uidotdev/usehooks';
+import { getTvCastQueryOptions } from '@/features/cast/api/get-tv-cast';
+import { getTvWatchProvidersQueryOptions } from '@/features/watchproviders/api/get-tv-watch-providers';
 
 export interface SearchPageTVProps {
   searchTerm: string;
-  onSelect: (tv: SearchTvResponse) => void;
+  onSelect: (tv: SearchTv) => void;
 }
 
 export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
@@ -22,10 +24,12 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
   const currentItem = useCommandState((state) => state.value);
   React.useEffect(() => {
     const prefetchTv = (id: string) => {
-      queryClient.prefetchQuery(getTvByIdQueryOptions({ id }));
+      queryClient.prefetchQuery(getTvDetailsQueryOptions({ id }));
       queryClient.prefetchQuery(
-        getTvSeasonByIdQueryOptions({ id, seasonId: '1' }),
+        getTvSeasonDetailsQueryOptions({ id, seasonId: '1' }),
       );
+      queryClient.prefetchQuery(getTvCastQueryOptions({ id }));
+      queryClient.prefetchQuery(getTvWatchProvidersQueryOptions({ id }));
     };
     if (currentItem) {
       const idString = currentItem.split('_');
@@ -72,8 +76,8 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
       <CommandList className="h-[300px]">
         {tv.map((tv) => (
           <CommandItem
-            key={tv.id + tv.name}
-            value={tv.name + '_tvID:' + tv.id}
+            key={tv.id + tv.title}
+            value={tv.title + '_tvID:' + tv.id}
             onSelect={() => {
               onSelect(tv);
             }}
@@ -87,16 +91,16 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
                     <AspectRatio ratio={2 / 3}>
                       <img
                         src={tv.poster_url}
-                        alt={tv.name}
+                        alt={tv.title}
                         className="w-full h-full object-cover rounded-md"
                       />
                     </AspectRatio>
                   )}
                 </div>
                 <div className="flex flex-col align-middle">
-                  <p className="font-medium">{tv.name}</p>
+                  <p className="font-medium">{tv.title}</p>
                   <p className="text-sm font-thin">
-                    {tv.first_air_date.slice(0, 4)}
+                    {tv.release_date.slice(0, 4)}
                   </p>
                 </div>
               </div>

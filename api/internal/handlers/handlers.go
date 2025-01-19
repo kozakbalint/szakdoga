@@ -54,11 +54,11 @@ func NewHandlers(ctx *context.ServerContext) *Handlers {
 			TmdbClient: ctx.TmdbClient,
 		},
 		WatchlistHandler: &WatchlistHandler{
-			Models:     &ctx.Models,
+			Model:      &ctx.Models,
 			TmdbClient: ctx.TmdbClient,
 		},
 		WatchedHandler: &WatchedHandler{
-			Models:     &ctx.Models,
+			Model:      &ctx.Models,
 			TmdbClient: ctx.TmdbClient,
 		},
 	}

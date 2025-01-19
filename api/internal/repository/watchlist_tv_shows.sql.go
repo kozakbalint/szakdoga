@@ -7,110 +7,92 @@ package repository
 
 import (
 	"context"
-	"time"
 )
 
-const deleteWatchlistTvShows = `-- name: DeleteWatchlistTvShows :one
-DELETE FROM watchlist_tv_shows WHERE id = $1
-RETURNING id, user_id, tv_show_id, added_at
+const deleteWatchlistTvShow = `-- name: DeleteWatchlistTvShow :one
+DELETE FROM watchlist_tv WHERE tmdb_id = $1 AND user_id = $2
+RETURNING id, tmdb_id, user_id, added_at
 `
 
-func (q *Queries) DeleteWatchlistTvShows(ctx context.Context, id int64) (WatchlistTvShow, error) {
-	row := q.db.QueryRow(ctx, deleteWatchlistTvShows, id)
-	var i WatchlistTvShow
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.TvShowID,
-		&i.AddedAt,
-	)
-	return i, err
-}
-
-const getWatchlistTvShows = `-- name: GetWatchlistTvShows :one
-SELECT id, user_id, tv_show_id, added_at FROM watchlist_tv_shows WHERE user_id = $1 AND id = $2
-`
-
-type GetWatchlistTvShowsParams struct {
+type DeleteWatchlistTvShowParams struct {
+	TmdbID int32 `json:"tmdb_id"`
 	UserID int32 `json:"user_id"`
-	ID     int64 `json:"id"`
 }
 
-func (q *Queries) GetWatchlistTvShows(ctx context.Context, arg GetWatchlistTvShowsParams) (WatchlistTvShow, error) {
-	row := q.db.QueryRow(ctx, getWatchlistTvShows, arg.UserID, arg.ID)
-	var i WatchlistTvShow
+func (q *Queries) DeleteWatchlistTvShow(ctx context.Context, arg DeleteWatchlistTvShowParams) (WatchlistTv, error) {
+	row := q.db.QueryRow(ctx, deleteWatchlistTvShow, arg.TmdbID, arg.UserID)
+	var i WatchlistTv
 	err := row.Scan(
 		&i.ID,
+		&i.TmdbID,
 		&i.UserID,
-		&i.TvShowID,
 		&i.AddedAt,
 	)
 	return i, err
 }
 
-const getWatchlistTvShowsByTVId = `-- name: GetWatchlistTvShowsByTVId :one
-SELECT id, user_id, tv_show_id, added_at FROM watchlist_tv_shows WHERE user_id = $1 AND tv_show_id = $2
+const getWatchlistTvShow = `-- name: GetWatchlistTvShow :one
+SELECT id, tmdb_id, user_id, added_at FROM watchlist_tv WHERE tmdb_id = $1 AND user_id = $2
 `
 
-type GetWatchlistTvShowsByTVIdParams struct {
-	UserID   int32 `json:"user_id"`
-	TvShowID int32 `json:"tv_show_id"`
+type GetWatchlistTvShowParams struct {
+	TmdbID int32 `json:"tmdb_id"`
+	UserID int32 `json:"user_id"`
 }
 
-func (q *Queries) GetWatchlistTvShowsByTVId(ctx context.Context, arg GetWatchlistTvShowsByTVIdParams) (WatchlistTvShow, error) {
-	row := q.db.QueryRow(ctx, getWatchlistTvShowsByTVId, arg.UserID, arg.TvShowID)
-	var i WatchlistTvShow
+func (q *Queries) GetWatchlistTvShow(ctx context.Context, arg GetWatchlistTvShowParams) (WatchlistTv, error) {
+	row := q.db.QueryRow(ctx, getWatchlistTvShow, arg.TmdbID, arg.UserID)
+	var i WatchlistTv
 	err := row.Scan(
 		&i.ID,
+		&i.TmdbID,
 		&i.UserID,
-		&i.TvShowID,
 		&i.AddedAt,
 	)
 	return i, err
 }
 
-const insertWatchlistTvShows = `-- name: InsertWatchlistTvShows :one
-INSERT INTO watchlist_tv_shows
-(user_id, tv_show_id, added_at)
-VALUES($1, $2, $3)
-RETURNING id, user_id, tv_show_id, added_at
+const insertWatchlistTvShow = `-- name: InsertWatchlistTvShow :one
+INSERT INTO watchlist_tv
+(tmdb_id, user_id)
+VALUES($1, $2)
+RETURNING id, tmdb_id, user_id, added_at
 `
 
-type InsertWatchlistTvShowsParams struct {
-	UserID   int32     `json:"user_id"`
-	TvShowID int32     `json:"tv_show_id"`
-	AddedAt  time.Time `json:"added_at"`
+type InsertWatchlistTvShowParams struct {
+	TmdbID int32 `json:"tmdb_id"`
+	UserID int32 `json:"user_id"`
 }
 
-func (q *Queries) InsertWatchlistTvShows(ctx context.Context, arg InsertWatchlistTvShowsParams) (WatchlistTvShow, error) {
-	row := q.db.QueryRow(ctx, insertWatchlistTvShows, arg.UserID, arg.TvShowID, arg.AddedAt)
-	var i WatchlistTvShow
+func (q *Queries) InsertWatchlistTvShow(ctx context.Context, arg InsertWatchlistTvShowParams) (WatchlistTv, error) {
+	row := q.db.QueryRow(ctx, insertWatchlistTvShow, arg.TmdbID, arg.UserID)
+	var i WatchlistTv
 	err := row.Scan(
 		&i.ID,
+		&i.TmdbID,
 		&i.UserID,
-		&i.TvShowID,
 		&i.AddedAt,
 	)
 	return i, err
 }
 
 const listWatchlistTvShows = `-- name: ListWatchlistTvShows :many
-SELECT id, user_id, tv_show_id, added_at FROM watchlist_tv_shows WHERE user_id = $1
+SELECT id, tmdb_id, user_id, added_at FROM watchlist_tv WHERE user_id = $1
 `
 
-func (q *Queries) ListWatchlistTvShows(ctx context.Context, userID int32) ([]WatchlistTvShow, error) {
+func (q *Queries) ListWatchlistTvShows(ctx context.Context, userID int32) ([]WatchlistTv, error) {
 	rows, err := q.db.Query(ctx, listWatchlistTvShows, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []WatchlistTvShow
+	var items []WatchlistTv
 	for rows.Next() {
-		var i WatchlistTvShow
+		var i WatchlistTv
 		if err := rows.Scan(
 			&i.ID,
+			&i.TmdbID,
 			&i.UserID,
-			&i.TvShowID,
 			&i.AddedAt,
 		); err != nil {
 			return nil, err
@@ -121,35 +103,4 @@ func (q *Queries) ListWatchlistTvShows(ctx context.Context, userID int32) ([]Wat
 		return nil, err
 	}
 	return items, nil
-}
-
-const updateWatchlistTvShows = `-- name: UpdateWatchlistTvShows :one
-UPDATE watchlist_tv_shows
-SET user_id = $1, tv_show_id = $2, added_at = $3
-WHERE id = $4
-RETURNING id, user_id, tv_show_id, added_at
-`
-
-type UpdateWatchlistTvShowsParams struct {
-	UserID   int32     `json:"user_id"`
-	TvShowID int32     `json:"tv_show_id"`
-	AddedAt  time.Time `json:"added_at"`
-	ID       int64     `json:"id"`
-}
-
-func (q *Queries) UpdateWatchlistTvShows(ctx context.Context, arg UpdateWatchlistTvShowsParams) (WatchlistTvShow, error) {
-	row := q.db.QueryRow(ctx, updateWatchlistTvShows,
-		arg.UserID,
-		arg.TvShowID,
-		arg.AddedAt,
-		arg.ID,
-	)
-	var i WatchlistTvShow
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.TvShowID,
-		&i.AddedAt,
-	)
-	return i, err
 }
