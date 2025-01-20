@@ -65,7 +65,7 @@ export function WatchlistTvDataTable<TData, TValue>({
           table.getRowModel().rows.map((row) => (
             <Card key={row.id} className="shadow-md">
               <div className="flex flex-col sm:flex-row gap-4 p-2 sm:p-0 justify-between">
-                <Link to={`/app/movies/${row.getValue('id')}`}>
+                <Link to={`/app/tv/${row.getValue('id')}`}>
                   <div className="flex gap-4">
                     <img
                       src={row.getValue('poster_url') || ''}
