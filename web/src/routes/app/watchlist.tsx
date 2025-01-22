@@ -1,4 +1,4 @@
-import { WatchlistLayout } from '@/components/layouts';
+import { ContentLayout } from '@/components/layouts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MoviesWatchlist } from '@/features/watchlist/components/watchlist-movies';
 import { TvWatchlist } from '@/features/watchlist/components/watchlist-tv';
@@ -18,7 +18,7 @@ export const Route = createFileRoute('/app/watchlist')({
 
 function WatchlistRoute() {
   return (
-    <WatchlistLayout title="Watchlist:" head="Watchlist">
+    <ContentLayout title="Watchlist:" head="Watchlist">
       <Tabs defaultValue="movies">
         <TabsList>
           <TabsTrigger value="movies">Movies</TabsTrigger>
@@ -31,6 +31,6 @@ function WatchlistRoute() {
           <TvWatchlist />
         </TabsContent>
       </Tabs>
-    </WatchlistLayout>
+    </ContentLayout>
   );
 }
