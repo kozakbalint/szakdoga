@@ -122,6 +122,13 @@ type MovieDetailsResponse struct {
 	Movie MovieDetails `json:"movie"`
 }
 
+// NextEpisode defines model for NextEpisode.
+type NextEpisode struct {
+	EpisodeDetails TvEpisodeDetails `json:"episode_details"`
+	EpisodeNumber  int              `json:"episode_number"`
+	SeasonNumber   int              `json:"season_number"`
+}
+
 // PersonDetails defines model for PersonDetails.
 type PersonDetails struct {
 	Biography  string  `json:"biography"`
@@ -319,10 +326,10 @@ type WatchedResponse struct {
 
 // WatchedTv defines model for WatchedTv.
 type WatchedTv struct {
-	Id       int64             `json:"id"`
-	Progress float64           `json:"progress"`
-	Seasons  []WatchedTvSeason `json:"seasons"`
-	Status   WatchedTvStatus   `json:"status"`
+	Id          int64           `json:"id"`
+	NextEpisode NextEpisode     `json:"next_episode"`
+	Progress    float64         `json:"progress"`
+	Status      WatchedTvStatus `json:"status"`
 }
 
 // WatchedTvStatus defines model for WatchedTv.Status.

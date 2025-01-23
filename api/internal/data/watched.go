@@ -115,36 +115,22 @@ func (m WatchedModel) IsTvOnWatched(tmdbId, userId int32) (types.WatchedTv, erro
 		Status:   types.WatchedTvStatus(tv.Status),
 	}
 
-	seasons, err := m.Repository.ListWatchedTvSeasons(ctx, repository.ListWatchedTvSeasonsParams{
-		TmdbID: int32(tmdbId),
+	var nextEpisode *types.NextEpisode
+	nextEpisodeIndexes, err := m.Repository.GetNextEpisode(ctx, repository.GetNextEpisodeParams{
 		UserID: userId,
+		TmdbID: tmdbId,
 	})
 	if err != nil {
-		return types.WatchedTv{}, WrapError(err)
+		watchedTv.NextEpisode = types.NextEpisode{}
+		return watchedTv, nil
 	}
 
-	var watchedSeasons []types.WatchedTvSeason
-	for i, season := range seasons {
-		episodes, err := m.Repository.ListWatchedTvEpisodes(ctx, repository.ListWatchedTvEpisodesParams{
-			TmdbID:       int32(tmdbId),
-			UserID:       userId,
-			SeasonNumber: season.SeasonNumber,
-		})
-		if err != nil {
-			return types.WatchedTv{}, WrapError(err)
-		}
-
-		watchedSeasons = append(watchedSeasons, types.WatchedTvSeason{
-			SeasonNumber: int(season.SeasonNumber),
-			Status:       types.WatchedTvSeasonStatus(season.Status),
-		})
-
-		for _, episode := range episodes {
-			watchedSeasons[i].Episodes = append(watchedSeasons[i].Episodes, int(episode.EpisodeNumber))
-		}
+	nextEpisode = &types.NextEpisode{
+		SeasonNumber:  int(nextEpisodeIndexes.SeasonNumber),
+		EpisodeNumber: int(nextEpisodeIndexes.EpisodeNumber),
 	}
 
-	watchedTv.Seasons = watchedSeasons
+	watchedTv.NextEpisode = *nextEpisode
 
 	return watchedTv, nil
 }

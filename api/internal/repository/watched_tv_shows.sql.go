@@ -176,6 +176,82 @@ func (q *Queries) DeleteWatchedTvSeason(ctx context.Context, arg DeleteWatchedTv
 	return i, err
 }
 
+const getNextEpisode = `-- name: GetNextEpisode :one
+with all_possible_episodes as (
+  select
+    wts.season_number,
+    generate_series(1, wts.total_episodes) as episode_number
+  from watched_tv_seasons wts
+  where wts.user_id = $1 and wts.tmdb_id = $2
+),
+watched_episodes as (
+  select
+    wte.season_number,
+    wte.episode_number
+  from watched_tv_episodes wte
+  where wte.user_id = $1 and wte.tmdb_id = $2
+),
+missing_episodes as (
+  select
+    ape.season_number,
+    ape.episode_number
+  from all_possible_episodes ape
+  left join watched_episodes we on
+    ape.season_number = we.season_number
+    and ape.episode_number = we.episode_number
+  where we.episode_number is null
+),
+next_season as (
+  select
+    ws.season_number,
+    1 as episode_number
+  from generate_series(1, (
+    select total_seasons from watched_tv_shows wts
+    where wts.user_id = $1 and wts.tmdb_id = $2
+  )) as ws(season_number)
+  where not exists (
+    select 1
+    from watched_tv_seasons wts
+    where wts.user_id = $1 and wts.tmdb_id = $2
+      and wts.season_number = ws.season_number
+  )
+),
+next_episode as (
+  select
+    season_number,
+    episode_number
+  from missing_episodes
+  union all
+  select
+    season_number,
+    episode_number
+  from next_season
+)
+select
+  season_number,
+  episode_number
+from next_episode
+order by season_number, episode_number
+limit 1
+`
+
+type GetNextEpisodeParams struct {
+	UserID int32 `json:"user_id"`
+	TmdbID int32 `json:"tmdb_id"`
+}
+
+type GetNextEpisodeRow struct {
+	SeasonNumber  int32   `json:"season_number"`
+	EpisodeNumber float32 `json:"episode_number"`
+}
+
+func (q *Queries) GetNextEpisode(ctx context.Context, arg GetNextEpisodeParams) (GetNextEpisodeRow, error) {
+	row := q.db.QueryRow(ctx, getNextEpisode, arg.UserID, arg.TmdbID)
+	var i GetNextEpisodeRow
+	err := row.Scan(&i.SeasonNumber, &i.EpisodeNumber)
+	return i, err
+}
+
 const getWatchedTv = `-- name: GetWatchedTv :one
 SELECT id, user_id, tmdb_id, status, total_seasons, total_episodes, created_at, updated_at, progress FROM watched_tv_shows WHERE tmdb_id = $1 AND user_id = $2 AND status in ('watched', 'in progress')
 `
