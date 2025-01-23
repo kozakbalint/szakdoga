@@ -103,26 +103,30 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
         {season.episodes.map((episode, index) => (
           <Card key={index} className="shadow-md w-full">
             <div className="flex flex-col sm:flex-row gap-4 p-2 sm:p-0 justify-between">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <img
-                  src={episode.still_url}
-                  alt={episode.name}
-                  width={imgWidth}
-                  height={imgHeight}
-                  className="rounded-xl object-cover self-center sm:self-center justify-center"
-                />
-                <div className="flex flex-col py-2 sm:py-0">
-                  <div>
-                    <CardTitle className="text-lg font-bold sm:pt-2 line-clamp-1 flex gap-2">
-                      {index + 1 + '. '}
-                      {episode.name}
-                    </CardTitle>
-                    <CardContent className="text-sm text-gray-700 py-2 sm:py-0 pb-0 px-0 line-clamp-3">
-                      {episode.overview}
-                    </CardContent>
+              <Link to={`/app/episode/${tvId}/${selectedSeason}/${index + 1}`}>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <img
+                    src={episode.still_url}
+                    alt={episode.name}
+                    width={imgWidth}
+                    height={imgHeight}
+                    className="rounded-xl object-cover self-center sm:self-center justify-center"
+                  />
+                  <div className="flex flex-col py-2 sm:py-0">
+                    <div>
+                      <CardTitle className="text-lg font-bold sm:pt-2 flex gap-2">
+                        <span className="line-clamp-1">
+                          {index + 1 + '. '}
+                          {episode.name}
+                        </span>
+                      </CardTitle>
+                      <CardContent className="text-sm text-gray-700 py-2 sm:py-0 pb-0 px-0 line-clamp-3">
+                        {episode.overview}
+                      </CardContent>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
               <div className="flex sm:flex-col gap-2 p-2 sm:p-4">
                 <EpisodeWatchedToggle
                   id={tvId}
