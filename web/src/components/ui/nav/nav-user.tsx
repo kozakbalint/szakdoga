@@ -1,6 +1,9 @@
-import { UserRound, ChevronsUpDown, LogOut, Settings } from 'lucide-react';
-
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  ChevronsUpDown,
+  LogOut,
+  Settings,
+  User as UserIcon,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,11 +49,7 @@ export function NavUser({ user }: { user: User }) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarFallback className="rounded-lg">
-                  {user.name[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <UserIcon className="size-4" />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
@@ -66,11 +65,7 @@ export function NavUser({ user }: { user: User }) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarFallback className="rounded-lg">
-                    {user.name[0].toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <UserIcon className="size-4" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
@@ -84,7 +79,7 @@ export function NavUser({ user }: { user: User }) {
                   navigate({ to: '/app/profile' });
                 }}
               >
-                <UserRound />
+                <UserIcon size={16} />
                 <p className="px-2">Account</p>
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -92,13 +87,13 @@ export function NavUser({ user }: { user: User }) {
                   navigate({ to: '/app/settings' });
                 }}
               >
-                <Settings />
+                <Settings size={16} />
                 <p className="px-2">Settings</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => logout.mutate({})}>
-              <LogOut />
+              <LogOut size={16} />
               <p className="px-2">Log out</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
