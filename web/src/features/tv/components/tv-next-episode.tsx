@@ -22,7 +22,6 @@ export const NextEpisode = ({ tvId }: { tvId: string }) => {
     nextEpisode.season_number === 0 ||
     nextEpisode.episode_number === 0
   ) {
-    console.log(nextEpisode);
     return '';
   }
 
