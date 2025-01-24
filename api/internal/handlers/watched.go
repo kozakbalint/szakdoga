@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/kozakbalint/szakdoga/api/internal/context"
@@ -147,15 +148,35 @@ func (h *WatchedHandler) GetTvWatchedHandler(w http.ResponseWriter, r *http.Requ
 
 	watchedStatus, err := h.Model.Watched.IsTvOnWatched(int32(id), int32(user.ID))
 	if err != nil {
+		fmt.Println(err.Error())
 		if err.Error() != "record not found" {
 			errors.ServerErrorResponse(w, r, err)
 			return
 		}
 		watchedStatus = types.WatchedTv{
-			Id:       int64(id),
-			Progress: 0,
-			Status:   "not watched",
-			Seasons:  nil,
+			Id:          int64(id),
+			Progress:    0,
+			Status:      "not watched",
+			NextEpisode: types.NextEpisode{},
+		}
+	}
+
+	var nextEpisodeDetails *types.TvEpisodeDetails
+	if watchedStatus.NextEpisode.SeasonNumber != 0 && watchedStatus.NextEpisode.EpisodeNumber != 0 {
+		nextEpisodeDetails, err = h.TmdbClient.GetTvEpisode(id, watchedStatus.NextEpisode.SeasonNumber, watchedStatus.NextEpisode.EpisodeNumber)
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
+
+		watchedStatus.NextEpisode.EpisodeDetails = types.TvEpisodeDetails{
+			AirDate:     nextEpisodeDetails.AirDate,
+			Id:          nextEpisodeDetails.Id,
+			Name:        nextEpisodeDetails.Name,
+			Overview:    nextEpisodeDetails.Overview,
+			Runtime:     nextEpisodeDetails.Runtime,
+			StillUrl:    nextEpisodeDetails.StillUrl,
+			VoteAverage: nextEpisodeDetails.VoteAverage,
 		}
 	}
 

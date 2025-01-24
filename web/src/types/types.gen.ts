@@ -861,7 +861,12 @@ export type components = {
             status: WatchedTvStatus;
             /** Format: double */
             progress: number;
-            seasons: components["schemas"]["WatchedTvSeason"][];
+            next_episode: components["schemas"]["NextEpisode"];
+        };
+        NextEpisode: {
+            season_number: number;
+            episode_number: number;
+            episode_details: components["schemas"]["TvEpisodeDetails"];
         };
         WatchedTvSeasonResponse: {
             watched_season: components["schemas"]["WatchedTvSeason"];
@@ -923,6 +928,7 @@ export type Watched = components['schemas']['Watched'];
 export type InWatched = components['schemas']['InWatched'];
 export type WatchedTvResponse = components['schemas']['WatchedTvResponse'];
 export type WatchedTv = components['schemas']['WatchedTv'];
+export type NextEpisode = components['schemas']['NextEpisode'];
 export type WatchedTvSeasonResponse = components['schemas']['WatchedTvSeasonResponse'];
 export type WatchedTvSeason = components['schemas']['WatchedTvSeason'];
 export type Message = components['schemas']['Message'];

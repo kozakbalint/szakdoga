@@ -2645,8 +2645,8 @@ components:
       required:
         - id
         - status
-        - seasons
         - progress
+        - next_episode
       properties:
         id:
           type: integer
@@ -2662,10 +2662,28 @@ components:
           examples:
             - 100
             - 33.33
-        seasons:
-          type: array
-          items:
-            $ref: "#/components/schemas/WatchedTvSeason"
+        next_episode:
+          type: object
+          $ref: "#/components/schemas/NextEpisode"
+
+    NextEpisode:
+      type: object
+      required:
+        - season_number
+        - episode_number
+        - episode_details
+      properties:
+        season_number:
+          type: integer
+          examples:
+            - 1
+        episode_number:
+          type: integer
+          examples:
+            - 1
+        episode_details:
+          type: object
+          $ref: "#/components/schemas/TvEpisodeDetails"
 
     WatchedTvSeasonResponse:
       type: object
