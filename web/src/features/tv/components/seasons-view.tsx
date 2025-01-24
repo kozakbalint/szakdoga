@@ -48,7 +48,7 @@ export const SeasonsView = ({ id }: { id: string }) => {
                         {season.overview}
                       </div>
                     </div>
-                    <div className="flex flex-row sm:flex-col gap-2 flex-grow justify-start lg:justify-end"></div>
+                    <div className="flex flex-row sm:flex-col gap-2 grow justify-start lg:justify-end"></div>
                   </div>
                 </Link>
                 <SeasonWatchedToggle

@@ -133,7 +133,7 @@ export const SearchInput = () => {
 
   return (
     <div
-      className="flex flex-grow justify-center"
+      className="flex grow justify-center"
       onKeyDown={(e) => {
         if (e.key === 'Escape' || (e.key === 'Backspace' && !search)) {
           e.preventDefault();
@@ -148,7 +148,7 @@ export const SearchInput = () => {
         icon={<Search size={16} />}
         size={'sm'}
         onClick={handleInputClick}
-        className="flex flex-grow sm:max-w-sm md:max-w-md lg:max-w-lg"
+        className="flex grow sm:max-w-sm md:max-w-md lg:max-w-lg"
       >
         Search...
       </Button>

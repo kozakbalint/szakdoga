@@ -82,7 +82,7 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
               onSelect(tv);
             }}
           >
-            <div className="flex flex-grow justify-between">
+            <div className="flex grow justify-between">
               <div className="flex gap-4 items-start align-middle">
                 <div className="w-12">
                   {tv.poster_url == '' ? (
