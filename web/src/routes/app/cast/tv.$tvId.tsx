@@ -8,12 +8,9 @@ import {
   useGetTvCast,
 } from '@/features/cast/api/get-tv-cast';
 import { QueryClient } from '@tanstack/react-query';
-import {
-  createFileRoute,
-  Link,
-  redirect,
-  useParams,
-} from '@tanstack/react-router';
+import { createFileRoute, redirect, useParams } from '@tanstack/react-router';
+import { castTvColumns } from '@/features/cast/components/cast-data-table/tv-cast-columns';
+import { CastDataTable } from '@/features/cast/components/cast-data-table/data-table';
 
 const queryClient = new QueryClient();
 
@@ -54,34 +51,7 @@ function TvCastRoute() {
   return (
     <>
       <ContentLayout title={tv.name + ' Cast'} head={tv.name + ' Cast'}>
-        <div className="flex flex-col gap-2 pt-4">
-          {cast.map((actor) => (
-            <Link to={`/app/people/${actor.id}`} className="hover:underline">
-              <div key={actor.id} className="flex gap-4">
-                <img
-                  src={actor.profile_url}
-                  alt={actor.name}
-                  className="rounded h-32"
-                />
-                <div className="flex flex-col gap-4">
-                  <h2 className="text-xl font-bold">{actor.name}</h2>
-                  <p className="text-base">
-                    Roles:{' '}
-                    {actor.roles.map((role) => {
-                      return role.character + ', ';
-                    })}
-                  </p>
-                  <p className="text-base">
-                    Total Episode Count:{' '}
-                    {actor.roles
-                      .map((role) => role.episode_count)
-                      .reduce((a, b) => a + b, 0)}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <CastDataTable columns={castTvColumns} data={cast} isTv={true} />
       </ContentLayout>
     </>
   );

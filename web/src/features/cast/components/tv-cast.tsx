@@ -16,10 +16,10 @@ export const TvCast = ({ tvId }: { tvId: string }) => {
     return <div>Cast not found</div>;
   }
 
-  const topCast = cast.slice(0, 5);
+  const topCast = cast.slice(0, 10);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-h-[350px] overflow-scroll">
       <Link to={'/app/cast/tv/' + tvId}>
         <div className="flex flex-row gap-2 place-items-center text-2xl font-semibold">
           <p>Cast</p>
@@ -32,13 +32,19 @@ export const TvCast = ({ tvId }: { tvId: string }) => {
           <Link key={actor.id} to={`/app/people/${actor.id}`}>
             <Card
               key={actor.id}
-              className="w-36 hover:underline h-full max-h-80"
+              className="w-36 hover:underline h-full max-h-[300px]"
             >
-              <img
-                src={actor.profile_url}
-                alt={actor.name}
-                className="object-cover w-full h-3/5 rounded-md shadow-md"
-              />
+              {actor.profile_url === '' ? (
+                <div className="bg-secondary w-full h-3/5 shadow-md rounded-md" />
+              ) : (
+                <img
+                  src={actor.profile_url}
+                  alt={actor.name}
+                  width={150}
+                  height={192}
+                  className="object-cover w-full h-3/5 rounded-md shadow-md"
+                />
+              )}
               <CardContent className="flex flex-col justify-between p-2 h-2/5">
                 <div className="flex flex-col">
                   <p className="text-base font-bold max-h-12 line-clamp-2">
