@@ -68,7 +68,7 @@ export const SeasonView = ({
                     </div>
                   </div>
                 </Link>
-                <div className="flex flex-row sm:flex-col gap-2 flex-grow justify-start">
+                <div className="flex flex-row sm:flex-col gap-2 grow justify-start">
                   <EpisodeWatchedToggle
                     key={index}
                     id={id}

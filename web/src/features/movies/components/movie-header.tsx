@@ -41,7 +41,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
           <img
             src={movie.poster_url}
             alt={movie.title}
-            className="rounded-md shadow object-center w-3/5 sm:w-full"
+            className="rounded-md shadow-sm object-center w-3/5 sm:w-full"
           />
         </div>
         <div className="flex flex-col gap-2 w-full sm:w-2/3 max-h-fit overflow-scroll">
@@ -51,7 +51,7 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
               <div className="text-xl font-thin">
                 ({movie.release_date.slice(0, 4)})
               </div>
-              <div className="flex text-xl lg:pr-4 font-thin self-start items-center flex-grow sm:justify-end gap-1">
+              <div className="flex text-xl lg:pr-4 font-thin self-start items-center grow sm:justify-end gap-1">
                 <Star fill="gold" stroke="black" />
                 {Math.fround(movie.vote_average).toFixed(1)}
               </div>

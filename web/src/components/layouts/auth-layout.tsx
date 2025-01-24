@@ -30,7 +30,7 @@ export const AuthLayout = ({ children, title }: LayoutProps) => {
             Screenlog
           </Link>
         </div>
-        <div className="flex flex-col flex-grow justify-center">{children}</div>
+        <div className="flex flex-col grow justify-center">{children}</div>
       </div>
     </>
   );

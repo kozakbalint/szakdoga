@@ -7,18 +7,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <div className="flex flex-col h-screen w-full">
-        <header className="sticky top-0 z-10 flex gap-4 items-center justify-between px-4 py-2 bg-primary-foreground shadow-sm">
+        <header className="sticky top-0 z-10 flex gap-4 items-center justify-between px-4 py-2 bg-primary-foreground shadow-xs">
           <div className="flex align-middle h-max">
             <SidebarTrigger />
           </div>
-          <div className="w-max flex-grow flex justify-center h-max">
+          <div className="w-max grow flex justify-center h-max">
             <SearchInput />
           </div>
           <div>
             <ThemeModeToggle />
           </div>
         </header>
-        <main className="grid flex-grow flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <main className="grid grow flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           {children}
         </main>
       </div>

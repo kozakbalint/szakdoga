@@ -81,7 +81,7 @@ export const SearchPageMovies = ({
               onSelect(movie);
             }}
           >
-            <div className="flex flex-grow justify-between">
+            <div className="flex grow justify-between">
               <div className="flex gap-4 items-start align-middle">
                 <div className="w-12">
                   {movie.poster_url == '' ? (
