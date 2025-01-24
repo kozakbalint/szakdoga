@@ -30,10 +30,7 @@ export const TvCast = ({ tvId }: { tvId: string }) => {
       <div className="flex flex-row flex-wrap max-w-full gap-4 justify-center lg:justify-start overflow-scroll">
         {topCast.map((actor) => (
           <Link key={actor.id} to={`/app/people/${actor.id}`}>
-            <Card
-              key={actor.id}
-              className="w-36 hover:underline h-full max-h-[300px]"
-            >
+            <Card key={actor.id} className="w-36 hover:underline h-[300px]">
               {actor.profile_url === '' ? (
                 <div className="bg-secondary w-full h-3/5 shadow-md rounded-md" />
               ) : (
