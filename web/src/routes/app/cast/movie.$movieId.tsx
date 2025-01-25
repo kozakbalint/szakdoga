@@ -8,12 +8,9 @@ import {
   useGetMovieCast,
 } from '@/features/cast/api/get-movie-cast';
 import { QueryClient } from '@tanstack/react-query';
-import {
-  createFileRoute,
-  Link,
-  redirect,
-  useParams,
-} from '@tanstack/react-router';
+import { createFileRoute, redirect, useParams } from '@tanstack/react-router';
+import { CastDataTable } from '@/features/cast/components/cast-data-table/data-table';
+import { castMovieColumns } from '@/features/cast/components/cast-data-table/movie-cast-columns';
 
 const queryClient = new QueryClient();
 
@@ -57,24 +54,11 @@ function MovieCastRoute() {
 
   return (
     <>
-      <ContentLayout title={movie.title + ' Cast'} head={movie.title + ' Cast'}>
-        <div className="flex flex-col gap-2 pt-4">
-          {cast.map((actor) => (
-            <Link to={`/app/people/${actor.id}`} className="hover:underline">
-              <div key={actor.id} className="flex gap-4">
-                <img
-                  src={actor.profile_url}
-                  alt={actor.name}
-                  className="rounded h-32"
-                />
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-xl font-bold">{actor.name}</h2>
-                  <p className="text-base">Role: {actor.character}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <ContentLayout
+        title={movie.title + ' Cast:'}
+        head={movie.title + ' Cast'}
+      >
+        <CastDataTable columns={castMovieColumns} data={cast} isTv={false} />
       </ContentLayout>
     </>
   );
