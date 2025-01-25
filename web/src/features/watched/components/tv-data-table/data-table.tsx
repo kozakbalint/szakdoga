@@ -5,8 +5,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { TvWatchedToggle } from '@/components/ui/watchedtoggle';
-import { TvWatchlistToggle } from '@/components/ui/watchlisttoggle';
+import { TvWatchedToggle } from '@/features/watched/components/watchedtoggle';
+import { TvWatchlistToggle } from '@/features/watchlist/components/watchlisttoggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Link } from '@tanstack/react-router';
 import {

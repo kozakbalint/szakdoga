@@ -8,7 +8,7 @@ import {
 import {
   EpisodeWatchedToggle,
   SeasonWatchedToggle,
-} from '@/components/ui/watchedtoggle';
+} from '@/features/watched/components/watchedtoggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';

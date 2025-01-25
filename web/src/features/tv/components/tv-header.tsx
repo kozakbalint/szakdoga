@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
-import { TvWatchedToggle } from '@/components/ui/watchedtoggle';
-import { WatchlistToggle } from '@/components/ui/watchlisttoggle';
-import { WatchProvider } from '@/components/ui/watchprovider';
+import { TvWatchedToggle } from '@/features/watched/components/watchedtoggle';
+import { WatchlistToggle } from '@/features/watchlist/components/watchlisttoggle';
+import { WatchProvider } from '@/features/watchproviders/components/watchprovider';
 import { useIsTvOnWatched } from '@/features/watched/api/is-tv-on-watched';
 import { useAddTvToWatchlist } from '@/features/watchlist/api/add-tv-to-watchlist';
 import { useIsTvOnWatchlist } from '@/features/watchlist/api/is-tv-on-watchlist';

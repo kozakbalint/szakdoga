@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useGetTvDetails } from '../api/get-tv-details';
 import { useGetTvSeasonDetails } from '../api/get-tv-season-details';
 import { Link } from '@tanstack/react-router';
-import { EpisodeWatchedToggle } from '@/components/ui/watchedtoggle';
+import { EpisodeWatchedToggle } from '@/features/watched/components/watchedtoggle';
 
 export const SeasonView = ({
   id,

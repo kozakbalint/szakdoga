@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useGetTvDetails } from '../api/get-tv-details';
 import { Link } from '@tanstack/react-router';
-import { SeasonWatchedToggle } from '@/components/ui/watchedtoggle';
+import { SeasonWatchedToggle } from '@/features/watched/components/watchedtoggle';
 
 export const SeasonsView = ({ id }: { id: string }) => {
   const tvQuery = useGetTvDetails({ id });

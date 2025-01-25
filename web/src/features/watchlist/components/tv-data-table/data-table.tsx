@@ -12,13 +12,13 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { TvWatchlistToggle } from '@/components/ui/watchlisttoggle';
+import { TvWatchlistToggle } from '@/features/watchlist/components/watchlisttoggle';
 import { Star } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Link } from '@tanstack/react-router';
-import { TvWatchedToggle } from '@/components/ui/watchedtoggle';
+import { TvWatchedToggle } from '@/features/watched/components/watchedtoggle';
 
 interface DataTableProps<TData, TValue> {
   data: TData[];

@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
-import { MovieWatchedToggle } from '@/components/ui/watchedtoggle';
-import { WatchlistToggle } from '@/components/ui/watchlisttoggle';
-import { WatchProvider } from '@/components/ui/watchprovider';
+import { MovieWatchedToggle } from '@/features/watched/components/watchedtoggle';
+import { WatchlistToggle } from '@/features/watchlist/components/watchlisttoggle';
+import { WatchProvider } from '@/features/watchproviders/components/watchprovider';
 import { useAddMovieToWatchlist } from '@/features/watchlist/api/add-movie-to-watchlist';
 import { useIsMovieOnWatchlist } from '@/features/watchlist/api/is-movie-on-watchlist';
 import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-movie-from-watchlist';

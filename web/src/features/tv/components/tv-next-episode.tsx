@@ -1,5 +1,5 @@
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
-import { EpisodeWatchedToggle } from '@/components/ui/watchedtoggle';
+import { EpisodeWatchedToggle } from '@/features/watched/components/watchedtoggle';
 import { useIsTvOnWatched } from '@/features/watched/api/is-tv-on-watched';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Link } from '@tanstack/react-router';
