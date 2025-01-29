@@ -1,4 +1,3 @@
-import { AspectRatio } from '@/components/ui/aspectratio';
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
 import { getMovieDetailsQueryOptions } from '@/features/movies/api/get-movie-details';
 import { SearchMovie } from '@/types/types.gen';
@@ -10,6 +9,7 @@ import { getMovieCastQueryOptions } from '@/features/cast/api/get-movie-cast';
 import { getMovieWatchProvidersQueryOptions } from '@/features/watchproviders/api/get-movie-watch-providers';
 import { Spinner } from '@/components/ui/spinner';
 import { useDebounce } from '@uidotdev/usehooks';
+import { SearchPageItem } from './search-page-item';
 
 export interface SearchPageMoviesProps {
   searchTerm: string;
@@ -73,43 +73,20 @@ export const SearchPageMovies = ({
   return (
     <>
       <CommandList className="h-[300px]">
-        {movies.map((movie) => (
-          <CommandItem
-            key={movie.id + movie.title}
-            value={movie.title + '_movieID:' + movie.id}
-            onSelect={() => {
-              onSelect(movie);
-            }}
-          >
-            <div className="flex grow justify-between">
-              <div className="flex gap-4 items-start align-middle">
-                <div className="w-12">
-                  {movie.poster_url == '' ? (
-                    <div className="w-full h-full bg-gray-300 rounded-md"></div>
-                  ) : (
-                    <AspectRatio ratio={2 / 3}>
-                      <img
-                        src={movie.poster_url}
-                        alt={movie.title}
-                        className="w-full h-full object-cover rounded-md"
-                      />
-                    </AspectRatio>
-                  )}
-                </div>
-                <div className="flex flex-col align-middle">
-                  <p className="font-medium">{movie.title}</p>
-                  <p className="text-sm font-thin">
-                    {movie.release_date.slice(0, 4)}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col align-middle">
-                <p className="text-sm font-thin">Popularity:</p>
-                <p className="text-sm font-medium">{movie.popularity}</p>
-              </div>
-            </div>
-          </CommandItem>
-        ))}
+        {movies
+          .filter((movie) => movie.popularity > 1)
+          .sort((a, b) => b.popularity - a.popularity)
+          .map((movie) => (
+            <CommandItem
+              key={movie.id}
+              value={movie.title + '_movieID:' + movie.id}
+              onSelect={() => {
+                onSelect(movie);
+              }}
+            >
+              <SearchPageItem data={movie} type="movie" />
+            </CommandItem>
+          ))}
       </CommandList>
     </>
   );
