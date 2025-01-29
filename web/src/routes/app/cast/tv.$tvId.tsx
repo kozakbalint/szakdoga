@@ -50,7 +50,7 @@ function TvCastRoute() {
 
   return (
     <>
-      <ContentLayout title={tv.name + ' Cast'} head={tv.name + ' Cast'}>
+      <ContentLayout title={tv.name + ' Cast:'} head={tv.name + ' Cast'}>
         <CastDataTable columns={castTvColumns} data={cast} isTv={true} />
       </ContentLayout>
     </>
