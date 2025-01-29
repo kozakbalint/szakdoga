@@ -35,7 +35,7 @@ export const SeasonsView = ({ id }: { id: string }) => {
             <CardContent className="py-2 w-full">
               <div className="flex">
                 <Link
-                  to={`/app/season/${tv.id}/${index + 1}`}
+                  to={`/app/season/` + `${tv.id}/${index + 1}`}
                   className="hover:underline w-3/4 sm:w-full"
                   key={index + 1}
                 >

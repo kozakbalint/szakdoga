@@ -73,9 +73,7 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
           </div>
           <div className="flex gap-2">
             {tv.genres.map((genre) => (
-              <Badge key={genre} className="cursor-pointer">
-                {genre}
-              </Badge>
+              <Badge key={genre}>{genre}</Badge>
             ))}
           </div>
           <div className="text-justify lg:pr-4 overflow-scroll">

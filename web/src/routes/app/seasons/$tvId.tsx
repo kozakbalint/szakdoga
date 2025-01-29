@@ -41,7 +41,7 @@ function SeasonsRoute() {
 
   return (
     <>
-      <ContentLayout head={tv.name + 'Seasons'}>
+      <ContentLayout head={tv.name + ' Seasons'}>
         <SeasonsView id={tvId} />
         <div className="mt-8">
           <ErrorBoundary
