@@ -54,7 +54,7 @@ export const DataTableItem = ({
                       .getContext(),
                   )}
                 </CardTitle>
-                <CardDescription className="text-sm text-gray-500">
+                <CardDescription className="text-sm text-gray-300">
                   Rating:{' '}
                   <Star
                     className="inline align-text-bottom"
@@ -73,7 +73,7 @@ export const DataTableItem = ({
                   )}
                 </CardDescription>
               </div>
-              <CardContent className="text-sm text-gray-700 py-2 sm:py-0 pb-0 px-0 line-clamp-4">
+              <CardContent className="text-sm text-gray-500 py-2 sm:py-0 pb-0 px-0 line-clamp-4">
                 {flexRender(
                   row
                     .getVisibleCells()

@@ -50,7 +50,7 @@ export const TvEpisodeItem = ({
                     {episode.name}
                   </span>
                 </CardTitle>
-                <CardContent className="text-sm text-gray-700 py-2 sm:py-0 pb-0 px-0 line-clamp-3">
+                <CardContent className="text-sm text-gray-500 py-2 sm:py-0 pb-0 px-0 line-clamp-3">
                   {episode.overview}
                 </CardContent>
               </div>
