@@ -1,6 +1,6 @@
 import { useGetWatchlist } from '../api/get-watchlist';
-import { WatchlistTvDataTable } from './tv-data-table/data-table';
-import { watchlistTvColumns } from './tv-data-table/columns';
+import { watchlistTvColumns } from './watchlist-data-table/tv-columns';
+import { WatchlistDataTable } from './watchlist-data-table/data-table';
 
 export const TvWatchlist = () => {
   const watchlistQuery = useGetWatchlist({});
@@ -12,5 +12,7 @@ export const TvWatchlist = () => {
   if (!tv) {
     tv = [];
   }
-  return <WatchlistTvDataTable columns={watchlistTvColumns} data={tv} />;
+  return (
+    <WatchlistDataTable columns={watchlistTvColumns} data={tv} isTv={true} />
+  );
 };

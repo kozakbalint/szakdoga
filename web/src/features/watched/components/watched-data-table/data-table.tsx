@@ -1,5 +1,4 @@
 import { Input } from '@/components/ui/input';
-import { Link } from '@tanstack/react-router';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -8,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import { DataTableItem } from './data-table-item';
+import { DataTableItem } from './data-table-items';
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
@@ -16,7 +15,7 @@ interface DataTableProps<TData, TValue> {
   isTv: boolean;
 }
 
-export function CastDataTable<TData, TValue>({
+export function WatchedDataTable<TData, TValue>({
   data,
   columns,
   isTv,
@@ -38,25 +37,25 @@ export function CastDataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          id="cast-search"
-          placeholder="Search Cast..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          id="watched-search"
+          placeholder="Search Watched..."
+          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
+            table.getColumn('title')?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
       </div>
       <div className="grid gap-4">
-        {table.getRowModel().rows.length ? (
-          table.getRowModel().rows.map((row) => (
-            <Link key={row.id} to={'/app/people/' + row.getValue('id')}>
-              <DataTableItem row={row} isTv={isTv} />
-            </Link>
-          ))
+        {table.getRowModel().rows?.length ? (
+          table
+            .getRowModel()
+            .rows.map((row) => (
+              <DataTableItem row={row} key={row.id} isTv={isTv} />
+            ))
         ) : (
           <div className="text-center p-4">
-            Could not find any cast members.
+            Currently no movies on your watchlist.
           </div>
         )}
       </div>
