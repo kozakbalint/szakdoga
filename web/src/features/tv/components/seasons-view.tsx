@@ -1,5 +1,13 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { useGetTvDetails } from '../api/get-tv-details';
 import { TvSeasonItem } from './tv-season-item';
+import { ChevronRight } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 
 export const SeasonsView = ({ id }: { id: string }) => {
   const tvQuery = useGetTvDetails({ id });
@@ -16,7 +24,19 @@ export const SeasonsView = ({ id }: { id: string }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-2xl">{tv.name} Seasons:</div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem className="text-2xl text-primary hover:underline">
+            <Link to={`/app/tv/` + `${id}`}>{tv.name}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator className="text-primary">
+            <ChevronRight />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem className="text-2xl text-primary">
+            Seasons
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       {tv.seasons.map((season, index) => (
         <TvSeasonItem
           key={index + 1}

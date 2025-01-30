@@ -1,8 +1,15 @@
-import { Star } from 'lucide-react';
+import { ChevronRight, Star } from 'lucide-react';
 import { useGetTvDetails } from '../api/get-tv-details';
 import { useGetTvSeasonDetails } from '../api/get-tv-season-details';
 import { TvEpisodeItem } from './tv-episode-item';
 import { SeasonWatchedToggle } from '@/features/watched/components/watchedtoggle';
+import { Link } from '@tanstack/react-router';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 
 export const SeasonView = ({
   id,
@@ -27,9 +34,19 @@ export const SeasonView = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-2xl">
-        {tv.name}: Seasons {seasonId}
-      </div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem className="text-2xl text-primary hover:underline">
+            <Link to={`/app/tv/` + `${id}`}>{tv.name}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator className="text-primary">
+            <ChevronRight />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem className="text-2xl text-primary">
+            Season {seasonId}
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="flex flex-row gap-10">
         <div className="flex flex-col sm:flex-row gap-3">
           <img
