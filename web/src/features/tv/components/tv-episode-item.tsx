@@ -23,7 +23,10 @@ export const TvEpisodeItem = ({
   return (
     <Card key={episodeNumber} className="shadow-md w-full">
       <div className="flex flex-col sm:flex-row gap-4 p-0 justify-between">
-        <Link to={`/app/episode/` + `${tvId}/${seasonNumber}/${episodeNumber}`}>
+        <Link
+          to={`/app/episode/` + `${tvId}/${seasonNumber}/${episodeNumber}`}
+          className="group grow"
+        >
           <div className="flex flex-col sm:flex-row gap-4">
             {episode.still_url === '' ? (
               <div
@@ -41,7 +44,7 @@ export const TvEpisodeItem = ({
             )}
             <div className="flex flex-col p-2 sm:p-0">
               <div>
-                <CardTitle className="text-lg font-bold sm:pt-2 flex gap-2">
+                <CardTitle className="text-lg font-bold sm:pt-2 flex gap-2 group-hover:underline">
                   <span className="line-clamp-1">
                     {episodeNumber + '.' + ' '}
                     {episode.name}

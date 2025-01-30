@@ -3,7 +3,7 @@ import { CastTv, CastMovies } from '@/types/types.gen';
 
 export const Cast = ({ actor }: { actor: CastTv | CastMovies }) => {
   return (
-    <Card key={actor.id} className="w-36 hover:underline h-[320px]">
+    <Card key={actor.id} className="w-36 h-[320px] group">
       {actor.profile_url === '' ? (
         <div className="bg-secondary w-full h-3/5 shadow-md rounded-md" />
       ) : (
@@ -19,7 +19,7 @@ export const Cast = ({ actor }: { actor: CastTv | CastMovies }) => {
         {'roles' in actor ? (
           <div className="flex flex-col h-full justify-between">
             <div>
-              <div className="text-base font-bold max-h-12 line-clamp-2">
+              <div className="text-base font-bold max-h-12 line-clamp-2 group-hover:underline">
                 {actor.name}
               </div>
               <div className="text-sm max-h-2/3 line-clamp-2">
@@ -32,7 +32,7 @@ export const Cast = ({ actor }: { actor: CastTv | CastMovies }) => {
           </div>
         ) : (
           <div className="flex flex-col">
-            <p className="text-base font-bold max-h-12 line-clamp-2">
+            <p className="text-base font-bold max-h-12 line-clamp-2 group-hover:underline">
               {actor.name}
             </p>
             <p className="text-sm max-h-2/3 line-clamp-2">{actor.character}</p>

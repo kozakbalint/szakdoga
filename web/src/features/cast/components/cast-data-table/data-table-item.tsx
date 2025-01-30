@@ -15,7 +15,7 @@ export const DataTableItem = ({
   const imgHeight = isMobile ? 150 : 150;
 
   return (
-    <Card key={row.id} className="shadow-md">
+    <Card key={row.id} className="shadow-md group">
       <div className="flex flex-col sm:flex-row gap-4 p-0 justify-between">
         <div className="flex gap-4">
           {row.getValue('profile_url') === '' ? (
@@ -34,7 +34,7 @@ export const DataTableItem = ({
           )}
           <div className="flex flex-col py-2 sm:py-0">
             <div>
-              <CardTitle className="text-lg font-bold sm:pt-2">
+              <CardTitle className="text-lg font-bold sm:pt-2 group-hover:underline">
                 {flexRender(
                   row
                     .getVisibleCells()

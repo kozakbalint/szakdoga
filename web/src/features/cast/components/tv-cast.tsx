@@ -45,10 +45,11 @@ export const TvCast = ({ tvId }: { tvId: string }) => {
 
   return (
     <div className="flex flex-col gap-4 max-h-[370px] overflow-scroll">
-      <Link to={'/app/cast/tv/' + tvId}>
+      <Link to={'/app/cast/tv/' + tvId} className="hover:underline">
         <div className="flex flex-row gap-1 place-items-center text-2xl font-semibold">
-          <p>Cast</p>
-          <p className="text-xl font-thin">({cast.length})</p>
+          <p>
+            Cast <span className="font-thin text-xl">({cast.length})</span>
+          </p>
           <ChevronRight size={32} className="align-baseline" />
         </div>
       </Link>

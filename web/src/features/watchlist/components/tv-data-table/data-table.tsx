@@ -65,7 +65,10 @@ export function WatchlistTvDataTable<TData, TValue>({
           table.getRowModel().rows.map((row) => (
             <Card key={row.id} className="shadow-md">
               <div className="flex flex-col sm:flex-row gap-4 p-2 sm:p-0 justify-between">
-                <Link to={`/app/tv/${row.getValue('id')}`}>
+                <Link
+                  to={`/app/tv/` + `${row.getValue('id')}`}
+                  className="group"
+                >
                   <div className="flex gap-4">
                     <img
                       src={row.getValue('poster_url') || ''}
@@ -76,7 +79,7 @@ export function WatchlistTvDataTable<TData, TValue>({
                     />
                     <div className="flex flex-col py-2 sm:py-0">
                       <div>
-                        <CardTitle className="text-lg font-bold sm:pt-2">
+                        <CardTitle className="text-lg font-bold sm:pt-2 group-hover:underline">
                           {flexRender(
                             row
                               .getVisibleCells()

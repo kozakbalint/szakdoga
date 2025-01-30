@@ -48,10 +48,12 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
   return (
     <div className="flex flex-col gap-4">
       <Link to={`/app/seasons/` + tvId} className="hover:underline">
-        <div className="flex flex-row place-items-center gap-2">
-          <div className="text-2xl font-bold">Seasons</div>
-          <div className="text-xl font-thin">({tv.number_of_seasons})</div>
-          <ChevronRight size={24} />
+        <div className="flex flex-row place-items-center gap-1">
+          <p className="text-2xl font-bold">
+            Seasons{' '}
+            <span className="text-xl font-thin">({tv.number_of_seasons})</span>
+          </p>
+          <ChevronRight size={32} className="align-baseline" />
         </div>
       </Link>
       <div className="flex justify-between">

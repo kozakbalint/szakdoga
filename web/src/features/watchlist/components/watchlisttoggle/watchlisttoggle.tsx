@@ -1,6 +1,10 @@
 import { Bookmark } from 'lucide-react';
-import { Button } from '../button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
+import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useAddMovieToWatchlist } from '@/features/watchlist/api/add-movie-to-watchlist';
 import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-movie-from-watchlist';
 
@@ -21,7 +25,7 @@ export const WatchlistToggle = ({
     <div>
       {isOnWatchlist ? (
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger asChild className="cursor-pointer">
             <Button
               onClick={() => {
                 removeMutation.mutate(id);
@@ -40,7 +44,7 @@ export const WatchlistToggle = ({
         </Tooltip>
       ) : (
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger asChild className="cursor-pointer">
             <Button
               onClick={() => {
                 addMutatuion.mutate(id);

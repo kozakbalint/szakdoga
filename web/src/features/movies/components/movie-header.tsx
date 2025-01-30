@@ -59,7 +59,13 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
           </div>
           <div className="flex gap-2 flex-wrap">
             {movie.genres.map((genre) => (
-              <Badge key={genre}>{genre}</Badge>
+              <Badge
+                key={genre}
+                variant="default"
+                className="pointer-events-none"
+              >
+                {genre}
+              </Badge>
             ))}
           </div>
           <div className="text-justify lg:pr-4 overflow-scroll">
