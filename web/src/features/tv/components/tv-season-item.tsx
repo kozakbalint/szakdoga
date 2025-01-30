@@ -4,6 +4,7 @@ import {
   CardDescription,
   CardTitle,
 } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { SeasonWatchedToggle } from '@/features/watched/components/watchedtoggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { TvSeason } from '@/types/types.gen';
@@ -29,13 +30,20 @@ export const TvSeasonItem = ({
       <div className="flex flex-col sm:flex-row gap-4 p-2 sm:p-0 justify-between">
         <Link to={'/app/season/' + `${tvId}/${seasonNumber}`} className="group">
           <div className="flex gap-4">
-            <img
-              src={season.poster_url}
-              alt={season.name}
-              width={imgWidth}
-              height={imgHeight}
-              className="rounded-xl object-cover self-center sm:self-start"
-            />
+            {season.poster_url === '' ? (
+              <Skeleton
+                className="rounded-xl shrink-0"
+                style={{ width: imgWidth, height: imgHeight }}
+              />
+            ) : (
+              <img
+                src={season.poster_url}
+                alt={season.name}
+                width={imgWidth}
+                height={imgHeight}
+                className="rounded-xl object-cover self-center sm:self-start"
+              />
+            )}
             <div className="flex flex-col py-2 sm:py-0">
               <div>
                 <CardTitle className="text-lg font-bold sm:pt-2 group-hover:underline">

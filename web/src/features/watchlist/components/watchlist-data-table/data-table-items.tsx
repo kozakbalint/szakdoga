@@ -13,6 +13,7 @@ import { Link } from '@tanstack/react-router';
 import { flexRender, Row } from '@tanstack/react-table';
 import { Star } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const DataTableItem = ({
   row,
@@ -33,13 +34,20 @@ export const DataTableItem = ({
       <div className="flex flex-col sm:flex-row gap-4 p-2 sm:p-0 justify-between">
         <Link to={link + `${row.getValue('id')}`} className="group">
           <div className="flex gap-4">
-            <img
-              src={row.getValue('poster_url') || ''}
-              alt={row.getValue('title') || 'Poster'}
-              width={imgWidth}
-              height={imgHeight}
-              className="rounded-xl object-cover self-center sm:self-start"
-            />
+            {row.getValue('poster_url') === '' ? (
+              <Skeleton
+                className="rounded-xl shrink-0"
+                style={{ width: imgWidth, height: imgHeight }}
+              />
+            ) : (
+              <img
+                src={row.getValue('poster_url') || ''}
+                alt={row.getValue('title') || 'Poster'}
+                width={imgWidth}
+                height={imgHeight}
+                className="rounded-xl object-cover self-center sm:self-start"
+              />
+            )}
             <div className="flex flex-col py-2 sm:py-0">
               <div>
                 <CardTitle className="text-lg font-bold sm:pt-2 group-hover:underline">

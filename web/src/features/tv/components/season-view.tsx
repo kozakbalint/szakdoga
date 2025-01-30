@@ -10,6 +10,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const SeasonView = ({
   id,
@@ -49,11 +50,15 @@ export const SeasonView = ({
       </Breadcrumb>
       <div className="flex flex-row gap-10">
         <div className="flex flex-col sm:flex-row gap-3">
-          <img
-            src={season.poster_url}
-            alt={season.name}
-            className="sm:h-96 rounded-xl"
-          />
+          {season.poster_url === '' ? (
+            <Skeleton className="sm:h-96 w-64 rounded-xl" />
+          ) : (
+            <img
+              src={season.poster_url}
+              alt={season.name}
+              className="sm:h-96 rounded-xl"
+            />
+          )}
           <div className="flex flex-col gap-2">
             <div className="flex justify-between text-xl">
               <span>{season.name}</span>

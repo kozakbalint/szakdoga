@@ -1,4 +1,5 @@
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { flexRender, Row } from '@tanstack/react-table';
 
@@ -19,8 +20,8 @@ export const DataTableItem = ({
       <div className="flex flex-col sm:flex-row gap-4 p-0 justify-between">
         <div className="flex gap-4">
           {row.getValue('profile_url') === '' ? (
-            <div
-              className="bg-secondary rounded-xl shrink-0"
+            <Skeleton
+              className="rounded-xl shrink-0"
               style={{ width: imgWidth, height: imgHeight }}
             />
           ) : (

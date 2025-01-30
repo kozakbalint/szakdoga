@@ -8,6 +8,7 @@ import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-mov
 import { useGetMovieWatchProviders } from '@/features/watchproviders/api/get-movie-watch-providers';
 import { Star } from 'lucide-react';
 import { useGetMovieDetails } from '../api/get-movie-details';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const MovieHeader = ({ movieId }: { movieId: string }) => {
   const movieQuery = useGetMovieDetails({ id: movieId });
@@ -38,11 +39,15 @@ export const MovieHeader = ({ movieId }: { movieId: string }) => {
     <div className="flex flex-col lg:flex-row gap-8 lg:gap-4">
       <div className="flex flex-col sm:flex-row w-full lg:w-4/5 gap-4">
         <div className="flex w-full sm:w-1/3 justify-center content-center">
-          <img
-            src={movie.poster_url}
-            alt={movie.title}
-            className="rounded-md shadow-sm object-center w-3/5 sm:w-full"
-          />
+          {movie.poster_url === '' ? (
+            <Skeleton className="rounded-md object-center w-3/5 min-h-100 h-full sm:w-full grow" />
+          ) : (
+            <img
+              src={movie.poster_url}
+              alt={movie.title}
+              className="rounded-md shadow-sm object-center w-3/5 h sm:w-full grow"
+            />
+          )}
         </div>
         <div className="flex flex-col gap-2 w-full sm:w-2/3 max-h-fit overflow-scroll">
           <div className="flex flex-col gap-1">

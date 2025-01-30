@@ -1,4 +1,5 @@
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { EpisodeWatchedToggle } from '@/features/watched/components/watchedtoggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { TvEpisode } from '@/types/types.gen';
@@ -29,10 +30,10 @@ export const TvEpisodeItem = ({
         >
           <div className="flex flex-col sm:flex-row gap-4">
             {episode.still_url === '' ? (
-              <div
-                className="bg-secondary rounded-xl shrink-0"
+              <Skeleton
+                className="rounded-xl shrink-0"
                 style={{ width: imgWidth, height: imgHeight }}
-              ></div>
+              />
             ) : (
               <img
                 src={episode.still_url}

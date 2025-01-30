@@ -1,11 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { CastTv, CastMovies } from '@/types/types.gen';
 
 export const Cast = ({ actor }: { actor: CastTv | CastMovies }) => {
   return (
     <Card key={actor.id} className="w-36 h-[320px] group">
       {actor.profile_url === '' ? (
-        <div className="bg-secondary w-full h-3/5 shadow-md rounded-md" />
+        <Skeleton className="w-full h-3/5 rounded-md" />
       ) : (
         <img
           src={actor.profile_url}

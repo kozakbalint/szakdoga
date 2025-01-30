@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Link } from '@tanstack/react-router';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const EpisodeView = ({
   id,
@@ -58,11 +59,16 @@ export const EpisodeView = ({
       </Breadcrumb>
       <div className="flex flex-row gap-10">
         <div className="flex flex-col sm:flex-row gap-3">
-          <img
-            src={episode.still_url}
-            alt={episode.name}
-            className="sm:h-36 rounded-xl"
-          />
+          {episode.still_url === '' ? (
+            <Skeleton className="sm:h-36 sm:w-64 rounded-xl" />
+          ) : (
+            <img
+              src={episode.still_url}
+              alt={episode.name}
+              className="sm:h-36 rounded-xl"
+            />
+          )}
+
           <div className="flex flex-col gap-2">
             <div className="flex justify-between text-xl">
               <span>{episode.name}</span>

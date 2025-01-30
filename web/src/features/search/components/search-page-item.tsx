@@ -1,3 +1,4 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import { SearchMovie, SearchPeople, SearchTv } from '@/types/types.gen';
 import { Star } from 'lucide-react';
 
@@ -15,7 +16,7 @@ export const SearchPageItem = ({
         <div className="flex gap-4 items-start align-middle">
           <div className="w-12 h-18">
             {movieOrTvData.poster_url === '' ? (
-              <div className="w-full h-full bg-secondary rounded-md"></div>
+              <Skeleton className="w-full h-full rounded-md" />
             ) : (
               <img
                 src={movieOrTvData.poster_url}
@@ -34,7 +35,7 @@ export const SearchPageItem = ({
         <div className="flex flex-col align-middle">
           <p className="text-sm font-thin">Rating:</p>
           <div className="flex gap-2">
-            <Star fill="gold" />
+            <Star fill="gold" stroke="black" />
             <p className="text-sm font-medium">
               {movieOrTvData.vote_average.toFixed(1)}
             </p>
@@ -51,7 +52,7 @@ export const SearchPageItem = ({
         <div className="flex gap-4 items-start align-middle">
           <div className="w-12 h-18">
             {personData.profile_url === '' ? (
-              <div className="w-full h-full bg-secondary rounded-md"></div>
+              <Skeleton className="w-full h-full rounded-md" />
             ) : (
               <img
                 src={personData.profile_url}

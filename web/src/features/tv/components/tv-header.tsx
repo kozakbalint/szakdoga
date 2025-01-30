@@ -10,6 +10,7 @@ import { useGetTvWatchProviders } from '@/features/watchproviders/api/get-tv-wat
 import { WatchedTvStatus } from '@/types/types.gen';
 import { Star } from 'lucide-react';
 import { useGetTvDetails } from '../api/get-tv-details';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const TvHeader = ({ tvId }: { tvId: string }) => {
   const tvQuery = useGetTvDetails({ id: tvId });
@@ -52,11 +53,15 @@ export const TvHeader = ({ tvId }: { tvId: string }) => {
     <div className="flex flex-col lg:flex-row gap-8 lg:gap-4">
       <div className="flex flex-col sm:flex-row w-full lg:w-4/5 gap-4">
         <div className="flex w-full sm:w-1/3 justify-center content-center">
-          <img
-            src={tv.poster_url}
-            alt={tv.name}
-            className="rounded-md shadow-sm object-center w-3/5 sm:w-full"
-          />
+          {tv.poster_url === '' ? (
+            <Skeleton className="rounded-md object-center w-3/5 min-h-100 h-full sm:w-full grow" />
+          ) : (
+            <img
+              src={tv.poster_url}
+              alt={tv.name}
+              className="rounded-md shadow-sm object-center w-3/5 sm:w-full"
+            />
+          )}
         </div>
         <div className="flex flex-col gap-2 w-full sm:w-2/3 max-h-fit overflow-scroll">
           <div className="flex flex-col gap-1">
