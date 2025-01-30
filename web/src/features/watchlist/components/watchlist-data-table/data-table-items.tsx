@@ -26,7 +26,7 @@ export const DataTableItem = ({
   const imgWidth = isMobile ? 100 : 100;
   const imgHeight = isMobile ? 150 : 150;
 
-  const link = isTv ? `/app/tv/` : `/app/movie/`;
+  const link = isTv ? `/app/tv/` : `/app/movies/`;
 
   return (
     <Card key={row.id} className="shadow-md">
