@@ -18,7 +18,7 @@ export const Route = createFileRoute('/app/watched')({
 
 function WatchedRoute() {
   return (
-    <ContentLayout title="Watched:" head="Watched">
+    <ContentLayout title="Watched" head="Watched">
       <Tabs defaultValue="movies">
         <TabsList>
           <TabsTrigger value="movies">Movies</TabsTrigger>
