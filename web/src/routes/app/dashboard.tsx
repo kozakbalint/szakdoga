@@ -1,8 +1,7 @@
 import { ContentLayout } from '@/components/layouts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DashboardStats } from '@/features/dashboard/components/stats';
 import { useGetUserStats } from '@/features/users/api/get-user-stats';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { Film, PlayCircle, Tv } from 'lucide-react';
 
 export const Route = createFileRoute('/app/dashboard')({
   beforeLoad: async ({ context, location }) => {
@@ -28,46 +27,8 @@ function DashboardRoute() {
   return (
     <div>
       <ContentLayout title="Dashboard" head="Dashboard">
-        <div className="flex gap-2">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Movies Watched
-              </CardTitle>
-              <Film className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {userStats.watched_movies}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                TV Episodes Watched
-              </CardTitle>
-              <Tv className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {userStats.watched_episodes}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Watchlist Items
-              </CardTitle>
-              <PlayCircle className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {userStats.watchlist_count}
-              </div>
-            </CardContent>
-          </Card>
+        <div className="flex flex-col gap-4">
+          <DashboardStats data={userStats} />
         </div>
       </ContentLayout>
     </div>
