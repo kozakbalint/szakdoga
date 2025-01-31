@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -21,5 +21,5 @@ type UseGetWatchedOptions = {
 };
 
 export const useGetWatched = ({ queryConfig }: UseGetWatchedOptions) => {
-  return useQuery({ ...getWatchedQueryOptions(), ...queryConfig });
+  return useSuspenseQuery({ ...getWatchedQueryOptions(), ...queryConfig });
 };

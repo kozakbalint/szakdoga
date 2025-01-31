@@ -3,37 +3,32 @@ import { MovieWatchedToggle } from '@/features/watched/components/watchedtoggle'
 import { WatchlistToggle } from '@/features/watchlist/components/watchlisttoggle';
 import { WatchProvider } from '@/features/watchproviders/components/watchprovider';
 import { useAddMovieToWatchlist } from '@/features/watchlist/api/add-movie-to-watchlist';
-import { useIsMovieOnWatchlist } from '@/features/watchlist/api/is-movie-on-watchlist';
 import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-movie-from-watchlist';
-import { useGetMovieWatchProviders } from '@/features/watchproviders/api/get-movie-watch-providers';
 import { Star } from 'lucide-react';
-import { useGetMovieDetails } from '../api/get-movie-details';
 import { Skeleton } from '@/components/ui/skeleton';
+import { MovieDetails, WatchProviders } from '@/types/types.gen';
 
-export const MovieHeader = ({ movieId }: { movieId: string }) => {
-  const movieQuery = useGetMovieDetails({ id: movieId });
-  const onWatchlistQuery = useIsMovieOnWatchlist({ id: movieId });
+export type MovieHeaderData = {
+  movieDetails: MovieDetails;
+  onWatchlist: boolean;
+  watchproviders: WatchProviders;
+};
+
+export const MovieHeader = ({
+  movieId,
+  data,
+}: {
+  movieId: string;
+  data: MovieHeaderData;
+}) => {
   const addMovieToWatchlistMutation = useAddMovieToWatchlist({ id: movieId });
   const removeMovieFromWatchlistMutation = useRemoveMovieFromWatchlist({
     id: movieId,
   });
-  const watchproviderQuery = useGetMovieWatchProviders({ id: movieId });
 
-  if (
-    movieQuery.isLoading ||
-    onWatchlistQuery.isLoading ||
-    watchproviderQuery.isLoading
-  ) {
-    return <div>Loading...</div>;
-  }
-
-  const movie = movieQuery.data?.movie;
-  const isOnWatchlist = onWatchlistQuery.data?.in_watchlist;
-  const watchProviderData = watchproviderQuery.data?.watch_providers;
-
-  if (!movie || !watchProviderData || isOnWatchlist === undefined) {
-    return '';
-  }
+  const movie = data.movieDetails;
+  const isOnWatchlist = data.onWatchlist;
+  const watchProviderData = data.watchproviders;
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 lg:gap-4">

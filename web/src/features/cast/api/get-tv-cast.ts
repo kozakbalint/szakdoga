@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -25,5 +25,5 @@ type UseGetTvCastOptions = {
 };
 
 export const useGetTvCast = ({ id, queryConfig }: UseGetTvCastOptions) => {
-  return useQuery({ ...getTvCastQueryOptions({ id }), ...queryConfig });
+  return useSuspenseQuery({ ...getTvCastQueryOptions({ id }), ...queryConfig });
 };

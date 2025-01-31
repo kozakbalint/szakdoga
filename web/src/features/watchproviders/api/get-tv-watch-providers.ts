@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -30,7 +30,7 @@ export const useGetTvWatchProviders = ({
   id,
   queryConfig,
 }: UseGetTvWatchProvidersdOptions) => {
-  return useQuery({
+  return useSuspenseQuery({
     ...getTvWatchProvidersQueryOptions({ id }),
     ...queryConfig,
   });

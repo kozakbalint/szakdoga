@@ -1,15 +1,14 @@
-import { useIsTvOnWatched } from '@/features/watched/api/is-tv-on-watched';
 import { TvEpisodeItem } from './tv-episode-item';
-import { TvEpisode } from '@/types/types.gen';
+import { TvEpisode, WatchedTv } from '@/types/types.gen';
 
-export const NextEpisode = ({ tvId }: { tvId: string }) => {
-  const watchedQuery = useIsTvOnWatched({ id: tvId });
-
-  if (watchedQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const nextEpisode = watchedQuery.data?.watched_tv.next_episode;
+export const NextEpisode = ({
+  tvId,
+  data,
+}: {
+  tvId: string;
+  data: WatchedTv;
+}) => {
+  const nextEpisode = data.next_episode;
 
   if (
     !nextEpisode ||

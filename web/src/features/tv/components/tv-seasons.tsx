@@ -9,31 +9,36 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import { useGetTvDetails } from '../api/get-tv-details';
 import {
   getTvSeasonDetailsQueryOptions,
   useGetTvSeasonDetails,
 } from '../api/get-tv-season-details';
 import { TvEpisodeItem } from './tv-episode-item';
+import { TvDetails } from '@/types/types.gen';
 
-export const TvSeasons = ({ tvId }: { tvId: string }) => {
+export const TvSeasons = ({
+  tvId,
+  data,
+}: {
+  tvId: string;
+  data: TvDetails;
+}) => {
   const [selectedSeason, setSelectedSeason] = useState<number>(1);
   const queryClient = useQueryClient();
-  const tvQuery = useGetTvDetails({ id: tvId });
   const tvSeasonQuery = useGetTvSeasonDetails({
     id: tvId,
     seasonId: selectedSeason.toString(),
   });
 
-  if (tvQuery.isLoading || tvSeasonQuery.isLoading) {
+  if (tvSeasonQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
-  const tv = tvQuery.data?.tv;
+  const tv = data;
   const season = tvSeasonQuery.data?.season;
 
   if (!tv || !season) {
-    return <div>Providers not found</div>;
+    return <div>Seasons not found</div>;
   }
 
   const prefetchNextSeason = async (tvId: string, seasonNumber: number) => {

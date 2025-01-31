@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -26,5 +26,8 @@ type UseSearchPeopleOptions = {
 };
 
 export const useSearchPeople = ({ q, queryConfig }: UseSearchPeopleOptions) => {
-  return useQuery({ ...searchPeopleQueryOptions({ q }), ...queryConfig });
+  return useSuspenseQuery({
+    ...searchPeopleQueryOptions({ q }),
+    ...queryConfig,
+  });
 };

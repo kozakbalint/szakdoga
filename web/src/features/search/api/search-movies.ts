@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -26,5 +26,8 @@ type UseSearchMoviesOptions = {
 };
 
 export const useSearchMovies = ({ q, queryConfig }: UseSearchMoviesOptions) => {
-  return useQuery({ ...searchMoviesQueryOptions({ q }), ...queryConfig });
+  return useSuspenseQuery({
+    ...searchMoviesQueryOptions({ q }),
+    ...queryConfig,
+  });
 };
