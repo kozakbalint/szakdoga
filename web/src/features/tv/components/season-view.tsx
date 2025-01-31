@@ -38,7 +38,9 @@ export const SeasonView = ({
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem className="text-2xl text-primary hover:underline">
-            <Link to={`/app/tv/` + `${id}`}>{tv.name}</Link>
+            <Link to={`/app/tv/` + `${id}`} resetScroll={true}>
+              {tv.name}
+            </Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator className="text-primary">
             <ChevronRight />

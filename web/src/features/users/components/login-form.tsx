@@ -98,7 +98,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           </Form>
           <div className="mt-4 flex justify-between items-center">
             <div className="text-sm">Don&apos;t have an account? </div>
-            <Link to="/auth/register">
+            <Link to="/auth/register" resetScroll={true}>
               <Button variant="link">Register</Button>
             </Link>
           </div>

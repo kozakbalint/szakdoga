@@ -32,7 +32,11 @@ export const DataTableItem = ({
   return (
     <Card key={row.id} className="shadow-md">
       <div className="flex flex-col sm:flex-row gap-4 p-2 sm:p-0 justify-between">
-        <Link to={link + `${row.getValue('id')}`} className="group">
+        <Link
+          to={link + `${row.getValue('id')}`}
+          resetScroll={true}
+          className="group"
+        >
           <div className="flex gap-4">
             {row.getValue('poster_url') === '' ? (
               <Skeleton

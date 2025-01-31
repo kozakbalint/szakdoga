@@ -26,7 +26,7 @@ export const AuthLayout = ({ children, title }: LayoutProps) => {
       <Head title={title} />
       <div className="flex min-h-screen flex-col justify-center bg-background sm:px-6 lg:px-8">
         <div className="pt-6">
-          <Link to="/" className="text-primary text-3xl p-6">
+          <Link to="/" className="text-primary text-3xl p-6" resetScroll={true}>
             Screenlog
           </Link>
         </div>

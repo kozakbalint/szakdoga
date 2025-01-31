@@ -10,7 +10,7 @@ export const MovieCast = ({ movieId }: { movieId: string }) => {
   if (movieCastQuery.isLoading) {
     return (
       <div className="flex flex-col gap-4 max-h-[370px] overflow-hidden">
-        <Link to={'/app/cast/movie/' + movieId}>
+        <Link to={'/app/cast/movie/' + movieId} resetScroll={true}>
           <div className="flex flex-row gap-1 place-items-center text-2xl font-semibold">
             <p>Cast</p>
             <ChevronRight size={32} className="align-baseline" />
@@ -33,7 +33,11 @@ export const MovieCast = ({ movieId }: { movieId: string }) => {
 
   return (
     <div className="flex flex-col gap-4 max-h-[370px] overflow-hidden">
-      <Link to={'/app/cast/movie/' + movieId} className="hover:underline">
+      <Link
+        to={'/app/cast/movie/' + movieId}
+        resetScroll={true}
+        className="hover:underline"
+      >
         <div className="flex flex-row gap-1 place-items-center text-2xl font-semibold">
           <p>
             Cast <span className="text-xl font-thin">({cast.length})</span>
@@ -43,7 +47,11 @@ export const MovieCast = ({ movieId }: { movieId: string }) => {
       </Link>
       <div className="flex flex-row flex-wrap max-w-full gap-4 justify-center lg:justify-start overflow-hidden">
         {topCast.map((actor) => (
-          <Link key={actor.id} to={`/app/people/` + actor.id}>
+          <Link
+            key={actor.id}
+            to={`/app/people/` + actor.id}
+            resetScroll={true}
+          >
             <Cast key={actor.id} actor={actor} />
           </Link>
         ))}

@@ -66,7 +66,9 @@ function TvCastRoute() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="text-2xl text-primary hover:underline">
-              <Link to={`/app/tv/` + `${tvId}`}>{tv.name}</Link>
+              <Link to={`/app/tv/` + `${tvId}`} resetScroll={true}>
+                {tv.name}
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="text-primary">
               <ChevronRight />

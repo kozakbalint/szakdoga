@@ -26,6 +26,7 @@ export const TvEpisodeItem = ({
       <div className="flex flex-col sm:flex-row gap-4 p-0 justify-between">
         <Link
           to={`/app/episode/` + `${tvId}/${seasonNumber}/${episodeNumber}`}
+          resetScroll={true}
           className="group grow"
         >
           <div className="flex flex-col sm:flex-row gap-4">

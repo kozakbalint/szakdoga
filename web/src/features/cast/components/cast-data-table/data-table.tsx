@@ -50,7 +50,11 @@ export function CastDataTable<TData, TValue>({
       <div className="grid gap-4">
         {table.getRowModel().rows.length ? (
           table.getRowModel().rows.map((row) => (
-            <Link key={row.id} to={'/app/people/' + row.getValue('id')}>
+            <Link
+              key={row.id}
+              to={'/app/people/' + row.getValue('id')}
+              resetScroll={true}
+            >
               <DataTableItem row={row} isTv={isTv} />
             </Link>
           ))
