@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -28,7 +28,7 @@ export const useIsMovieOnWatchlist = ({
   id,
   queryConfig,
 }: UseIsMovieOnWatchlistOptions) => {
-  return useQuery({
+  return useSuspenseQuery({
     ...isMovieOnWatchlistQueryOptions({ id }),
     ...queryConfig,
   });
