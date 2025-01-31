@@ -19,6 +19,7 @@ func New(ctx *context.ServerContext) http.Handler {
 	router.HandlerFunc(http.MethodPost, "/v1/users/register", h.UsersHandler.CreateUserHandler)
 	router.HandlerFunc(http.MethodPost, "/v1/users/login", h.TokensHandler.CreateAuthenticationTokenHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/users/logout", middleware.RequireAuthenticatedUser(h.TokensHandler.InvalidateAuthenticationTokenHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/users/stats", middleware.RequireAuthenticatedUser(h.UsersHandler.GetUserStatsHandler))
 
 	router.HandlerFunc(http.MethodGet, "/v1/search/movies", middleware.RequireAuthenticatedUser(h.SearchHandler.SearchMoviesHandler))
 	router.HandlerFunc(http.MethodGet, "/v1/search/tv", middleware.RequireAuthenticatedUser(h.SearchHandler.SearchTvHandler))

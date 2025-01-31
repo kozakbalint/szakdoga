@@ -112,3 +112,6 @@ select
 from next_episode
 order by season_number, episode_number
 limit 1;
+
+-- name: CountWatchedTvEpisodes :one
+SELECT COUNT(*) FROM watched_tv_episodes WHERE user_id = $1;

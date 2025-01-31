@@ -196,6 +196,36 @@ paths:
               schema:
                 $ref: "#/components/schemas/Message"
 
+  "/users/stats":
+    get:
+      tags:
+        - User
+      summary: Get user stats
+      description: |
+        This endpoint is used to get the stats of the current user.
+      operationId: GetUserStatsHandler
+      security:
+        - main_auth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStatsResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
   "/search/movies":
     get:
       tags:
@@ -2716,6 +2746,35 @@ components:
               - 1
               - 2
               - 3
+
+    UserStatsResponse:
+      type: object
+      required:
+        - user_stats
+      properties:
+        user_stats:
+          type: object
+          $ref: "#/components/schemas/UserStats"
+
+    UserStats:
+      type: object
+      required:
+        - watchlist_count
+        - watched_movies
+        - watched_episodes
+      properties:
+        watchlist_count:
+          type: integer
+          examples:
+            - 5
+        watched_movies:
+          type: integer
+          examples:
+            - 10
+        watched_episodes:
+          type: integer
+          examples:
+            - 50
 
     Message:
       type: object

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/kozakbalint/szakdoga/api/internal/repository"
+	"github.com/kozakbalint/szakdoga/api/internal/types"
 	"github.com/kozakbalint/szakdoga/api/internal/validator"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -210,4 +211,37 @@ func (m UserModel) GetForToken(tokenPlaintext string) (*User, error) {
 	}
 
 	return &user, nil
+}
+
+func (m UserModel) GatherUserStats(user *User) (*types.UserStats, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	watchedEps, err := m.Repository.CountWatchedTvEpisodes(ctx, int32(user.ID))
+	if err != nil {
+		return nil, WrapError(err)
+	}
+
+	watchedMovies, err := m.Repository.CountWatchedMovies(ctx, int32(user.ID))
+	if err != nil {
+		return nil, WrapError(err)
+	}
+
+	watchlistMovies, err := m.Repository.CountWatchlistMovies(ctx, int32(user.ID))
+	if err != nil {
+		return nil, WrapError(err)
+	}
+
+	watchlistTv, err := m.Repository.CountWatchlistTvShows(ctx, int32(user.ID))
+	if err != nil {
+		return nil, WrapError(err)
+	}
+
+	stats := types.UserStats{
+		WatchedEpisodes: int(watchedEps),
+		WatchedMovies:   int(watchedMovies),
+		WatchlistCount:  int(watchlistTv) + int(watchlistMovies),
+	}
+
+	return &stats, nil
 }

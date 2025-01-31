@@ -11,6 +11,17 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const countWatchedTvEpisodes = `-- name: CountWatchedTvEpisodes :one
+SELECT COUNT(*) FROM watched_tv_episodes WHERE user_id = $1
+`
+
+func (q *Queries) CountWatchedTvEpisodes(ctx context.Context, userID int32) (int64, error) {
+	row := q.db.QueryRow(ctx, countWatchedTvEpisodes, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const deleteAllWatchedTvEpisodes = `-- name: DeleteAllWatchedTvEpisodes :many
 DELETE FROM watched_tv_episodes WHERE tmdb_id = $1 AND user_id = $2
 RETURNING id, user_id, tmdb_id, season_number, episode_number, watched_at, created_at, updated_at

@@ -300,6 +300,18 @@ type UserResponse struct {
 	User User `json:"user"`
 }
 
+// UserStats defines model for UserStats.
+type UserStats struct {
+	WatchedEpisodes int `json:"watched_episodes"`
+	WatchedMovies   int `json:"watched_movies"`
+	WatchlistCount  int `json:"watchlist_count"`
+}
+
+// UserStatsResponse defines model for UserStatsResponse.
+type UserStatsResponse struct {
+	UserStats UserStats `json:"user_stats"`
+}
+
 // WatchProviders defines model for WatchProviders.
 type WatchProviders struct {
 	Buy      []Provider `json:"buy"`

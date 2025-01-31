@@ -12,6 +12,10 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+const (
+	cacheExpiration = 7 * 24 * time.Hour
+)
+
 func NewClient(tmdb *tmdb.Client, repo *repository.Queries, redis *redis.Client, logger *slog.Logger) *Client {
 	return &Client{
 		Client:     tmdb,
@@ -70,7 +74,7 @@ func (m *Client) GetMovieCast(tmdbID int) (*[]types.CastMovies, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -137,7 +141,7 @@ func (m *Client) GetTvCast(tmdbID int) (*[]types.CastTv, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -193,7 +197,7 @@ func (m *Client) GetMovie(tmdbID int) (*types.MovieDetails, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -241,7 +245,7 @@ func (m *Client) GetPerson(tmdbID int) (*types.PersonDetails, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -297,7 +301,7 @@ func (m *Client) SearchMovies(query string) (*[]types.SearchMovie, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -353,7 +357,7 @@ func (m *Client) SearchTv(query string) (*[]types.SearchTv, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -407,7 +411,7 @@ func (m *Client) SearchPeople(query string) (*[]types.SearchPeople, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -485,7 +489,7 @@ func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -548,7 +552,7 @@ func (m *Client) GetTvSeason(tmdbID int, seasonNumber int) (*types.TvSeasonDetai
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -597,7 +601,7 @@ func (m *Client) GetTvEpisode(tmdbID, seasonNumber, episodeNumber int) (*types.T
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -673,7 +677,7 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}
@@ -755,7 +759,7 @@ func (m *Client) GetTvWatchProviders(tmdbID int) (*types.WatchProviders, error) 
 	if err != nil {
 		m.Logger.Debug("Failed to marshal data", slog.String("key", cacheKey), slog.String("err", err.Error()))
 	} else {
-		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, 24*time.Hour)
+		err = utils.SaveToCache(m.Redis, cacheKey, serializedData, cacheExpiration)
 		if err != nil {
 			m.Logger.Debug("Failed to save data to cache", slog.String("key", cacheKey), slog.String("err", err.Error()))
 		}

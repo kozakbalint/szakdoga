@@ -1,6 +1,9 @@
 -- name: GetWatchlistTvShow :one
 SELECT * FROM watchlist_tv WHERE tmdb_id = $1 AND user_id = $2;
 
+-- name: CountWatchlistTvShows :one
+SELECT COUNT(*) FROM watchlist_tv WHERE user_id = $1;
+
 -- name: ListWatchlistTvShows :many
 SELECT * FROM watchlist_tv WHERE user_id = $1;
 

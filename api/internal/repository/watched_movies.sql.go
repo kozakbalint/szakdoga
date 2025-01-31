@@ -9,6 +9,17 @@ import (
 	"context"
 )
 
+const countWatchedMovies = `-- name: CountWatchedMovies :one
+SELECT COUNT(*) FROM watched_movies WHERE user_id = $1
+`
+
+func (q *Queries) CountWatchedMovies(ctx context.Context, userID int32) (int64, error) {
+	row := q.db.QueryRow(ctx, countWatchedMovies, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const deleteWatchedMovie = `-- name: DeleteWatchedMovie :one
 DELETE FROM watched_movies WHERE tmdb_id = $1 AND user_id = $2
 RETURNING id, tmdb_id, user_id, added_at

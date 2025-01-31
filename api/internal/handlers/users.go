@@ -84,3 +84,20 @@ func (h *UsersHandler) GetRequestUserHandler(w http.ResponseWriter, r *http.Requ
 		errors.ServerErrorResponse(w, r, err)
 	}
 }
+
+func (h *UsersHandler) GetUserStatsHandler(w http.ResponseWriter, r *http.Request) {
+	user := context.GetUser(r)
+
+	if user.IsAnonymous() {
+		errors.AuthenticationRequiredResponse(w, r)
+		return
+	}
+
+	stats, err := h.Models.Users.GatherUserStats(user)
+	if err != nil {
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
+
+	err = utils.WriteJSON(w, http.StatusOK, utils.Envelope{"user_stats": stats}, nil)
+}

@@ -109,6 +109,27 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/users/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get user stats
+         * @description This endpoint is used to get the stats of the current user.
+         *
+         */
+        get: operations["GetUserStatsHandler"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/search/movies": {
         parameters: {
             query?: never;
@@ -877,6 +898,14 @@ export type components = {
             status: WatchedTvStatus;
             episodes: number[];
         };
+        UserStatsResponse: {
+            user_stats: components["schemas"]["UserStats"];
+        };
+        UserStats: {
+            watchlist_count: number;
+            watched_movies: number;
+            watched_episodes: number;
+        };
         Message: {
             message: string;
         };
@@ -931,6 +960,8 @@ export type WatchedTv = components['schemas']['WatchedTv'];
 export type NextEpisode = components['schemas']['NextEpisode'];
 export type WatchedTvSeasonResponse = components['schemas']['WatchedTvSeasonResponse'];
 export type WatchedTvSeason = components['schemas']['WatchedTvSeason'];
+export type UserStatsResponse = components['schemas']['UserStatsResponse'];
+export type UserStats = components['schemas']['UserStats'];
 export type Message = components['schemas']['Message'];
 export type $defs = Record<string, never>;
 export interface operations {
@@ -1126,6 +1157,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Logout"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Message"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Message"];
+                };
+            };
+        };
+    };
+    GetUserStatsHandler: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStatsResponse"];
                 };
             };
             /** @description Unauthorized */
