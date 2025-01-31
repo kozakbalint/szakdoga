@@ -16,6 +16,7 @@ export function NavLogo() {
         <Link
           className="text-2xl text-center transition-[width] ease-linear duration-500 font-semibold text-primary"
           to="/app/dashboard"
+          resetScroll={true}
         >
           {isMobile
             ? open

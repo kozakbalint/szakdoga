@@ -104,7 +104,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           </Form>
           <div className="mt-4 flex justify-between items-center">
             <div className="text-sm">Already have an account? </div>
-            <Link to="/auth/login">
+            <Link to="/auth/login" resetScroll={true}>
               <Button variant="link">Login</Button>
             </Link>
           </div>

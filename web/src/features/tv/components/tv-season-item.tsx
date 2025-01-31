@@ -28,7 +28,11 @@ export const TvSeasonItem = ({
   return (
     <Card key={seasonNumber} className="shadow-md">
       <div className="flex flex-col sm:flex-row gap-4 p-2 sm:p-0 justify-between">
-        <Link to={'/app/season/' + `${tvId}/${seasonNumber}`} className="group">
+        <Link
+          to={'/app/season/' + `${tvId}/${seasonNumber}`}
+          resetScroll={true}
+          className="group"
+        >
           <div className="flex gap-4">
             {season.poster_url === '' ? (
               <Skeleton

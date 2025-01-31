@@ -47,7 +47,11 @@ export const TvSeasons = ({ tvId }: { tvId: string }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link to={`/app/seasons/` + tvId} className="hover:underline">
+      <Link
+        to={`/app/seasons/` + tvId}
+        resetScroll={true}
+        className="hover:underline"
+      >
         <div className="flex flex-row place-items-center gap-1">
           <p className="text-2xl font-bold">
             Seasons{' '}

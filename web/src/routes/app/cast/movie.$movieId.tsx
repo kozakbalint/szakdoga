@@ -70,7 +70,9 @@ function MovieCastRoute() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="text-2xl text-primary hover:underline">
-              <Link to={`/app/movies/` + `${movieId}`}>{movie.title}</Link>
+              <Link to={`/app/movies/` + `${movieId}`} resetScroll={true}>
+                {movie.title}
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="text-primary">
               <ChevronRight />

@@ -21,12 +21,18 @@ function LandingRoute() {
           A simple way to log your watched movies and TV shows.
         </p>
         <div className="flex mt-8 space-x-4">
-          <Link to={user.data ? '/app/dashboard' : '/auth/login'}>
+          <Link
+            to={user.data ? '/app/dashboard' : '/auth/login'}
+            resetScroll={true}
+          >
             <Button variant={'default'} icon={<Home />}>
               Go to Dashboard
             </Button>
           </Link>
-          <Link to={user.data ? '/app/dashboard' : '/auth/register'}>
+          <Link
+            to={user.data ? '/app/dashboard' : '/auth/register'}
+            resetScroll={true}
+          >
             <Button variant={'secondary'} icon={<Home />}>
               Register
             </Button>
