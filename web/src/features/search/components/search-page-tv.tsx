@@ -1,5 +1,4 @@
 import { CommandItem, CommandList } from '@/components/ui/cmdk';
-import { AspectRatio } from '@/components/ui/aspectratio';
 import { CommandLoading, useCommandState } from 'cmdk';
 import { SearchTv } from '@/types/types.gen';
 import { useSearchTV } from '../api/search-tv';
@@ -11,6 +10,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useDebounce } from '@uidotdev/usehooks';
 import { getTvCastQueryOptions } from '@/features/cast/api/get-tv-cast';
 import { getTvWatchProvidersQueryOptions } from '@/features/watchproviders/api/get-tv-watch-providers';
+import { SearchPageItem } from './search-page-item';
 
 export interface SearchPageTVProps {
   searchTerm: string;
@@ -74,43 +74,20 @@ export const SearchPageTV = ({ searchTerm, onSelect }: SearchPageTVProps) => {
   return (
     <>
       <CommandList className="h-[300px]">
-        {tv.map((tv) => (
-          <CommandItem
-            key={tv.id + tv.title}
-            value={tv.title + '_tvID:' + tv.id}
-            onSelect={() => {
-              onSelect(tv);
-            }}
-          >
-            <div className="flex grow justify-between">
-              <div className="flex gap-4 items-start align-middle">
-                <div className="w-12">
-                  {tv.poster_url == '' ? (
-                    <div className="w-full h-full bg-gray-300 rounded-md"></div>
-                  ) : (
-                    <AspectRatio ratio={2 / 3}>
-                      <img
-                        src={tv.poster_url}
-                        alt={tv.title}
-                        className="w-full h-full object-cover rounded-md"
-                      />
-                    </AspectRatio>
-                  )}
-                </div>
-                <div className="flex flex-col align-middle">
-                  <p className="font-medium">{tv.title}</p>
-                  <p className="text-sm font-thin">
-                    {tv.release_date.slice(0, 4)}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col align-middle">
-                <p className="text-sm font-thin">Popularity:</p>
-                <p className="text-sm font-medium">{tv.popularity}</p>
-              </div>
-            </div>
-          </CommandItem>
-        ))}
+        {tv
+          .filter((tv) => tv.popularity > 1)
+          .sort((a, b) => b.popularity - a.popularity)
+          .map((tv) => (
+            <CommandItem
+              key={tv.id}
+              value={tv.title + '_tvID:' + tv.id}
+              onSelect={() => {
+                onSelect(tv);
+              }}
+            >
+              <SearchPageItem data={tv} type="tv" />
+            </CommandItem>
+          ))}
       </CommandList>
     </>
   );

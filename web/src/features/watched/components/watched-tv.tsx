@@ -1,6 +1,6 @@
 import { useGetWatched } from '../api/get-watched';
-import { watchedTvColumns } from './tv-data-table/columns';
-import { WatchedTvDataTable } from './tv-data-table/data-table';
+import { watchedTvColumns } from './watched-data-table/tv-columns';
+import { WatchedDataTable } from './watched-data-table/data-table';
 
 export const TvWatched = () => {
   const watchedTvQuery = useGetWatched({});
@@ -13,5 +13,7 @@ export const TvWatched = () => {
     return 'No tv shows in watched list';
   }
 
-  return <WatchedTvDataTable columns={watchedTvColumns} data={watchedTv} />;
+  return (
+    <WatchedDataTable columns={watchedTvColumns} data={watchedTv} isTv={true} />
+  );
 };

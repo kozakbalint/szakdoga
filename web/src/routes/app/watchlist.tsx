@@ -18,7 +18,7 @@ export const Route = createFileRoute('/app/watchlist')({
 
 function WatchlistRoute() {
   return (
-    <ContentLayout title="Watchlist:" head="Watchlist">
+    <ContentLayout title="Watchlist" head="Watchlist">
       <Tabs defaultValue="movies">
         <TabsList>
           <TabsTrigger value="movies">Movies</TabsTrigger>

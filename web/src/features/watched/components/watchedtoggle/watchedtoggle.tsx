@@ -24,7 +24,7 @@ export const WatchedToggle = ({
       <div>
         {isOnWatched ? (
           <Tooltip>
-            <TooltipTrigger asChild>
+            <TooltipTrigger asChild className="cursor-pointer">
               <Button
                 onClick={removeOnClicked}
                 disabled={disabled}
@@ -41,7 +41,7 @@ export const WatchedToggle = ({
           </Tooltip>
         ) : (
           <Tooltip>
-            <TooltipTrigger asChild>
+            <TooltipTrigger asChild className="cursor-pointer">
               <Button
                 onClick={addOnClicked}
                 disabled={disabled}

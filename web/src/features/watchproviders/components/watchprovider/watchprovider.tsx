@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { WatchProviders } from '@/types/types.gen';
 import { useLocalStorage } from '@uidotdev/usehooks';
 
@@ -35,11 +36,15 @@ export const WatchProvider = ({
               : []
         ).map((provider) => (
           <Card className="flex items-center w-fit max-h-11" key={provider.id}>
-            <img
-              src={provider.logo_url}
-              alt={provider.name}
-              className="h-10 rounded-xl"
-            />
+            {provider.logo_url === '' ? (
+              <Skeleton className="h-10 w-10 rounded-xl" />
+            ) : (
+              <img
+                src={provider.logo_url}
+                alt={provider.name}
+                className="h-10 rounded-xl"
+              />
+            )}
             <p className="px-2 truncate">{provider.name}</p>
           </Card>
         ))}

@@ -1,6 +1,6 @@
 import { useGetWatched } from '../api/get-watched';
-import { WatchedMoviesDataTable } from './movies-data-table/data-table';
-import { watchedMovieColumns } from './movies-data-table/columns';
+import { watchedMovieColumns } from './watched-data-table/movies-columns';
+import { WatchedDataTable } from './watched-data-table/data-table';
 
 export const MoviesWatched = () => {
   const watchedMoviesQuery = useGetWatched({});
@@ -13,9 +13,10 @@ export const MoviesWatched = () => {
     return 'No movies in watched list';
   }
   return (
-    <WatchedMoviesDataTable
+    <WatchedDataTable
       columns={watchedMovieColumns}
       data={watchedMovies}
+      isTv={false}
     />
   );
 };

@@ -8,9 +8,21 @@ import {
   useGetMovieCast,
 } from '@/features/cast/api/get-movie-cast';
 import { QueryClient } from '@tanstack/react-query';
-import { createFileRoute, redirect, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useParams,
+} from '@tanstack/react-router';
 import { CastDataTable } from '@/features/cast/components/cast-data-table/data-table';
 import { castMovieColumns } from '@/features/cast/components/cast-data-table/movie-cast-columns';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { ChevronRight } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
@@ -54,10 +66,20 @@ function MovieCastRoute() {
 
   return (
     <>
-      <ContentLayout
-        title={movie.title + ' Cast:'}
-        head={movie.title + ' Cast'}
-      >
+      <ContentLayout head={movie.title + ' Cast'}>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem className="text-2xl text-primary hover:underline">
+              <Link to={`/app/movies/` + `${movieId}`}>{movie.title}</Link>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-primary">
+              <ChevronRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem className="text-2xl text-primary">
+              Cast
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <CastDataTable columns={castMovieColumns} data={cast} isTv={false} />
       </ContentLayout>
     </>

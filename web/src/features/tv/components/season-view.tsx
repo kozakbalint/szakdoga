@@ -1,8 +1,16 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ChevronRight, Star } from 'lucide-react';
 import { useGetTvDetails } from '../api/get-tv-details';
 import { useGetTvSeasonDetails } from '../api/get-tv-season-details';
+import { TvEpisodeItem } from './tv-episode-item';
+import { SeasonWatchedToggle } from '@/features/watched/components/watchedtoggle';
 import { Link } from '@tanstack/react-router';
-import { EpisodeWatchedToggle } from '@/components/ui/watchedtoggle';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const SeasonView = ({
   id,
@@ -27,59 +35,58 @@ export const SeasonView = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-2xl">
-        {tv.name} Seasons {seasonId}
-      </div>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <img src={season.poster_url} alt={season.name} className="sm:h-96" />
-        <div className="flex flex-col">
-          <div className="text-2xl">{season.name}</div>
-          <div>{season.overview}</div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem className="text-2xl text-primary hover:underline">
+            <Link to={`/app/tv/` + `${id}`}>{tv.name}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator className="text-primary">
+            <ChevronRight />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem className="text-2xl text-primary">
+            Season {seasonId}
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="flex flex-row gap-10">
+        <div className="flex flex-col sm:flex-row gap-3">
+          {season.poster_url === '' ? (
+            <Skeleton className="sm:h-96 w-64 rounded-xl" />
+          ) : (
+            <img
+              src={season.poster_url}
+              alt={season.name}
+              className="sm:h-96 rounded-xl"
+            />
+          )}
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between text-xl">
+              <span>{season.name}</span>
+              <div className="flex gap-1 items-center">
+                <Star size={18} fill="gold" className="inline align-bottom" />{' '}
+                {season.vote_average}
+              </div>
+            </div>
+            <div className="text-sm text-gray-500">{season.overview}</div>
+          </div>
+        </div>
+        <div>
+          <SeasonWatchedToggle id={id} seasonNumber={seasonId} />
         </div>
       </div>
-      <div className="text-2xl">Episodes</div>
-      <div className="flex flex-row sm:flex-col gap-2 flex-wrap justify-center sm:justify-start">
-        {season.episodes.map((episode, index) => (
-          <Card
-            key={index + 1}
-            className="flex flex-col h-full w-full sm:flex-row sm:h-32"
-          >
-            <CardHeader className="p-0 min-w-fit">
-              <img
-                src={episode.still_url}
-                alt={episode.name}
-                className="h-full w-full rounded-xl object-cover"
-              />
-            </CardHeader>
-            <CardContent className="py-2 w-full">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  to={`/app/episode/${tv.id}/${seasonId}/${index + 1}`}
-                  className="hover:underline w-3/4 sm:w-full"
-                  key={index + 1}
-                >
-                  <div className="flex flex-col">
-                    <div className="flex flex-row gap-2 font-bold text-lg sm:text-xl">
-                      <div>{index + 1}.</div>
-                      <div className="line-clamp-2">{episode.name}</div>
-                    </div>
-                    <div className="line-clamp-2 lg:line-clamp-3">
-                      {episode.overview}
-                    </div>
-                  </div>
-                </Link>
-                <div className="flex flex-row sm:flex-col gap-2 grow justify-start">
-                  <EpisodeWatchedToggle
-                    key={index}
-                    id={id}
-                    seasonNumber={seasonId}
-                    episodeNumber={(index + 1).toString()}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div>
+        <div className="text-xl pb-2">Episodes:</div>
+        <div className="flex flex-row sm:flex-col gap-2 flex-wrap justify-center sm:justify-start">
+          {season.episodes.map((episode, index) => (
+            <TvEpisodeItem
+              key={index}
+              episode={episode}
+              tvId={id}
+              seasonNumber={Number(seasonId)}
+              episodeNumber={index + 1}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
