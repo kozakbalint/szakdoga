@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isTvOnWatchlistQueryOptions } from './is-tv-on-watchlist';
 import { getWatchlistQueryOptions } from './get-watchlist';
 import { Message } from '@/types/types.gen';
+import { getUserStatsQueryOptions } from '@/features/users/api/get-user-stats';
 
 export const removeTvFromWatchlist = (id: string): Promise<Message> => {
   if (!id) {
@@ -36,6 +37,9 @@ export const useRemoveTvFromWatchlist = ({
       });
       queryClient.invalidateQueries({
         queryKey: getWatchlistQueryOptions().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: getUserStatsQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

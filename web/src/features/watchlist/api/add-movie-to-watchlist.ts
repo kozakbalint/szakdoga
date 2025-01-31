@@ -5,6 +5,7 @@ import { MutationConfig } from '@/lib/react-query';
 import { Message } from '@/types/types.gen';
 import { isMovieOnWatchlistQueryOptions } from './is-movie-on-watchlist';
 import { getWatchlistQueryOptions } from './get-watchlist';
+import { getUserStatsQueryOptions } from '@/features/users/api/get-user-stats';
 
 export const addMovieToWatchlist = (id: string): Promise<Message> => {
   const url = `/watchlist/movies/${id}`;
@@ -31,6 +32,9 @@ export const useAddMovieToWatchlist = ({
       });
       queryClient.invalidateQueries({
         queryKey: getWatchlistQueryOptions().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: getUserStatsQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

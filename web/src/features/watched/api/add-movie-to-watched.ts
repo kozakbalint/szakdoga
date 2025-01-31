@@ -5,6 +5,7 @@ import { MutationConfig } from '@/lib/react-query';
 import { Message } from '@/types/types.gen';
 import { isMovieOnWatchedQueryOptions } from './is-movie-on-watched';
 import { getWatchedQueryOptions } from './get-watched';
+import { getUserStatsQueryOptions } from '@/features/users/api/get-user-stats';
 
 export const addMovieToWatched = (id: string): Promise<Message> => {
   if (!id) {
@@ -34,6 +35,9 @@ export const useAddMovieToWatched = ({
       });
       queryClient.invalidateQueries({
         queryKey: getWatchedQueryOptions().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: getUserStatsQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

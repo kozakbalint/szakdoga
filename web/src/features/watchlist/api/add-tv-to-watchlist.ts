@@ -5,6 +5,7 @@ import { MutationConfig } from '@/lib/react-query';
 import { Message } from '@/types/types.gen';
 import { isTvOnWatchlistQueryOptions } from './is-tv-on-watchlist';
 import { getWatchlistQueryOptions } from './get-watchlist';
+import { getUserStatsQueryOptions } from '@/features/users/api/get-user-stats';
 
 export const addTvToWatchlist = (id: string): Promise<Message> => {
   const url = `/watchlist/tv/${id}`;
@@ -31,6 +32,9 @@ export const useAddTvToWatchlist = ({
       });
       queryClient.invalidateQueries({
         queryKey: getWatchlistQueryOptions().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: getUserStatsQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

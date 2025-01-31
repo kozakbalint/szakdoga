@@ -4,6 +4,7 @@ import { isMovieOnWatchlistQueryOptions } from './is-movie-on-watchlist';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getWatchlistQueryOptions } from './get-watchlist';
 import { Message } from '@/types/types.gen';
+import { getUserStatsQueryOptions } from '@/features/users/api/get-user-stats';
 
 export const removeMovieFromWatchlist = (id: string): Promise<Message> => {
   if (!id) {
@@ -35,6 +36,9 @@ export const useRemoveMovieFromWatchlist = ({
       });
       queryClient.invalidateQueries({
         queryKey: getWatchlistQueryOptions().queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: getUserStatsQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },
