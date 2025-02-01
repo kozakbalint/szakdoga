@@ -34,24 +34,27 @@ export const SeasonView = ({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem className="text-2xl text-primary hover:underline">
-            <Link to={`/app/tv/` + `${id}`} resetScroll={true}>
-              {tv.name}
-            </Link>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="text-primary">
-            <ChevronRight />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem className="text-2xl text-primary">
-            Season {seasonId}
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <div className="flex flex-row gap-10">
-        <div className="flex flex-col sm:flex-row gap-3">
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex justify-between w-full">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem className="text-2xl text-primary hover:underline">
+              <Link to={`/app/tv/` + `${id}`} resetScroll={true}>
+                {tv.name}
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-primary">
+              <ChevronRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem className="text-2xl text-primary">
+              Season {seasonId}
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <SeasonWatchedToggle id={id} seasonNumber={seasonId} />
+      </div>
+      <div className="flex flex-col sm:flex-row gap-2 justify-between">
+        <div className="flex flex-none flex-col sm:flex-row gap-3">
           {season.poster_url === '' ? (
             <Skeleton className="sm:h-96 w-64 rounded-xl" />
           ) : (
@@ -61,19 +64,20 @@ export const SeasonView = ({
               className="sm:h-96 rounded-xl"
             />
           )}
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between text-xl">
-              <span>{season.name}</span>
-              <div className="flex gap-1 items-center">
-                <Star size={18} fill="gold" className="inline align-bottom" />{' '}
-                {season.vote_average}
-              </div>
-            </div>
-            <div className="text-sm text-gray-500">{season.overview}</div>
-          </div>
         </div>
-        <div>
-          <SeasonWatchedToggle id={id} seasonNumber={seasonId} />
+        <div className="flex grow flex-col gap-2 justify-start">
+          <div className="flex justify-between w-full text-xl">
+            {season.name}
+            <div className="sm:hidden flex flex-none gap-2 items-center">
+              <Star size={18} fill="gold" className="inline align-bottom" />{' '}
+              {season.vote_average}
+            </div>
+          </div>
+          <div className="text-sm text-gray-500">{season.overview}</div>
+        </div>
+        <div className="hidden sm:block flex-none gap-2">
+          <Star size={18} fill="gold" className="inline align-text-bottom" />{' '}
+          {season.vote_average}
         </div>
       </div>
       <div>

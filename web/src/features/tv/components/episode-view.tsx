@@ -36,29 +36,39 @@ export const EpisodeView = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem className="text-2xl text-primary hover:underline">
-            <Link to={`/app/tv/` + `${id}`} resetScroll={true}>
-              {tv.name}
-            </Link>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="text-primary">
-            <ChevronRight />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem className="text-2xl text-primary hover:underline">
-            <Link to={`/app/season/` + `${id}/${seasonId}`} resetScroll={true}>
-              Season {seasonId}
-            </Link>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="text-primary">
-            <ChevronRight />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem className="text-2xl text-primary">
-            Episode {episodeId}
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div className="flex justify-between w-full">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem className="text-2xl text-primary hover:underline">
+              <Link to={`/app/tv/` + `${id}`} resetScroll={true}>
+                {tv.name}
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-primary">
+              <ChevronRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem className="text-2xl text-primary hover:underline">
+              <Link
+                to={`/app/season/` + `${id}/${seasonId}`}
+                resetScroll={true}
+              >
+                Season {seasonId}
+              </Link>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-primary">
+              <ChevronRight />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem className="text-2xl text-primary">
+              Episode {episodeId}
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <EpisodeWatchedToggle
+          id={id}
+          seasonNumber={seasonId}
+          episodeNumber={episodeId}
+        />
+      </div>
       <div className="flex flex-row gap-10">
         <div className="flex flex-col sm:flex-row gap-3">
           {episode.still_url === '' ? (
@@ -81,13 +91,6 @@ export const EpisodeView = ({
             </div>
             <div className="text-sm text-gray-500">{episode.overview}</div>
           </div>
-        </div>
-        <div>
-          <EpisodeWatchedToggle
-            id={id}
-            seasonNumber={seasonId}
-            episodeNumber={episodeId}
-          />
         </div>
       </div>
     </div>
