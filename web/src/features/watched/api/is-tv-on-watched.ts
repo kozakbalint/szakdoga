@@ -1,4 +1,4 @@
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -28,7 +28,7 @@ export const useIsTvOnWatched = ({
   id,
   queryConfig,
 }: UseIsTvOnWatchedOptions) => {
-  return useSuspenseQuery({
+  return useQuery({
     ...isTvOnWatchedQueryOptions({ id }),
     ...queryConfig,
   });

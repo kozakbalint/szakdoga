@@ -1,4 +1,4 @@
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -49,7 +49,7 @@ export const useGetTvEpisodeDetails = ({
   episodeId,
   queryConfig,
 }: UseGetTvEpisodeDetailsOptions) => {
-  return useSuspenseQuery({
+  return useQuery({
     ...getTvEpisodeDetailsQueryOptions({ id, seasonId, episodeId }),
     ...queryConfig,
   });
