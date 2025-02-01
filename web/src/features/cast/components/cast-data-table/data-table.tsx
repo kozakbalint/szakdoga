@@ -1,3 +1,5 @@
+'use no memo';
+
 import { Input } from '@/components/ui/input';
 import { Link } from '@tanstack/react-router';
 import {
@@ -60,7 +62,9 @@ export function CastDataTable<TData, TValue>({
           ))
         ) : (
           <div className="text-center p-4">
-            Could not find any cast members.
+            <p className="text-muted-foreground">
+              Could not find any cast members.
+            </p>
           </div>
         )}
       </div>

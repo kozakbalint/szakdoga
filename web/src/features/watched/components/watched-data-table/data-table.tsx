@@ -1,3 +1,5 @@
+'use no memo';
+
 import { Input } from '@/components/ui/input';
 import {
   ColumnDef,
@@ -55,7 +57,7 @@ export function WatchedDataTable<TData, TValue>({
             ))
         ) : (
           <div className="text-center p-4">
-            Currently no movies on your watchlist.
+            <p className="text-muted-foreground">No items available to show.</p>
           </div>
         )}
       </div>
