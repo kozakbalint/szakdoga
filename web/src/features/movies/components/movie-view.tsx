@@ -9,6 +9,7 @@ import { getMovieDetailsQueryOptions } from '../api/get-movie-details';
 import { isMovieOnWatchlistQueryOptions } from '@/features/watchlist/api/is-movie-on-watchlist';
 import { getMovieWatchProvidersQueryOptions } from '@/features/watchproviders/api/get-movie-watch-providers';
 import { useSuspenseQueries } from '@tanstack/react-query';
+import { Head } from '@/components/seo';
 
 export const MovieView = ({ movieId }: { movieId: string }) => {
   const queries = useSuspenseQueries({
@@ -28,6 +29,7 @@ export const MovieView = ({ movieId }: { movieId: string }) => {
 
   return (
     <div className="flex flex-col gap-8">
+      <Head title={queries[0].data.movie.title} />
       <MovieHeader movieId={movieId} data={headerData} />
       <TopCast id={movieId} isTv={false} data={queries[3].data.cast} />
     </div>

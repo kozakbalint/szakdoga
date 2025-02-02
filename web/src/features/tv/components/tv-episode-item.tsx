@@ -1,6 +1,9 @@
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { EpisodeWatchedToggle } from '@/features/watched/components/watchedtoggle';
+import {
+  EpisodeWatchedToggle,
+  SuspenseWatchedToggle,
+} from '@/features/watched/components/watchedtoggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { TvEpisode } from '@/types/types.gen';
 import { Link } from '@tanstack/react-router';
@@ -65,6 +68,46 @@ export const TvEpisodeItem = ({
             seasonNumber={seasonNumber.toString()}
             episodeNumber={episodeNumber.toString()}
           />
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+export const SuspenseTvEpisodeItem = ({ index }: { index: number }) => {
+  const isMobile = useIsMobile();
+
+  const imgWidth = isMobile ? 300 : 200;
+  const imgHeight = isMobile ? 100 : 100;
+  return (
+    <Card key={index} className="shadow-md w-full">
+      <div className="flex flex-col sm:flex-row gap-4 p-0 justify-between">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Skeleton
+            className="rounded-xl shrink-0 self-center"
+            style={{ width: imgWidth, height: imgHeight }}
+          />
+
+          <div className="flex flex-col p-2 sm:p-0">
+            <div>
+              <CardTitle className="grow text-lg font-bold sm:pt-2 flex gap-2 group-hover:underline">
+                <div className="line-clamp-1 flex gap-2 items-center">
+                  {index + '.' + ' '}
+                  <Skeleton className="h-5 w-50 py-2" />
+                </div>
+              </CardTitle>
+              <CardContent className="grow text-sm text-gray-500 py-2 sm:py-0 pb-0 px-0 line-clamp-3">
+                <div className="flex flex-col gap-2">
+                  {[...Array(3)].map((_, index) => (
+                    <Skeleton key={index} className="h-3 w-50" />
+                  ))}
+                </div>
+              </CardContent>
+            </div>
+          </div>
+        </div>
+        <div className="flex sm:flex-col gap-2 p-2 sm:p-4">
+          <SuspenseWatchedToggle />
         </div>
       </div>
     </Card>

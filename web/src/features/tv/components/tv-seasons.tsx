@@ -4,7 +4,10 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/components/ui/select';
-import { SeasonWatchedToggle } from '@/features/watched/components/watchedtoggle';
+import {
+  SeasonWatchedToggle,
+  SuspenseWatchedToggle,
+} from '@/features/watched/components/watchedtoggle';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
@@ -13,7 +16,7 @@ import {
   getTvSeasonDetailsQueryOptions,
   useGetTvSeasonDetails,
 } from '../api/get-tv-season-details';
-import { TvEpisodeItem } from './tv-episode-item';
+import { SuspenseTvEpisodeItem, TvEpisodeItem } from './tv-episode-item';
 import { TvDetails } from '@/types/types.gen';
 
 export const TvSeasons = ({
@@ -111,6 +114,35 @@ export const TvSeasons = ({
             seasonNumber={selectedSeason}
             episodeNumber={index + 1}
           />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const SuspenseTvSeasons = () => {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-row place-items-center gap-1">
+        <p className="text-2xl font-bold">Seasons</p>
+        <ChevronRight size={32} className="align-baseline" />
+      </div>
+      <div className="flex justify-between">
+        <div>
+          <Select>
+            <SelectTrigger className="w-[180px]">Season 1</SelectTrigger>
+            <SelectContent>
+              <SelectItem value="season-1">Season 1</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <SuspenseWatchedToggle />
+        </div>
+      </div>
+      <div className="flex flex-col items-center gap-2 h-96 overflow-scroll">
+        {[...Array(10)].map((_, index) => (
+          <SuspenseTvEpisodeItem key={index} index={index + 1} />
         ))}
       </div>
     </div>

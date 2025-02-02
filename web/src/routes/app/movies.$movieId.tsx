@@ -1,9 +1,6 @@
 import { ContentLayout } from '@/components/layouts';
 
-import {
-  getMovieDetailsQueryOptions,
-  useGetMovieDetails,
-} from '@/features/movies/api/get-movie-details';
+import { getMovieDetailsQueryOptions } from '@/features/movies/api/get-movie-details';
 import {
   MovieView,
   SuspenseMovieView,
@@ -35,20 +32,10 @@ export const Route = createFileRoute('/app/movies/$movieId')({
 function MovieRoute() {
   const params = useParams({ strict: false });
   const movieId = params.movieId as string;
-  const movieQuery = useGetMovieDetails({ id: movieId });
-
-  if (movieQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const movie = movieQuery.data?.movie;
-  if (!movie) {
-    return <div>Movie not found</div>;
-  }
 
   return (
     <>
-      <ContentLayout head={movie.title}>
+      <ContentLayout>
         <Suspense fallback={<SuspenseMovieView />}>
           <MovieView movieId={movieId} />
           <div className="mt-8">

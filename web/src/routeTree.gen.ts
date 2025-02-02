@@ -21,7 +21,7 @@ import { Route as AppWatchedImport } from './routes/app/watched'
 import { Route as AppSettingsImport } from './routes/app/settings'
 import { Route as AppProfileImport } from './routes/app/profile'
 import { Route as AppDashboardImport } from './routes/app/dashboard'
-import { Route as AppTvTvIdImport } from './routes/app/tv/$tvId'
+import { Route as AppTvTvIdImport } from './routes/app/tv.$tvId'
 import { Route as AppSeasonsTvIdImport } from './routes/app/seasons/$tvId'
 import { Route as AppPeoplePersonIdImport } from './routes/app/people.$personId'
 import { Route as AppMoviesMovieIdImport } from './routes/app/movies.$movieId'
@@ -513,7 +513,7 @@ export const routeTree = rootRoute
       "parent": "/app"
     },
     "/app/tv/$tvId": {
-      "filePath": "app/tv/$tvId.tsx",
+      "filePath": "app/tv.$tvId.tsx",
       "parent": "/app"
     },
     "/app/cast/movie/$movieId": {
