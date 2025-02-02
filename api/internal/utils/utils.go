@@ -118,7 +118,7 @@ func ReadJSON(w http.ResponseWriter, r *http.Request, dst any) error {
 
 func GetFromCache(redisClient *redis.Client, key string) ([]byte, error) {
 	data, err := redisClient.Get(context.Background(), key).Result()
-	if err != redis.Nil {
+	if err == redis.Nil {
 		return nil, nil
 	} else if err != nil {
 		return nil, err

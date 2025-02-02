@@ -1,4 +1,4 @@
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { apiClient } from '@/lib/api-client';
 import { QueryConfig } from '@/lib/react-query';
@@ -30,7 +30,7 @@ export const useGetPersonDetails = ({
   id,
   queryConfig,
 }: UseGetPersonDetailsOptions) => {
-  return useSuspenseQuery({
+  return useQuery({
     ...getPersonDetailsQueryOptions({ id }),
     ...queryConfig,
   });
