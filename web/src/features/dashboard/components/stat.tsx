@@ -7,7 +7,7 @@ export const Stat = ({
 }: {
   title: string;
   icon: React.ReactNode;
-  value: number;
+  value?: number;
 }) => {
   return (
     <Card className="w-[200px]">
@@ -16,7 +16,7 @@ export const Stat = ({
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center">
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-2xl font-bold">{value ?? '-'}</div>
       </CardContent>
     </Card>
   );

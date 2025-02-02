@@ -1,7 +1,10 @@
 import { ContentLayout } from '@/components/layouts';
-import { DashboardStats } from '@/features/dashboard/components/stats';
-import { useGetUserStats } from '@/features/users/api/get-user-stats';
+import {
+  DashboardStats,
+  SuspenseDashboardStats,
+} from '@/features/dashboard/components/stats';
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import { Suspense } from 'react';
 
 export const Route = createFileRoute('/app/dashboard')({
   beforeLoad: async ({ context, location }) => {
@@ -16,19 +19,13 @@ export const Route = createFileRoute('/app/dashboard')({
 });
 
 function DashboardRoute() {
-  const userStatsQuery = useGetUserStats({});
-
-  if (userStatsQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const userStats = userStatsQuery.data.user_stats;
-
   return (
     <div>
       <ContentLayout title="Dashboard" head="Dashboard">
         <div className="flex flex-col gap-4">
-          <DashboardStats data={userStats} />
+          <Suspense fallback={<SuspenseDashboardStats />}>
+            <DashboardStats />
+          </Suspense>
         </div>
       </ContentLayout>
     </div>
