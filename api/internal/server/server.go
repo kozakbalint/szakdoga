@@ -41,7 +41,9 @@ func NewServer() *http.Server {
 		fmt.Println("Error connecting to tmdb: ", err)
 	}
 
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	}))
 	errors.Init(logger)
 
 	serverContext := &context.ServerContext{

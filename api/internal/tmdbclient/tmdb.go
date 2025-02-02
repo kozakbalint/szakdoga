@@ -37,6 +37,7 @@ func (m *Client) GetMovieCast(tmdbID int) (*[]types.CastMovies, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[[]types.CastMovies](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -75,6 +76,7 @@ func (m *Client) GetMovieCast(tmdbID int) (*[]types.CastMovies, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
 
@@ -87,6 +89,7 @@ func (m *Client) GetTvCast(tmdbID int) (*[]types.CastTv, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[[]types.CastTv](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -140,6 +143,7 @@ func (m *Client) GetTvCast(tmdbID int) (*[]types.CastTv, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
 
@@ -152,6 +156,7 @@ func (m *Client) GetMovie(tmdbID int) (*types.MovieDetails, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[types.MovieDetails](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -194,6 +199,7 @@ func (m *Client) GetMovie(tmdbID int) (*types.MovieDetails, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return response, nil
 }
 
@@ -206,6 +212,7 @@ func (m *Client) GetPerson(tmdbID int) (*types.PersonDetails, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[types.PersonDetails](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -240,6 +247,7 @@ func (m *Client) GetPerson(tmdbID int) (*types.PersonDetails, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return response, nil
 }
 
@@ -252,6 +260,7 @@ func (m *Client) SearchMovies(query string) (*[]types.SearchMovie, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[[]types.SearchMovie](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -294,6 +303,7 @@ func (m *Client) SearchMovies(query string) (*[]types.SearchMovie, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
 
@@ -306,6 +316,7 @@ func (m *Client) SearchTv(query string) (*[]types.SearchTv, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[[]types.SearchTv](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -348,6 +359,7 @@ func (m *Client) SearchTv(query string) (*[]types.SearchTv, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
 
@@ -360,6 +372,7 @@ func (m *Client) SearchPeople(query string) (*[]types.SearchPeople, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[[]types.SearchPeople](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -400,6 +413,7 @@ func (m *Client) SearchPeople(query string) (*[]types.SearchPeople, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
 
@@ -412,6 +426,7 @@ func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[types.TvDetails](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -476,6 +491,7 @@ func (m *Client) GetTv(tmdbID int) (*types.TvDetails, error) {
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return response, nil
 }
 
@@ -488,6 +504,7 @@ func (m *Client) GetTvSeason(tmdbID int, seasonNumber int) (*types.TvSeasonDetai
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[types.TvSeasonDetails](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -537,6 +554,7 @@ func (m *Client) GetTvSeason(tmdbID int, seasonNumber int) (*types.TvSeasonDetai
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
 
@@ -549,6 +567,7 @@ func (m *Client) GetTvEpisode(tmdbID, seasonNumber, episodeNumber int) (*types.T
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[types.TvEpisodeDetails](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -584,6 +603,7 @@ func (m *Client) GetTvEpisode(tmdbID, seasonNumber, episodeNumber int) (*types.T
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return response, nil
 }
 
@@ -596,6 +616,7 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[types.WatchProviders](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -658,6 +679,7 @@ func (m *Client) GetMovieWatchProviders(tmdbID int) (*types.WatchProviders, erro
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
 
@@ -670,6 +692,7 @@ func (m *Client) GetTvWatchProviders(tmdbID int) (*types.WatchProviders, error) 
 	} else if cachedData != nil {
 		cachedResponse, err := utils.UnmarshalCacheData[types.WatchProviders](cachedData)
 		if err == nil {
+			m.Logger.Debug("Cache hit!", slog.String("key", cacheKey))
 			return cachedResponse, nil
 		}
 		m.Logger.Debug("Failed to unmarshal cached data", slog.String("key", cacheKey), slog.String("err", err.Error()))
@@ -738,5 +761,6 @@ func (m *Client) GetTvWatchProviders(tmdbID int) (*types.WatchProviders, error) 
 		}
 	}
 
+	m.Logger.Debug("Cache miss!", slog.String("key", cacheKey))
 	return &response, nil
 }
