@@ -1,5 +1,9 @@
-import { MovieHeader, MovieHeaderData } from './movie-header';
-import { TopCast } from '@/features/cast/components/top-cast';
+import {
+  MovieHeader,
+  MovieHeaderData,
+  SuspenseMovieHeader,
+} from './movie-header';
+import { SuspenseTopCast, TopCast } from '@/features/cast/components/top-cast';
 import { getMovieCastQueryOptions } from '@/features/cast/api/get-movie-cast';
 import { getMovieDetailsQueryOptions } from '../api/get-movie-details';
 import { isMovieOnWatchlistQueryOptions } from '@/features/watchlist/api/is-movie-on-watchlist';
@@ -26,6 +30,15 @@ export const MovieView = ({ movieId }: { movieId: string }) => {
     <div className="flex flex-col gap-8">
       <MovieHeader movieId={movieId} data={headerData} />
       <TopCast id={movieId} isTv={false} data={queries[3].data.cast} />
+    </div>
+  );
+};
+
+export const SuspenseMovieView = () => {
+  return (
+    <div className="flex flex-col gap-8">
+      <SuspenseMovieHeader />
+      <SuspenseTopCast />
     </div>
   );
 };

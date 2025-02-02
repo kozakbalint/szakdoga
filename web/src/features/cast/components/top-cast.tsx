@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { Cast } from './cast';
+import { Cast, SuspenseCast } from './cast';
 import { CastMovies, CastTv } from '@/types/types.gen';
 
 export const TopCast = ({
@@ -34,6 +34,22 @@ export const TopCast = ({
           >
             <Cast key={actor.id} actor={actor} />
           </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const SuspenseTopCast = () => {
+  return (
+    <div className="flex flex-col gap-4 max-h-[370px] overflow-hidden">
+      <div className="flex flex-row gap-1 place-items-center text-2xl font-semibold">
+        <p>Cast</p>
+        <ChevronRight size={32} className="align-baseline" />
+      </div>
+      <div className="flex flex-row flex-wrap max-w-full gap-4 justify-center lg:justify-start overflow-hidden">
+        {[...Array(10)].map((_, index) => (
+          <SuspenseCast key={index} id={index} />
         ))}
       </div>
     </div>

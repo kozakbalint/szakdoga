@@ -59,3 +59,11 @@ export const WatchedToggle = ({
     </div>
   );
 };
+
+export const SuspenseWatchedToggle = () => {
+  return (
+    <Button className="flex items-center" size={'icon'} variant={'outline'}>
+      <Eye />
+    </Button>
+  );
+};

@@ -1,7 +1,16 @@
 import { Badge } from '@/components/ui/badge';
-import { MovieWatchedToggle } from '@/features/watched/components/watchedtoggle';
-import { WatchlistToggle } from '@/features/watchlist/components/watchlisttoggle';
-import { WatchProvider } from '@/features/watchproviders/components/watchprovider';
+import {
+  MovieWatchedToggle,
+  SuspenseWatchedToggle,
+} from '@/features/watched/components/watchedtoggle';
+import {
+  SuspenseWatchlistToggle,
+  WatchlistToggle,
+} from '@/features/watchlist/components/watchlisttoggle';
+import {
+  SuspenseWatchProvider,
+  WatchProvider,
+} from '@/features/watchproviders/components/watchprovider';
 import { useAddMovieToWatchlist } from '@/features/watchlist/api/add-movie-to-watchlist';
 import { useRemoveMovieFromWatchlist } from '@/features/watchlist/api/remove-movie-from-watchlist';
 import { Star } from 'lucide-react';
@@ -90,6 +99,63 @@ export const MovieHeader = ({
         </div>
         <div>
           <WatchProvider watchproviders={watchProviderData} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const SuspenseMovieHeader = () => {
+  return (
+    <div className="flex flex-col lg:flex-row gap-8 lg:gap-4">
+      <div className="flex flex-col sm:flex-row w-full lg:w-4/5 gap-4">
+        <div className="flex w-full sm:w-1/3 justify-center content-center">
+          <Skeleton className="rounded-md object-center w-3/5 min-h-100 h-full sm:w-full grow" />
+        </div>
+        <div className="flex flex-col gap-2 w-full sm:w-2/3 max-h-fit overflow-scroll">
+          <div className="flex flex-col gap-1">
+            <div className="text-2xl font-bold text-pretty">
+              <Skeleton className="w-40 h-6" />
+            </div>
+            <div className="flex flex-row items-start gap-4">
+              <div className="text-xl font-thin">
+                <Skeleton className="w-15 h-5" />
+              </div>
+              <div className="flex text-xl lg:pr-4 font-thin self-start items-center grow sm:justify-end gap-1">
+                <Star fill="gold" stroke="black" />
+                <Skeleton className="w-10 h-5" />
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {[...Array(3)].map((_, index) => (
+              <Badge
+                key={index}
+                variant="default"
+                className="pointer-events-none"
+              >
+                <Skeleton key={index} className="w-10 h-3" />
+              </Badge>
+            ))}
+          </div>
+          <div className="text-justify lg:pr-4 overflow-scroll flex flex-col gap-2">
+            {[...Array(5)].map((_, index) => (
+              <Skeleton key={index} className="h-3 w-full p-2" />
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-4 w-full lg:w-1/5 lg:justify-between">
+        <div className="flex">
+          <div>
+            <SuspenseWatchlistToggle />
+          </div>
+          <div>
+            <SuspenseWatchedToggle />
+          </div>
+        </div>
+        <div>
+          <SuspenseWatchProvider />
         </div>
       </div>
     </div>

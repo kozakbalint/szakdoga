@@ -1,11 +1,16 @@
 import { ContentLayout } from '@/components/layouts';
+
 import {
   getMovieDetailsQueryOptions,
   useGetMovieDetails,
 } from '@/features/movies/api/get-movie-details';
-import { MovieView } from '@/features/movies/components/movie-view';
+import {
+  MovieView,
+  SuspenseMovieView,
+} from '@/features/movies/components/movie-view';
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, redirect, useParams } from '@tanstack/react-router';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 const queryClient = new QueryClient();
@@ -44,14 +49,16 @@ function MovieRoute() {
   return (
     <>
       <ContentLayout head={movie.title}>
-        <MovieView movieId={movieId} />
-        <div className="mt-8">
-          <ErrorBoundary
-            fallback={
-              <div>Failed to load the movie. Try to refresh the page.</div>
-            }
-          ></ErrorBoundary>
-        </div>
+        <Suspense fallback={<SuspenseMovieView />}>
+          <MovieView movieId={movieId} />
+          <div className="mt-8">
+            <ErrorBoundary
+              fallback={
+                <div>Failed to load the movie. Try to refresh the page.</div>
+              }
+            ></ErrorBoundary>
+          </div>
+        </Suspense>
       </ContentLayout>
     </>
   );

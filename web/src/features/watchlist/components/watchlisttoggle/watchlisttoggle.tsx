@@ -63,3 +63,11 @@ export const WatchlistToggle = ({
     </div>
   );
 };
+
+export const SuspenseWatchlistToggle = () => {
+  return (
+    <Button className="flex items-center" size={'icon'} variant={'outline'}>
+      <Bookmark fill="none" />
+    </Button>
+  );
+};

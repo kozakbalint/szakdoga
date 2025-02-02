@@ -52,3 +52,22 @@ export const WatchProvider = ({
     </div>
   );
 };
+
+export const SuspenseWatchProvider = () => {
+  const [type] = useLocalStorage('preferredProvider', 'Stream');
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="text-xl font-bold">{type} at:</p>
+      <div className="flex gap-2 flex-wrap">
+        {[...Array(3)].map((_, index) => (
+          <Card className="flex items-center w-fit max-h-11" key={index}>
+            <Skeleton className="h-10 w-10 rounded-xl" />
+            <div className="px-2">
+              <Skeleton className="h-5 w-15" />
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};

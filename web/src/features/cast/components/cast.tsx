@@ -43,3 +43,27 @@ export const Cast = ({ actor }: { actor: CastTv | CastMovies }) => {
     </Card>
   );
 };
+
+export const SuspenseCast = ({ id }: { id: number }) => {
+  return (
+    <Card key={id} className="w-36 h-[320px] group">
+      <Skeleton className="w-full h-3/5 rounded-md" />
+      <CardContent className="p-2 h-2/5">
+        <div className="flex flex-col h-full justify-between">
+          <div>
+            <div className="text-base font-bold max-h-12 line-clamp-2 group-hover:underline">
+              <Skeleton className="w-full h-6" />
+            </div>
+            <div className="text-sm max-h-2/3 line-clamp-2 pt-2">
+              <Skeleton className="w-full h-3" />
+            </div>
+            <div className="text-sm max-h-2/3 line-clamp-2 pt-2">
+              <Skeleton className="w-full h-3" />
+            </div>
+          </div>
+          <Skeleton className="text-sm text-primary" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
